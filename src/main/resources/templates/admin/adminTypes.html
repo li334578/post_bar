@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="../../static/css/semantic.min.css">
+		<link rel="stylesheet" href="../../static/css/my.css">
+		<title>话题管理</title>
+	</head>
+	<body>
+		<!--导航-->
+		<nav class="ui attached segment m-padded-tb-mini m-shadow-small">
+			<div class="ui container">
+				<div class="ui menu secondary stackable">
+					<h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
+					<a href="#" class="m-item item m-mobile-hide"><i class="mini home icon"></i>帖子</a>
+					<a href="#" class="active m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
+					<a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+					<a href="#" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
+				</div>
+			</div>
+			<a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
+		</nav>
+		<!--中间内容-->
+		<div class="m-container-small m-padded-tb-big">
+			<div class="ui container">
+				<!--头部-->
+				<div class="ui top attached segment">
+					<div class="ui middle aligned two column grid">
+						<div class="column">
+							<h3 class="ui violet header">话题分类</h3>
+						</div>
+						<div class="right aligned column">
+							共<h3 class="ui orange header m-inline-block m-text-thin">15</h3>个
+						</div>
+					</div>
+				</div>
+				<!--话题分类列表-->
+				<div class="ui attached segment m-padded-tb-large">
+					<div class="ui labeled button m-margin-tb-tiny">
+						<a href="#" class="ui basic violet button">思考与感悟</a>
+						<div class="ui basic violet left pointing label">24</div>
+						<div class="ui basic red left pointing label"><i class="icon close"></i></div>
+					</div>
+
+					<div class="ui labeled button m-margin-tb-tiny">
+						<a href="#" class="ui basic button">问题与解答</a>
+						<div class="ui basic left pointing label">12</div>
+						<div class="ui basic left pointing label"><i class="icon delete"></i></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--底部-->
+		<footer class="ui attached segment">
+			<div class="ui center aligned container">
+				<p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
+			</div>
+		</footer>
+
+
+		<script src="../../static/js/jquery.min.js"></script>
+		<script src="../../static/js/semantic.min.js"></script>
+		<script>
+			$('.menu.toggle').click(function() {
+				$('.m-item').toggleClass('m-mobile-hide');
+			});
+		</script>
+	</body>
+</html>
