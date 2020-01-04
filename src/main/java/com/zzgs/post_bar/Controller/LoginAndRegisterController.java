@@ -36,7 +36,6 @@ public class LoginAndRegisterController {
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询帖子
-        System.out.println("index被访问了....");
         return "index";
     }
 

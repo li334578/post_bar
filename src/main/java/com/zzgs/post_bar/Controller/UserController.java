@@ -1,6 +1,10 @@
 package com.zzgs.post_bar.Controller;
 
+import com.zzgs.post_bar.Bean.Tag;
+import com.zzgs.post_bar.Bean.Type;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Service.TagService;
+import com.zzgs.post_bar.Service.TypeService;
 import com.zzgs.post_bar.Service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
@@ -29,6 +33,12 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TagService tagService;
+
+    @Autowired
+    TypeService typeService;
+
 
     @GetMapping("/findAll")
     public String findAll(){
@@ -46,6 +56,19 @@ public class UserController {
         User user = userService.findByAccountName(accountname);
         model.addAttribute("user",user);
         return "userSetting";
+    }
+
+    @RequestMapping("/forum_input")
+    public String forum_input(Model model){
+        Subject subject = SecurityUtils.getSubject();
+        String accountname = subject.getPrincipal().toString();
+        User user = userService.findByAccountName(accountname);
+        List<Type> typeList = typeService.findAll();
+        List<Tag> tagList = tagService.findAll();
+        model.addAttribute("user",user);
+        model.addAttribute("typeList",typeList);
+        model.addAttribute("tagList",tagList);
+        return "forum_input";
     }
 
 

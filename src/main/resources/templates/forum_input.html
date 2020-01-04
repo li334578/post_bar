@@ -40,7 +40,7 @@
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         <a href="/user/userSetting" class="item">个人资料</a>
-                        <a href="#" class="item">我要发帖</a>
+                        <a href="/user/forum_input" class="item">我要发帖</a>
                         <a href="#" id="myPost" class="item">我的帖子</a>
                         <a href="/logout" class="item">注销</a>
                     </div>
@@ -88,9 +88,10 @@
                             <input type="hidden" name="type.id">
                             <i class="dropdown icon"></i>
                             <div class="default text">话题</div>
-                            <div class="menu">
-                                <div class="item" data-value="1">错误日志</div>
-                                <div class="item" data-value="2">个人感悟</div>
+                            <div class="menu" id="type_item">
+                                <div class="item" th:each="type : ${typeList}">
+                                    <div th:value="${type.id}" th:text="${type.type_name}">错误日志</div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -102,8 +103,10 @@
                             <input type="hidden" name="tagIds">
                             <i class="dropdown icon"></i>
                             <div class="default text">标签</div>
-                            <div class="menu">
-                                <div class="item" data-value="1">java</div>
+                            <div class="menu" id="tag_item" >
+                                <div class="item" th:each="tag : ${tagList}">
+                                    <span th:value="${tag.id}" th:text="${tag.tag_name}">java</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,16 +128,65 @@
 
             <div class="ui right aligned container">
                 <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
-                <button type="button" id="add-tag-btn" class="ui positive button">添加话题</button>
-                <button type="button" id="add-type-btn" class="ui positive button">添加标签</button>
-                <button type="button" id="save-btn" class="ui secondary button">保存</button>
-                <button type="button" id="publish-btn" class="ui violet button">发布</button>
+                <button type="button" id="add_tag_btn" class="ui positive button">添加标签</button>
+                <button type="button" id="add_type_btn" class="ui positive button">添加话题</button>
+                <button type="button" id="save_btn" class="ui secondary button">保存</button>
+                <button type="button" id="publish_btn" class="ui violet button">发布</button>
             </div>
 
         </form>
     </div>
 </div>
 
+<!--添加话题的模态框-->
+<div class="container">
+    <div class="ui add_type modal tiny">
+        <div class="header">
+            新增话题
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>话题名：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="add_type_name" name="type_name" placeholder="请输入话题名">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="add_type_submit_btn">添加</button>
+                    <button class="ui button red" id="add_type_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="add_type_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+
+<!--添加标签的模态框-->
+<div class="container">
+    <div class="ui add_tag modal tiny">
+        <div class="header">
+            新增标签
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>话题名：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="add_tag_name" name="tag_name" placeholder="请输入标签名">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="add_tag_submit_btn">添加</button>
+                    <button class="ui button red" id="add_tag_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="add_tag_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
 
 <!--底部-->
 <footer class="ui attached segment">
@@ -148,7 +200,86 @@
 <script src="../static/js/semantic.min.js"></script>
 <script>
     $('.ui.dropdown').dropdown();
-
+    //添加话题的模态框控制
+    $('#add_type_btn').click(function () {
+        $(".ui.add_type.modal").modal("setting", "closable", false);
+        $(".ui.add_type.modal").modal("show");
+    });
+    //添加标签的模态框控制
+    $('#add_tag_btn').click(function () {
+        $(".ui.add_tag.modal").modal("setting", "closable", false);
+        $(".ui.add_tag.modal").modal("show");
+    });
+    //添加话题模态框的提交事件
+    $('#add_type_submit_btn').click(function () {
+        var type_name = $('#add_type_name').val();
+        if (type_name == '') {
+            //未输入
+            $('#add_type_msg').html("请输入话题名称");
+        } else {
+            $.ajax({
+                url: '/addType',
+                data: {
+                    type_name: type_name
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        //添加成功
+                        $('#type_item div').append("<div class=\"item\" data-value=\"" + data.type_id + "\">" + data.type_name + "</div>\n");
+                        //关闭模态框
+                        $(".ui.add_type.modal").modal("hide");
+                        //清空内容
+                        $('#add_type_name').val("");
+                        alert("添加话题成功");
+                    } else {
+                        alert("添加失败请重试");
+                    }
+                }
+            });
+        }
+    });
+    //添加话题模态框的重置事件
+    $('#add_type_reset_btn').click(function () {
+        $('#add_type_name').val("");
+    });
+    //添加标签模态框的提交事件
+    $('#add_tag_submit_btn').click(function () {
+        var tag_name = $('#add_tag_name').val();
+        if (tag_name == '') {
+            //未输入
+            $('#add_tag_msg').html("请输入标签名称");
+        } else {
+            $.ajax({
+                url: '/addTag',
+                data: {
+                    tag_name: tag_name
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        //添加成功
+                        $('#tag_item span').append("<div class=\"item\" data-value=\"" + data.tag_id + "\">" + data.tag_name + "</div>\n");
+                        //关闭模态框
+                        $(".ui.add_tag.modal").modal("hide");
+                        //清空内容
+                        $('#add_tag_name').val("");
+                        alert("添加标签成功");
+                    } else {
+                        alert("添加失败请重试");
+                    }
+                }
+            });
+        }
+    });
+    //添加标签的模态框的重置事件
+    $('#add_tag_reset_btn').click(function () {
+        $('#add_tag_name').val("");
+    });
 </script>
 </body>
 </html>
