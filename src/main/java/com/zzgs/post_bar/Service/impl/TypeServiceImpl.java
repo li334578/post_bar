@@ -29,4 +29,15 @@ public class TypeServiceImpl implements TypeService {
     public Type findByTypeName(String type_name) {
         return typeMapper.findByTypeName(type_name);
     }
+
+    /**
+     * 根据id查询话题分类
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public Type findById(Integer id) {
+        return typeMapper.findById(id);
+    }
 }

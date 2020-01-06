@@ -35,4 +35,12 @@ public interface TypeMapper {
      */
     @Select("select * from type where type_name = #{type_name}")
     Type findByTypeName(String type_name);
+
+    /**
+     * 根据id查询type
+     * @param id
+     * @return
+     */
+    @Select("select * from type where id = #{id}")
+    Type findById(Integer id);
 }

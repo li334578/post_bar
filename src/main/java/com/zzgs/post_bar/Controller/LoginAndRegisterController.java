@@ -1,7 +1,12 @@
 package com.zzgs.post_bar.Controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
+import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Service.ArticleService;
+import com.zzgs.post_bar.Service.TagService;
+import com.zzgs.post_bar.Service.TypeService;
 import com.zzgs.post_bar.Service.UserService;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
@@ -14,7 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * Author:   Tang
@@ -26,16 +34,31 @@ public class LoginAndRegisterController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    ArticleService articleService;
+    @Autowired
+    TypeService typeService;
 
 
 
     @RequestMapping("/index")
-    public String index(Model model){
+    public String index(Model model,
+                        @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                        @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
         Subject subject = SecurityUtils.getSubject();
         if (subject.getPrincipal()!=null){
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询帖子
+        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+        for (ArticleDto articleDto : articleDtoList) {
+            articleDto.setComment(1);
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+        }
+        PageInfo pageInfo = new PageInfo(articleDtoList);
+        model.addAttribute("articleDtoList",articleDtoList);
+        model.addAttribute("pageInfo",pageInfo);
         return "index";
     }
 

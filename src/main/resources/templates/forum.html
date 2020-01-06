@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,11 +13,11 @@
     <div class="ui container">
         <div class="ui menu secondary stackable">
             <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
-            <a href="#" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
+            <a href="../templates/index.html" th:href="@{/index}" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+            <a href="../templates/types.html" class="m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
+            <a href="../templates/tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+            <a href="../templates/author.html" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
+            <a href="../templates/about.html" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
             <div class="right item m-mobile-hide">
                 <div class="ui icon input">
                     <input type="text" placeholder="请输入搜索的内容">
@@ -97,8 +97,8 @@
             </div>
         </div>
         <div class="ui attached segment" style="text-align: center">
-            <label>点赞</label><a><i class="thumbs up outline icon large"></i></a>
-            <label>点踩</label><a><i class="thumbs down outline icon large"></i></a>
+            <label>点赞</label><a href="javascript:void(0)" id="thumbs_up"><i class="thumbs up outline icon large"></i></a>
+            <label>点踩</label><a href="javascript:void(0)" id="thumbs_down"><i class="thumbs down outline icon large"></i></a>
         </div>
         <div class="ui attached positive message">
             <div class="ui middle aligned grid m-padded-lr-responsive">
@@ -211,6 +211,10 @@
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $(function () {
+        $('#thumbs_up').click();
+        $('#thumbs_down').click();
     });
 </script>
 </body>

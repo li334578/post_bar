@@ -27,4 +27,11 @@ public interface TypeService {
      * @return
      */
     Type findByTypeName(String type_name);
+
+    /**
+     * 根据id查询话题分类
+     * @param id
+     * @return
+     */
+    Type findById(Integer id);
 }

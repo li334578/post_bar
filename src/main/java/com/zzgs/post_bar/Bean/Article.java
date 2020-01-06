@@ -18,18 +18,19 @@ public class Article {
      * @create_time 创建时间
      * @update_time 更新时间
      * @first_picture 封面图地址
-     * @published 是否发布
+     * @published 是否发布 0是保存 1是发布
      * @description 描述/摘要 信息
      * @type_id 文章所属话题
      * @user_id 文章所属用户 id
      * @approval_num 文章赞同数
      * @trample_num 文章点踩数
+     * @browse_volume 文章浏览量
      */
     private Integer id;
     private String title;
     private String content;
-    private Date create_time;
-    private Date update_time;
+    private String create_time;
+    private String update_time;
     private String first_picture;
     private Integer published;
     private String description;
@@ -37,4 +38,5 @@ public class Article {
     private Integer user_id;
     private Integer approval_num;
     private Integer trample_num;
+    private Integer browse_volume;
 }

@@ -14,3 +14,8 @@ spring:
     static-path-pattern: /static/**
   thymeleaf:
     cache: false # 关闭Thymeleaf缓存
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
