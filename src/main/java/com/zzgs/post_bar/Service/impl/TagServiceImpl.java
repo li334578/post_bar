@@ -29,4 +29,15 @@ public class TagServiceImpl implements TagService {
     public Tag findByTagName(String tag_name) {
         return tagMapper.findByTagName(tag_name);
     }
+
+    /**
+     * 根据article_id查询这个文章的所有标签
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public List<Tag> findByArticleId(Integer article_id) {
+        return tagMapper.findByArticleId(article_id);
+    }
 }

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/my.css">
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../static/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
     <title>帖子详情</title>
 </head>
 <body>
@@ -13,8 +13,10 @@
     <div class="ui container">
         <div class="ui menu secondary stackable">
             <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
-            <a href="../templates/index.html" th:href="@{/index}" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
-            <a href="../templates/types.html" class="m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
+            <a href="../templates/index.html" th:href="@{/index}" class="active m-item item m-mobile-hide"><i
+                    class="mini home icon"></i>首页</a>
+            <a href="../templates/types.html" class="m-item item m-mobile-hide"><i
+                    class="mini microphone icon"></i>话题</a>
             <a href="../templates/tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
             <a href="../templates/author.html" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
             <a href="../templates/about.html" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
@@ -25,18 +27,24 @@
                 </div>
             </div>
             <div class="right m-item m-mobile-hide menu">
-                <div class="item">
-                    <a href="#">登录</a>
+                <div class="item login_btn" th:unless="${user}">
+                    <button class="ui login violet button">登录</button>
+                    &nbsp
+                    <button class="ui register violet button">注册</button>
                 </div>
-                <div class="ui dropdown item">
+                <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
                         <img class="ui avatar image" src="https://picsum.photos/id/1033/100/100">
-                        李文博
+                        <span th:if="${user}">
+                            <span th:text="${user.nick_name}">李文博</span>
+                        </span>
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <a href="#" class="item">我的帖子</a>
-                        <a href="#" class="item">注销</a>
+                        <a href="/user/userSetting" class="item">个人资料</a>
+                        <a href="/article/article_input" class="item">我要发帖</a>
+                        <a href="#" id="myPost" class="item">我的帖子</a>
+                        <a href="/logout" class="item">注销</a>
                     </div>
                 </div>
             </div>
@@ -55,35 +63,36 @@
                     <img src="https://picsum.photos/id/1033/100/100" alt=""
                          class="ui avatar image">
                     <div class="content">
-                        <div class="header"><a href="#">李文博</a></div>
+                        <div class="header"><a href="#" th:text="${articleDto.author_name}">李文博</a></div>
                     </div>
                 </div>
                 <div class="item">
-                    <i class="calendar icon"></i>2019-10-02
+                    <i class="calendar icon"></i><span th:text="${articleDto.create_time}">2019-10-02</span>
                 </div>
                 <div class="item">
-                    <i class="eye icon"></i>2333
+                    <i class="eye icon"></i><span th:text="${articleDto.browse_volume}">2333</span>
                 </div>
                 <div class="item">
-                    <i class="thumbs up outline icon"></i>10
+                    <i class="thumbs up outline icon"></i><span th:text="${articleDto.approval_num}">10</span>
                 </div>
                 <div class="item">
-                    <i class="thumbs down outline icon"></i>1
+                    <i class="thumbs down outline icon"></i><span th:text="${articleDto.trample_num}">1</span>
                 </div>
             </div>
         </div>
         <div class="ui attached segment">
             <!--图片区域-->
-            <img src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded fluid image">
+            <img src="https://picsum.photos/id/1033/800/450" th:src="${articleDto.first_picture}" alt=""
+                 class="ui rounded fluid image">
         </div>
         <div class="ui attached padded segment">
             <!--内容-->
             <div class="ui right aligned basic segment">
-                <div class="ui orange label basic">原创</div>
+                <div class="ui violet label basic" th:text="${articleDto.type_name}">原创</div>
             </div>
-            <h2 class="ui center aligned header">几米经典语录</h2>
+            <h2 class="ui center aligned header" th:text="${articleDto.title}">几米经典语录</h2>
             <br>
-            <div id="content" class="m-padded-lr-responsive m-padded-tb-large">
+            <div id="content" class="m-padded-lr-responsive m-padded-tb-large" th:text="${articleDto.content}">
                 <p>1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。</p>
                 <p>2.但是冬天总是会过去，春天总是会来。</p>
                 <p>3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。</p>
@@ -91,20 +100,29 @@
             </div>
             <!--标签-->
             <div class="m-padded-lr-responsive">
-                <div class="ui basic violet left pointing label">
-                    Java
+                <div class="ui basic violet left pointing label" th:each="tag : ${tagList}">
+                    <span th:text="${tag.tag_name}">Java</span>
                 </div>
             </div>
         </div>
         <div class="ui attached segment" style="text-align: center">
-            <label>点赞</label><a href="javascript:void(0)" id="thumbs_up"><i class="thumbs up outline icon large"></i></a>
-            <label>点踩</label><a href="javascript:void(0)" id="thumbs_down"><i class="thumbs down outline icon large"></i></a>
+            <label>点赞</label>
+            <a href="javascript:void(0)" id="thumbs_up">
+                <i class="thumbs up outline icon large"></i>
+            </a>
+            <label th:text="${articleDto.approval_num}">2333</label>
+            <label>点踩</label>
+            <a href="javascript:void(0)" id="thumbs_down">
+                <i class="thumbs down outline icon large"></i>
+            </a>
+            <label th:text="${articleDto.trample_num}">2333</label>
         </div>
         <div class="ui attached positive message">
             <div class="ui middle aligned grid m-padded-lr-responsive">
                 <ui class="list">
-                    <li>作者：李文博</li>
-                    <li>发表时间： 2019-10-03</li>
+                    <li>作者：<span th:text="${articleDto.author_name}">李文博</span></li>
+                    <li>发表时间：<span th:text="${articleDto.create_time}">2019-10-03</span></li>
+                    <li>最后更新时间：<span th:text="${articleDto.update_time}">2019-10-03</span></li>
                 </ui>
             </div>
         </div>
@@ -206,8 +224,8 @@
 </footer>
 
 
-<script src="../static/js/jquery.min.js"></script>
-<script src="../static/js/semantic.min.js"></script>
+<script src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
+<script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');

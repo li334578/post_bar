@@ -16,6 +16,12 @@ public interface ArticleService {
     List<ArticleDto> findAll(Integer pageNum, Integer pageSize);
 
     /**
+     * 根据id查询article
+     * @param id
+     * @return
+     */
+    ArticleDto findById(Integer id);
+    /**
      * 新增一篇帖子
      * @param title 标题
      * @param content 内容

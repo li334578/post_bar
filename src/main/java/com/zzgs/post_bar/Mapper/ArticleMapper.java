@@ -25,6 +25,13 @@ public interface ArticleMapper {
     List<ArticleDto> findAll();
 
     /**
+     * 根据id查询article
+     * @param id
+     * @return
+     */
+    @Select("select * from article where id = #{id}")
+    ArticleDto findById(Integer id);
+    /**
      * 新增一篇帖子
      * @param title
      * @param content

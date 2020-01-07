@@ -42,7 +42,7 @@
                     <i class="dropdown icon"></i>
                     <div class="menu">
                         <a href="/user/userSetting" class="item">个人资料</a>
-                        <a href="/user/forum_input" class="item">我要发帖</a>
+                        <a href="/article/article_input" class="item">我要发帖</a>
                         <a href="#" id="myPost" class="item">我的帖子</a>
                         <a href="/logout" class="item">注销</a>
                     </div>
@@ -66,7 +66,7 @@
                             <h3 class="ui violet header">帖子</h3>
                         </div>
                         <div class="right aligned column">
-                            共<h3 class="ui orange header m-inline-block m-text-thin">15</h3>篇
+                            当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">15</h3>篇
                         </div>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="ui padded vertical segment m-padded-tb-large" th:each="articleDto : ${articleDtoList}">
                         <div class="ui mobile reversed stackable grid">
                             <div class="eleven wide column">
-                                <a href="../templates/forum.html"><h3 class="ui header" th:text="${articleDto.title}">
+                                <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}"><h3 class="ui header" th:text="${articleDto.title}">
                                     几米经典语录</h3>
                                     <p class="m-text" th:text="${articleDto.description}">
                                         1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
@@ -137,16 +137,39 @@
                 <div class="ui center aligned bottom attached segment">
                     <div class="ui buttons">
                         <li th:if="${pageInfo.hasPreviousPage}">
-                            <button class="ui basic violet button">上一页</button>
+                            <a th:href="'/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
                         </li>
                         <li th:if="!${pageInfo.hasPreviousPage}">
                             <button class="ui basic disabled violet button">上一页</button>
                         </li>
-                        <li th:each="${page : pageInfo.pages}">
-                            <button class="ui basic violet button" th:text="${page}">1</button>
+                        <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                            <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                        </li>
+                        <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
+                            th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                            <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                        </li>
+                        <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
+                            th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                            <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
                         </li>
                         <li th:if="${pageInfo.hasNextPage}">
-                            <button class="ui basic violet button">下一页</button>
+                            <a th:href="'/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
                         </li>
                         <li th:if="!${pageInfo.hasNextPage}">
                             <button class="ui basic disabled violet button">下一页</button>

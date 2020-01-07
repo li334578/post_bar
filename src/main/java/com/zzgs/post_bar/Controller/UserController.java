@@ -33,11 +33,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    TagService tagService;
 
-    @Autowired
-    TypeService typeService;
 
 
     @GetMapping("/findAll")
@@ -58,18 +54,7 @@ public class UserController {
         return "userSetting";
     }
 
-    @RequestMapping("/forum_input")
-    public String forum_input(Model model){
-        Subject subject = SecurityUtils.getSubject();
-        String accountname = subject.getPrincipal().toString();
-        User user = userService.findByAccountName(accountname);
-        List<Type> typeList = typeService.findAll();
-        List<Tag> tagList = tagService.findAll();
-        model.addAttribute("user",user);
-        model.addAttribute("typeList",typeList);
-        model.addAttribute("tagList",tagList);
-        return "forum_input";
-    }
+
 
 
 }

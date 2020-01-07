@@ -27,4 +27,11 @@ public interface TagService {
      * @return
      */
     Tag findByTagName(String tag_name);
+
+    /**
+     * 根据article_id查询这个文章的所有标签
+     * @param article_id
+     * @return
+     */
+    List<Tag> findByArticleId(Integer article_id);
 }

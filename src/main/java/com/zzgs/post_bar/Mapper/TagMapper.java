@@ -41,4 +41,13 @@ public interface TagMapper {
      */
     @Select("select * from tag where tag_name = #{tag_name}")
     Tag findByTagName(String tag_name);
+
+    /**
+     * 根据article_id查询这个文章的所有标签
+     * @param article_id
+     * @return
+     */
+    @Select("SELECT * FROM tag WHERE tag.id IN " +
+            "(SELECT article_tag.tag_id FROM article_tag WHERE article_tag.article_id = #{article_id})")
+    List<Tag> findByArticleId(Integer article_id);
 }

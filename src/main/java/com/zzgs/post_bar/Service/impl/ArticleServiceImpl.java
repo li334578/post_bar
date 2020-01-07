@@ -29,6 +29,16 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * 根据id查询article
+     * @param id
+     * @return
+     */
+    @Override
+    public ArticleDto findById(Integer id) {
+        return articleMapper.findById(id);
+    }
+
+    /**
      * 新增一篇帖子
      *
      * @param title         标题
