@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
     <title>帖子详情</title>
 </head>
-<body>
+<body onload="addArticleBrowseVolume()">
 <!--导航-->
 <nav class="ui attached segment m-padded-tb-mini">
     <div class="ui container">
@@ -70,13 +70,16 @@
                     <i class="calendar icon"></i><span th:text="${articleDto.create_time}">2019-10-02</span>
                 </div>
                 <div class="item">
-                    <i class="eye icon"></i><span th:text="${articleDto.browse_volume}">2333</span>
+                    <i class="eye icon"></i>
+                    <span id="browse_volume" th:text="${articleDto.browse_volume}">2333</span>
                 </div>
                 <div class="item">
-                    <i class="thumbs up outline icon"></i><span th:text="${articleDto.approval_num}">10</span>
+                    <i class="thumbs up outline icon"></i>
+                    <span id="approval_num_top" th:text="${articleDto.approval_num}">10</span>
                 </div>
                 <div class="item">
-                    <i class="thumbs down outline icon"></i><span th:text="${articleDto.trample_num}">1</span>
+                    <i class="thumbs down outline icon"></i>
+                    <span id="trample_num_top" th:text="${articleDto.trample_num}">1</span>
                 </div>
             </div>
         </div>
@@ -107,15 +110,23 @@
         </div>
         <div class="ui attached segment" style="text-align: center">
             <label>点赞</label>
-            <a href="javascript:void(0)" id="thumbs_up">
-                <i class="thumbs up outline icon large"></i>
+            <a href="javascript:publishAttitude(1)" id="thumbs_up" th:unless="${attitude}">
+                <i id = "icon_up" class="thumbs up outline icon large"></i>
             </a>
-            <label th:text="${articleDto.approval_num}">2333</label>
+            <a href="javascript:publishAttitude(1)" th:id="thumbs_up" th:if="${attitude}">
+                <i th:id = "icon_up" class="thumbs up icon large" th:if="${attitude.attitude==1}"></i>
+                <i th:id = "icon_up" class="thumbs up outline icon large" th:unless="${attitude.attitude==1}"></i>
+            </a>
+            <label th:text="${articleDto.approval_num}" id="approval_num_bottom">2333</label>
             <label>点踩</label>
-            <a href="javascript:void(0)" id="thumbs_down">
-                <i class="thumbs down outline icon large"></i>
+            <a href="javascript:publishAttitude(0)" id="thumbs_down" th:unless="${attitude}">
+                <i id = "icon_down" class="thumbs down outline icon large"></i>
             </a>
-            <label th:text="${articleDto.trample_num}">2333</label>
+            <a href="javascript:publishAttitude(0)" th:id="thumbs_down" th:if="${attitude}">
+                <i th:id = "icon_down" class="thumbs down icon large" th:if="${attitude.attitude==0}"></i>
+                <i th:id = "icon_down" class="thumbs down outline icon large" th:unless="${attitude.attitude==0}"></i>
+            </a>
+            <label th:text="${articleDto.trample_num}" id="trample_num_bottom">2333</label>
         </div>
         <div class="ui attached positive message">
             <div class="ui middle aligned grid m-padded-lr-responsive">
@@ -216,6 +227,77 @@
     </div>
 </div>
 
+<!--登录的模态框-->
+<div class="container">
+    <div class="ui login modal tiny">
+        <div class="header">
+            登录
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>账号：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="login_account_name" name="account_name" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>密码：</label>
+                    <div class="ui input focus">
+                        <input type="password" id="login_account_password" name="account_password" placeholder="请输入密码">
+                    </div>
+                    <div class="ui error message"></div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="login_submit_btn">登录</button>
+                    <button class="ui button red" id="login_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="login_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+<!--注册的模态框-->
+<div class="container">
+    <div class="ui register modal tiny">
+        <div class="header">
+            注册
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>昵称：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_nickname" id="register_nickname" placeholder="请输入昵称">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>账号：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_account_name" id="register_account_name" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>密码：</label>
+                    <div class="ui input focus">
+                        <input type="password" name="register_account_password" id="register_account_password"
+                               placeholder="请输入密码">
+                    </div>
+                    <div class="ui error message"></div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="register_submit_btn">注册</button>
+                    <button class="ui button red" id="register_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="register_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+
+
 <!--底部-->
 <footer class="ui attached segment">
     <div class="ui center aligned container">
@@ -224,16 +306,165 @@
 </footer>
 
 
-<script src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
+<script type="text/javascript" src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
 <script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
-    $(function () {
-        $('#thumbs_up').click();
-        $('#thumbs_down').click();
+    $('.ui.dropdown').dropdown();
+    $('.ui.login.violet.button').click(function () {
+        $(".ui.login.modal").modal("setting", "closable", false);
+        $(".ui.login.modal").modal("show");
     });
+    $('.ui.register.violet.button').click(function () {
+        $(".ui.register.modal").modal("setting", "closable", false);
+        $(".ui.register.modal").modal("show");
+    });
+    $('#login_reset_btn').click(function () {
+        $('#login_account_name').val('');
+        $('#login_account_password').val('');
+        $('#login_msg').html('');
+    });
+    $('#login_submit_btn').click(function () {
+        var account_name = $('#login_account_name').val();
+        var account_password = $('#login_account_password').val();
+        if (account_name == '' || account_password == '') {
+            $('#login_msg').html("请完整填写字段");
+        } else {
+            $.ajax({
+                url: '/login',
+                data: {
+                    account_name: account_name,
+                    account_password: account_password
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        location.reload();
+                    } else {
+                        $('#login_msg').html(data.msg);
+                    }
+                }
+            })
+        }
+    });
+    $('#register_reset_btn').click(function () {
+        $('#register_nickname').val('');
+        $('#register_account_name').val('');
+        $('#register_account_password').val('');
+        $('#register_msg').html('');
+    });
+    $('#register_submit_btn').click(function () {
+        var register_nickname = $('#register_nickname').val();
+        var register_account_name = $('#register_account_name').val();
+        var register_account_password = $('#register_account_password').val();
+        if (register_account_name == '' || register_account_password == '' || register_nickname == '') {
+            $('#register_msg').html("请完整填写字段");
+        } else {
+            $.ajax({
+                url: '/register',
+                data: {
+                    register_nickname: register_nickname,
+                    register_account_name: register_account_name,
+                    register_account_password: register_account_password
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        location.reload();
+                        alert("注册成功,已为您自动登录");
+                    } else {
+                        $('#register_msg').html(data.msg);
+                    }
+                }
+            })
+        }
+    });
+    $(function () {
+        // console.log(Number(browse_volume)+1);
+    });
+    function addArticleBrowseVolume() {
+        //浏览量更新函数
+        var browse_volume = $('#browse_volume').html();
+        var article_id = [[${articleDto.id}]];
+        $.ajax({
+            url:'/article/addArticleBrowseVolume',
+            data: {
+                article_id:article_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success:function (data) {
+                if (data.statusCode==200){
+                    browse_volume = Number(browse_volume)+1;
+                }else {
+                    console.log("服务器错误")
+                }
+            }
+        });
+    }
+    function publishAttitude(flag) {
+        //更新点赞/点踩数
+        var article_id = [[${articleDto.id}]];
+        //查询当前用户是否登录  登录了判断是否对该文章发表过态度
+        $.ajax({
+            url:'/article/findArticleAttitude',
+            type: 'post',
+            async: 'false',
+            data:{
+                article_id:article_id
+            },
+            dataType:'json',
+            success: function (data) {
+                if (data.statusCode==200){
+                    //可以发表态度
+                    if (flag==1){
+                        //点赞
+                        $("#icon_up").removeClass("outline");
+                        //更新页面的点赞数
+                        var approval_num_top = $('#approval_num_top').html();
+                        var approval_num_bottom = $('#approval_num_bottom').html();
+                        approval_num_top = Number(approval_num_top)+1;
+                        approval_num_bottom = Number(approval_num_bottom)+1;
+                    }else {
+                        $("#icon_down").removeClass("outline");
+                        //更新页面的点踩数
+                        var trample_num_top = $('#trample_num_top').html();
+                        var trample_num_bottom = $('#trample_num_bottom').html();
+                        trample_num_top = Number(trample_num_top)+1;
+                        trample_num_bottom = Number(trample_num_bottom)+1;
+                    }
+                    console.log(flag);
+                    $.ajax({
+                        url:'/article/addArticleAttitude',
+                        data:{
+                            flag:flag,
+                            article_id:article_id
+                        },
+                        type: 'post',
+                        dataType: 'json',
+                        async: 'false',
+                        success:function (data) {
+                            if (data.statusCode==200){
+                                console.log("发表态度成功");
+                            }else {
+                                console.log("服务器出现异常");
+                            }
+                        }
+                    });
+                }else {
+                    alert(data.msg);
+                }
+            }
+        });
+
+    }
 </script>
 </body>
 </html>

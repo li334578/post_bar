@@ -1,11 +1,9 @@
 package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.Article;
+import com.zzgs.post_bar.Bean.ArticleAttitude;
 import com.zzgs.post_bar.Dto.ArticleDto;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -82,4 +80,41 @@ public interface ArticleMapper {
     @Select("select * from article where user_id = #{user_id} and create_time = #{create_time}")
     Article findByUserIdAndCreateTime(@Param("user_id")Integer user_id,
                                       @Param("create_time")String create_time);
+
+    /**
+     * 根据博客id更新浏览量数据
+     * @param article_id
+     * @return
+     */
+    @Update("update article set browse_volume = browse_volume+1 where id = #{article_id}")
+    Integer updateArticleBrowseVolume(@Param("article_id")Integer article_id);
+
+    /**
+     * 根据用户和文章id查询用户是否对文章发表过态度
+     * @param article_id
+     * @param user_id
+     * @return
+     */
+    @Select("select * from article_attitude where article_id = #{article_id} and user_id = #{user_id}")
+    ArticleAttitude findArticleAttitudeByUserIdAndArticleId(@Param("article_id")Integer article_id,
+                                                            @Param("user_id")Integer user_id);
+
+    /**
+     * 新增用户对文章的态度
+     * @param article_id
+     * @param user_id
+     * @param attitude
+     * @return
+     */
+    @Insert("insert into article_attitude VALUES(null,#{user_id},#{article_id},#{attitude})")
+    Integer addArticleAttitude(@Param("article_id")Integer article_id,
+                               @Param("user_id")Integer user_id,
+                               @Param("attitude")Integer attitude);
+
+    @Update("update article set approval_num = approval_num + 1 where id = #{article_id}")
+    Integer updateArticleAttitudeApproval_num(@Param("article_id")Integer article_id);
+
+    @Update("update article set trample_num = trample_num + 1 where id = #{article_id}")
+    Integer updateArticleAttitudeTrample_num(@Param("article_id")Integer article_id);
+
 }

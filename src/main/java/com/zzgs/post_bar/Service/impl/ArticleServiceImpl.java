@@ -2,6 +2,7 @@ package com.zzgs.post_bar.Service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.zzgs.post_bar.Bean.Article;
+import com.zzgs.post_bar.Bean.ArticleAttitude;
 import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Mapper.ArticleMapper;
 import com.zzgs.post_bar.Service.ArticleService;
@@ -87,5 +88,63 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article findByUserIdAndCreateTime(Integer user_id, String create_time) {
         return articleMapper.findByUserIdAndCreateTime(user_id,create_time);
+    }
+
+    /**
+     * 根据文章id来增加文章的浏览数
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Integer updateArticleBrowseVolume(Integer article_id) {
+        return articleMapper.updateArticleBrowseVolume(article_id);
+    }
+
+    /**
+     * 根据文章id和用户id来查询用户是否对文章发表过态度
+     *
+     * @param article_id
+     * @param user_id
+     * @return
+     */
+    @Override
+    public ArticleAttitude findArticleAttitudeByUserIdAndArticleId(Integer article_id, Integer user_id) {
+        return articleMapper.findArticleAttitudeByUserIdAndArticleId(article_id,user_id);
+    }
+
+    /**
+     * 新增用户对文章的态度
+     *
+     * @param article_id
+     * @param user_id
+     * @param attitude
+     * @return
+     */
+    @Override
+    public Integer addArticleAttitude(Integer article_id, Integer user_id, Integer attitude) {
+        return articleMapper.addArticleAttitude(article_id,user_id,attitude);
+    }
+
+    /**
+     * 更新文章点赞数量
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Integer updateArticleAttitudeApproval_num(Integer article_id) {
+        return articleMapper.updateArticleAttitudeApproval_num(article_id);
+    }
+
+    /**
+     * 更新文章点踩数量
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Integer updateArticleAttitudeTrample_num(Integer article_id) {
+        return articleMapper.updateArticleAttitudeTrample_num(article_id);
     }
 }

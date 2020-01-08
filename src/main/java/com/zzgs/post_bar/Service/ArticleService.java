@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Service;
 
 import com.zzgs.post_bar.Bean.Article;
+import com.zzgs.post_bar.Bean.ArticleAttitude;
 import com.zzgs.post_bar.Dto.ArticleDto;
 
 import java.util.List;
@@ -58,4 +59,46 @@ public interface ArticleService {
      * @return
      */
     Article findByUserIdAndCreateTime(Integer user_id, String create_time);
+
+    /**
+     * 根据文章id来增加文章的浏览数
+     * @param article_id
+     * @return
+     */
+    Integer updateArticleBrowseVolume(Integer article_id);
+
+    /**
+     * 根据文章id和用户id来查询用户是否对文章发表过态度
+     * @param article_id
+     * @param user_id
+     * @return
+     */
+    ArticleAttitude findArticleAttitudeByUserIdAndArticleId(Integer article_id,
+                                                            Integer user_id);
+
+    /**
+     * 新增用户对文章的态度
+     * @param article_id
+     * @param user_id
+     * @param attitude
+     * @return
+     */
+    Integer addArticleAttitude(Integer article_id,
+                               Integer user_id,
+                               Integer attitude);
+
+    /**
+     * 更新文章点赞数量
+     * @param article_id
+     * @return
+     */
+    Integer updateArticleAttitudeApproval_num(Integer article_id);
+
+    /**
+     * 更新文章点踩数量
+     * @param article_id
+     * @return
+     */
+    Integer updateArticleAttitudeTrample_num(Integer article_id);
+
 }

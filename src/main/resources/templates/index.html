@@ -325,7 +325,6 @@
         $(".ui.register.modal").modal("setting", "closable", false);
         $(".ui.register.modal").modal("show");
     });
-
     $('#login_reset_btn').click(function () {
         $('#login_account_name').val('');
         $('#login_account_password').val('');
@@ -348,7 +347,7 @@
                 async: 'false',
                 success: function (data) {
                     if (data.statusCode == 200) {
-                        window.location.href = "/index";
+                        location.reload();
                     } else {
                         $('#login_msg').html(data.msg);
                     }
@@ -381,7 +380,7 @@
                 async: 'false',
                 success: function (data) {
                     if (data.statusCode == 200) {
-                        window.location.href = "/index";
+                        location.reload();
                         alert("注册成功,已为您自动登录");
                     } else {
                         $('#register_msg').html(data.msg);
