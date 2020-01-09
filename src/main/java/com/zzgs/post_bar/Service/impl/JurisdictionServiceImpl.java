@@ -19,6 +19,10 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     @Autowired
     JurisdictionMapper jurisdictionMapper;
 
+    /**
+     * 查询所有资源的访问权限设置
+     * @return
+     */
     @Override
     public List<Jurisdiction> findAll() {
         return jurisdictionMapper.findAll();

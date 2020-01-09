@@ -14,17 +14,29 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
-
+    /**
+     * 新增一个标签
+     * @param tag_name 标签名
+     * @param create_time 创建时间
+     * @return
+     */
     @Override
     public Integer addTag(String tag_name, String create_time) {
         return tagMapper.addTag(tag_name,create_time);
     }
-
+    /**
+     * 查询所有标签
+     * @return
+     */
     @Override
     public List<Tag> findAll() {
         return tagMapper.findAll();
     }
-
+    /**
+     * 根据标签名查询标签
+     * @param tag_name 标签名
+     * @return
+     */
     @Override
     public Tag findByTagName(String tag_name) {
         return tagMapper.findByTagName(tag_name);

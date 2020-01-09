@@ -10,6 +10,9 @@ import java.util.List;
  * Description:
  */
 public interface JurisdictionService {
-
+    /**
+     * 查询所有资源的访问权限设置
+     * @return
+     */
     List<Jurisdiction> findAll();
 }

@@ -43,7 +43,7 @@
                     <div class="menu">
                         <a href="/user/userSetting" class="item">个人资料</a>
                         <a href="/article/article_input" class="item">我要发帖</a>
-                        <a href="#" id="myPost" class="item">我的帖子</a>
+                        <a href="/article/myArticle" class="item">我的帖子</a>
                         <a href="/logout" class="item">注销</a>
                     </div>
                 </div>
@@ -91,7 +91,8 @@
                                                 <img src="https://picsum.photos/id/1033/100/100" alt=""
                                                      class="ui avatar image">
                                                 <div class="content">
-                                                    <div class="header"><a href="#" th:text="${articleDto.author_name}">李文博</a>
+                                                    <div class="header">
+                                                        <a href="#" th:text="${articleDto.author_name}">李文博</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -127,7 +128,7 @@
                             </div>
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
+                                    <img th:src="${articleDto.first_picture}" src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
                                 </a>
                             </div>
                         </div>

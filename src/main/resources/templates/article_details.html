@@ -402,7 +402,7 @@
             async: 'false',
             success:function (data) {
                 if (data.statusCode==200){
-                    browse_volume = Number(browse_volume)+1;
+                    $('#browse_volume').html(Number(browse_volume)+1);
                 }else {
                     console.log("服务器错误")
                 }
@@ -430,17 +430,17 @@
                         //更新页面的点赞数
                         var approval_num_top = $('#approval_num_top').html();
                         var approval_num_bottom = $('#approval_num_bottom').html();
-                        approval_num_top = Number(approval_num_top)+1;
-                        approval_num_bottom = Number(approval_num_bottom)+1;
+                        $('#approval_num_top').html(Number(approval_num_top)+1);
+                        $('#approval_num_bottom').html(Number(approval_num_bottom)+1);
                     }else {
                         $("#icon_down").removeClass("outline");
                         //更新页面的点踩数
                         var trample_num_top = $('#trample_num_top').html();
                         var trample_num_bottom = $('#trample_num_bottom').html();
-                        trample_num_top = Number(trample_num_top)+1;
-                        trample_num_bottom = Number(trample_num_bottom)+1;
+                        $('#trample_num_top').html(Number(trample_num_top)+1);
+                        $('#trample_num_bottom').html(Number(trample_num_bottom)+1);
                     }
-                    console.log(flag);
+                    // console.log(flag);
                     $.ajax({
                         url:'/article/addArticleAttitude',
                         data:{

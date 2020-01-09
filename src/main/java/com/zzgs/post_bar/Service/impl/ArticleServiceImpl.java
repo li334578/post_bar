@@ -147,4 +147,16 @@ public class ArticleServiceImpl implements ArticleService {
     public Integer updateArticleAttitudeTrample_num(Integer article_id) {
         return articleMapper.updateArticleAttitudeTrample_num(article_id);
     }
+
+    /**
+     * 根据用户id查询用户的所有文章
+     *
+     * @param user_id
+     * @return
+     */
+    @Override
+    public List<ArticleDto> findAllArticleByUserId(Integer user_id,Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        return articleMapper.findAllArticleByUserId(user_id);
+    }
 }

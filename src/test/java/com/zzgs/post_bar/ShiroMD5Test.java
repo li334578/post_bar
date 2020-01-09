@@ -14,7 +14,7 @@ public class ShiroMD5Test {
         String algorithmName = "MD5";//加密算法
         Object source = password;//要加密的密码
 
-        Object salt = "admin1";//盐值，一般都是用户名或者userid，要保证唯一
+        Object salt = "admin2";//盐值，一般都是用户名或者userid，要保证唯一
         int hashIterations = 10;//加密次数
         ByteSource credentialsSalt = ByteSource.Util.bytes(salt);
 

@@ -13,7 +13,10 @@ import java.util.List;
  */
 @Mapper
 public interface JurisdictionMapper {
-
+    /**
+     * 按照权重升序查询所有的资源访问权限
+     * @return
+     */
     @Select("SELECT * FROM jurisdiction ORDER BY sortnum ASC")
     List<Jurisdiction> findAll();
 }

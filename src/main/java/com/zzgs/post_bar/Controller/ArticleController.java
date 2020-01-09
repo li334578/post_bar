@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
 import com.zzgs.post_bar.Bean.*;
 import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Service.ArticleService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -107,6 +109,11 @@ public class ArticleController {
         return jsonObject.toJSONString();
     }
 
+    /**
+     * 查询当前用户对文章的态度
+     * @param article_id
+     * @return
+     */
     @RequestMapping("/findArticleAttitude")
     @ResponseBody
     public String findArticleAttitude(@Param("article_id")Integer article_id){
@@ -133,6 +140,12 @@ public class ArticleController {
         return jsonObject.toString();
     }
 
+    /**
+     * 添加用户对文章的态度
+     * @param flag
+     * @param article_id
+     * @return
+     */
     @RequestMapping("/addArticleAttitude")
     @ResponseBody
     public String addArticleAttitude(@Param("flag")Integer flag,
@@ -201,7 +214,56 @@ public class ArticleController {
             }
             jsonObject.put("statusCode",200);
         }
-
         return jsonObject.toString();
+    }
+
+    /**
+     * 编辑文章内容
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping("/articleEdit/{id}")
+    public String articleEdit(@PathVariable("id")Integer id,Model model){
+        //获取当前登录的用户
+        Subject subject = SecurityUtils.getSubject();
+        String accountname = subject.getPrincipal().toString();
+        User user = userService.findByAccountName(accountname);
+        ArticleDto articleDto = articleService.findById(id);
+        articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+        List<Type> typeList = typeService.findAll();
+        List<Tag> tagList = tagService.findByArticleId(id);
+        model.addAttribute("articleDto",articleDto);
+        model.addAttribute("user",user);
+        model.addAttribute("typeList",typeList);
+        model.addAttribute("tagList",tagList);
+        return "article_edit";
+    }
+
+    /**
+     * 分页查询我的文章
+     * @param model
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping("/myArticle")
+    public String myArticle(Model model,
+                            @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                            @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+        //获取当前登录的用户
+        Subject subject = SecurityUtils.getSubject();
+        String accountName = subject.getPrincipal().toString();
+        User user = userService.findByAccountName(accountName);
+        List<ArticleDto> articleDtoList = articleService.findAllArticleByUserId(user.getId(),pageNum,pageSize);
+        for (ArticleDto articleDto : articleDtoList) {
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+        }
+        PageInfo pageInfo = new PageInfo(articleDtoList);
+        model.addAttribute("user",user);
+        model.addAttribute("articleDtoList",articleDtoList);
+        model.addAttribute("pageInfo",pageInfo);
+        return "my_article";
     }
 }

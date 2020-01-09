@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/semantic.min.css"
+          th:href="@{../../static/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/editormd/css/editormd.min.css"
+          th:href="@{../../static/editormd/css/editormd.min.css}"/>
+    <link rel="stylesheet" href="../static/css/my.css"
+          th:href="@{../../static/css/my.css}">
+    <title>发布新贴</title>
+</head>
+<body>
+<!--导航-->
+<nav class="ui attached segment m-padded-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui menu secondary stackable">
+            <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
+            <a href="/index" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
+            <a href="#" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
+            <div class="right  item m-mobile-hide">
+                <div class="ui icon input">
+                    <input type="text" placeholder="请输入搜索的内容">
+                    <i class="search link icon"></i>
+                </div>
+            </div>
+            <div class="right m-item m-mobile-hide menu">
+                <div class="item login_btn" th:unless="${user}">
+                    <button class="ui login violet button">登录</button>
+                    &nbsp
+                    <button class="ui register violet button">注册</button>
+                </div>
+                <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
+                    <div class="text">
+                        <img class="ui avatar image" src="https://picsum.photos/id/1033/100/100">
+                        <span th:if="${user}">
+                            <span th:text="${user.nick_name}">李文博</span>
+                        </span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="/user/userSetting" class="item">个人资料</a>
+                        <a href="/article/article_input" class="item">我要发帖</a>
+                        <a href="#" id="myPost" class="item">我的帖子</a>
+                        <a href="/logout" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i
+            class="sidebar icon"></i></a>
+</nav>
+
+<!--中间内容-->
+<div class="m-container m-padded-tb-big">
+    <div class="ui container">
+        <form id="blog-form" action="#" method="post" class="ui form">
+            <div class="required field">
+                <div class="ui left labeled input">
+                    <label class="ui violet basic label">标题</label>
+                    <input type="text" name="title" th:value="${articleDto.title}" id="title" placeholder="请输入标题...">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label class="ui violet basic label">话题</label>
+                    <a href="#" target="_blank" class="ui violet basic label"
+                       th:text="${articleDto.type_name}">个人感悟</a>
+                </div>
+                <div class="field">
+                    <!--标签-->
+                    <label class="ui violet basic label">标签</label>
+                    <div class="ui basic violet left pointing label" th:each="tag : ${tagList}">
+                        <span th:text="${tag.tag_name}">Java</span>
+                    </div>
+                </div>
+            </div>
+            <div class="required field">
+                <div class="ui left labeled input">
+                    <label class="ui violet basic label">首图</label>
+                    <input type="text" name="firstPicture" th:value="${articleDto.first_picture}" id="firstPicture"
+                           placeholder="首图引用地址">
+                </div>
+            </div>
+            <div class="required field">
+                <textarea name="description" id="description" th:text="${articleDto.description}" placeholder="帖子简介..."
+                          maxlength="200"></textarea>
+            </div>
+            <div class="required field">
+                <div id="editormd" style="z-index: 1 !important;">
+                    <textarea name="content" id="content" th:text="${articleDto.content}"
+                              style="display: none"></textarea>
+                </div>
+            </div>
+
+            <div class="ui error message"></div>
+
+            <div class="ui right aligned container">
+                <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
+                <button type="button" id="add_tag_btn" class="ui positive button">添加标签</button>
+                <button type="button" id="add_type_btn" class="ui positive button">添加话题</button>
+                <button type="button" onclick="commit_article(0)" class="ui secondary button">保存</button>
+                <button type="button" onclick="commit_article(1)" class="ui violet button">发布</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<!--添加话题的模态框-->
+<div class="container">
+    <div class="ui add_type modal tiny">
+        <div class="header">
+            新增话题
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>话题名：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="add_type_name" name="type_name" placeholder="请输入话题名">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="add_type_submit_btn">添加</button>
+                    <button class="ui button red" id="add_type_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="add_type_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+
+<!--添加标签的模态框-->
+<div class="container">
+    <div class="ui add_tag modal tiny">
+        <div class="header">
+            新增标签
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>话题名：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="add_tag_name" name="tag_name" placeholder="请输入标签名">
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="add_tag_submit_btn">添加</button>
+                    <button class="ui button red" id="add_tag_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="add_tag_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+
+<!--底部-->
+<footer class="ui attached segment">
+    <div class="ui center aligned container">
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
+    </div>
+</footer>
+
+
+<script type="text/javascript" src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
+<script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
+<script src="../static/editormd/js/editormd.min.js" th:src="@{../../static/editormd/js/editormd.min.js}"></script>
+<script>
+    //调用编辑器
+    var Editor;
+    $(function () {
+        //初始化markdown编辑器
+        Editor = editormd("editormd", {
+            width: "1005px",
+            height: 640,
+            syncScrolling: 'single',
+            path: '../../static/editormd/lib/'
+        });
+    });
+    $('.ui.dropdown').dropdown();
+    //添加话题的模态框控制
+    $('#add_type_btn').click(function () {
+        $(".ui.add_type.modal").modal("setting", "closable", false);
+        $(".ui.add_type.modal").modal("show");
+    });
+    //添加标签的模态框控制
+    $('#add_tag_btn').click(function () {
+        $(".ui.add_tag.modal").modal("setting", "closable", false);
+        $(".ui.add_tag.modal").modal("show");
+    });
+    //添加话题模态框的提交事件
+    $('#add_type_submit_btn').click(function () {
+        var type_name = $('#add_type_name').val();
+        if (type_name == '') {
+            //未输入
+            $('#add_type_msg').html("请输入话题名称");
+        } else {
+            $.ajax({
+                url: '/addType',
+                data: {
+                    type_name: type_name
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        //添加成功
+                        $('#type_item div').append("<div class=\"item\" data-value=\"" + data.type_id + "\">" + data.type_name + "</div>\n");
+                        //关闭模态框
+                        $(".ui.add_type.modal").modal("hide");
+                        //清空内容
+                        $('#add_type_name').val("");
+                        alert("添加话题成功");
+                    } else {
+                        alert("添加失败请重试");
+                    }
+                }
+            });
+        }
+    });
+    //添加话题模态框的重置事件
+    $('#add_type_reset_btn').click(function () {
+        $('#add_type_name').val("");
+    });
+    //添加标签模态框的提交事件
+    $('#add_tag_submit_btn').click(function () {
+        var tag_name = $('#add_tag_name').val();
+        if (tag_name == '') {
+            //未输入
+            $('#add_tag_msg').html("请输入标签名称");
+        } else {
+            $.ajax({
+                url: '/addTag',
+                data: {
+                    tag_name: tag_name
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        //添加成功
+                        $('#tag_item').append("<div class=\"item\"><span value=" + data.tag_id + ">" + data.tag_name + "</span></div>");
+                        //关闭模态框
+                        $(".ui.add_tag.modal").modal("hide");
+                        //清空内容
+                        $('#add_tag_name').val("");
+                        alert("添加标签成功");
+                    } else {
+                        alert("添加失败请重试");
+                    }
+                }
+            });
+        }
+    });
+    //添加标签的模态框的重置事件
+    $('#add_tag_reset_btn').click(function () {
+        $('#add_tag_name').val("");
+    });
+    //删除已选中标签事件
+    $('a.ui.label.transition.visible').click(function () {
+        console.log("1234");
+    });
+
+    //保存文章--发布文章
+    function commit_article(published) {
+        var title = $('#title').val();
+        var type_id = $('.text div').attr("value");
+        var tag_arr = new Array(3); //定义标签的数组 每篇帖子最多选三个标签
+        $('#tag_div a span').each(function (index, e) {
+            tag_arr[index] = $(e).attr("value");
+        });
+        var firstPicture = $('#firstPicture').val();
+        var description = $('#description').val();
+        var content = $('#content').val();
+        $.ajax({
+            url: '/article/addArticle',
+            data: {
+                title: title,
+                type_id: type_id,
+                tag_arr: tag_arr,
+                firstPicture: firstPicture,
+                description: description,
+                content: content,
+                published: published
+            },
+            traditional: true,
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    window.location.href = "/user/forum_input";
+                    alert("操作成功");
+                } else {
+                    alert("服务器出现异常");
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -19,7 +19,7 @@ public interface ArticleMapper {
      * 查询所有帖子
      * @return
      */
-    @Select("select * from article")
+    @Select("select * from article where published = 1")
     List<ArticleDto> findAll();
 
     /**
@@ -111,10 +111,27 @@ public interface ArticleMapper {
                                @Param("user_id")Integer user_id,
                                @Param("attitude")Integer attitude);
 
+    /**
+     * 根据文章id更新文章点赞数
+     * @param article_id
+     * @return
+     */
     @Update("update article set approval_num = approval_num + 1 where id = #{article_id}")
     Integer updateArticleAttitudeApproval_num(@Param("article_id")Integer article_id);
 
+    /**
+     * 根据文章id更新文章点踩数
+     * @param article_id
+     * @return
+     */
     @Update("update article set trample_num = trample_num + 1 where id = #{article_id}")
     Integer updateArticleAttitudeTrample_num(@Param("article_id")Integer article_id);
 
+    /**
+     * 根据用户id查询该用户的所有文章 create_time降序排列
+      * @param user_id
+     * @return
+     */
+    @Select("select * from article where user_id = #{user_id} ORDER BY create_time DESC")
+    List<ArticleDto> findAllArticleByUserId(Integer user_id);
 }

@@ -101,7 +101,9 @@ body {
 .m-margin-bottom-small {
     margin-bottom: 0.5em !important;
 }
-
+.m-margin-bottom {
+    margin-bottom: 1em !important;
+}
 /*------------opacity------------*/
 .m-opacity-mini {
     opacity: 0.8 !important;
