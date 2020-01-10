@@ -159,4 +159,22 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(pageNum,pageSize);
         return articleMapper.findAllArticleByUserId(user_id);
     }
+
+    /**
+     * 根据文章id更新文章标题、内容、封面图、是否发布、描述信息、更新时间等
+     * @param id
+     * @param title
+     * @param content
+     * @param first_picture
+     * @param published
+     * @param description
+     * @param update_time
+     * @return
+     */
+    @Override
+    public Integer updateArticleByArticleId(Integer id, String title, String content,
+                                            String first_picture, Integer published,
+                                            String description, String update_time) {
+        return articleMapper.updateArticleByArticleId(id,title,content,first_picture,published,description,update_time);
+    }
 }

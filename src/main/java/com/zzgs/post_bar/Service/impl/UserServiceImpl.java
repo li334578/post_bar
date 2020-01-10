@@ -66,15 +66,17 @@ public class UserServiceImpl implements UserService {
     /**
      * 用户注册
      *
-     * @param nick_name        昵称
+     * @param nick_name        昵称名
      * @param account_name     账户名
      * @param account_password 账户密码
+     * @param user_avatar      用户头像
      * @return
      */
     @Override
-    public Integer insertUser(String nick_name, String account_name, String account_password) {
-        return userMapper.insertUser(nick_name, account_name, account_password);
+    public Integer insertUser(String nick_name, String account_name, String account_password, String user_avatar) {
+        return userMapper.insertUser(nick_name, account_name, account_password,user_avatar);
     }
+
 
     /**
      * 根据用户id查询用户的角色
@@ -85,5 +87,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<String> findRolesById(Integer id) {
         return userMapper.findRolesById(id);
+    }
+
+    /**
+     * 根据id修改用户的信息
+     *
+     * @param id
+     * @param avatar
+     * @param nick_name
+     * @param mailbox
+     * @param phone
+     * @param intro
+     * @return
+     */
+    @Override
+    public Integer updateUser(Integer id, String avatar, String nick_name, String mailbox, String phone, String intro) {
+        return userMapper.updateUser(id,avatar,nick_name,mailbox,phone,intro);
     }
 }

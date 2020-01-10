@@ -8,4 +8,5 @@ public class ArticleDto extends Article {
     private Integer comment;
     private String type_name;
     private String author_name;
+    private String user_avatar;
 }

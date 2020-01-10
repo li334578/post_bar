@@ -134,4 +134,35 @@ public interface ArticleMapper {
      */
     @Select("select * from article where user_id = #{user_id} ORDER BY create_time DESC")
     List<ArticleDto> findAllArticleByUserId(Integer user_id);
+
+    @Update("update article set title = #{title},content = #{content},first_picture = #{first_picture}," +
+            "published = #{published},description = #{description},update_time = #{update_time} where id = #{article_id}")
+    Integer updateArticleByArticleId(@Param("article_id")Integer id,@Param("title")String title,
+                                     @Param("content")String content,@Param("first_picture")String first_picture,
+                                     @Param("published")Integer published,@Param("description")String description,
+                                     @Param("update_time")String update_time);
+
+    /**
+     * 根据文章id删除文章
+     * @param id
+     * @return
+     */
+    @Delete("delete from article where id = #{id}")
+    Integer deleteArticleByArticleId(Integer id);
+
+    /**
+     * 根据文章id删除用户对文章的点赞和点踩
+     * @param article_id
+     * @return
+     */
+    @Delete("delete from article_attitude where article_id = #{article_id}")
+    Integer deleteArticleAttitudeByArticleId(Integer article_id);
+
+    /**
+     * 根据文章id删除文章的标签
+     * @param article_id
+     * @return
+     */
+    @Delete("delete from article_tag where article_id = #{article_id}")
+    Integer deleteArticleTag(Integer article_id);
 }

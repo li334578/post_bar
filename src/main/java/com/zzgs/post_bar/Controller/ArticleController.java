@@ -240,6 +240,26 @@ public class ArticleController {
         return "article_edit";
     }
 
+    @RequestMapping("/updateArticle")
+    @ResponseBody
+    public String updateArticle(@Param("article_id")Integer article_id,@Param("title")String title,
+                                @Param("content")String content,@Param("first_picture")String first_picture,
+                                @Param("published")Integer published,@Param("description")String description){
+        JSONObject jsonObject = new JSONObject();
+        DateUtil dateUtil = new DateUtil();
+        String update_time = dateUtil.getNowDate();
+        Integer integer = articleService.updateArticleByArticleId(article_id, title, content,
+                first_picture, published, description, update_time);
+        if (integer==1){
+            //更新成功
+            jsonObject.put("statusCode",200);
+        }else {
+            //更新失败
+            jsonObject.put("statusCode",500);
+        }
+        return jsonObject.toString();
+    };
+
     /**
      * 分页查询我的文章
      * @param model
@@ -258,6 +278,7 @@ public class ArticleController {
         List<ArticleDto> articleDtoList = articleService.findAllArticleByUserId(user.getId(),pageNum,pageSize);
         for (ArticleDto articleDto : articleDtoList) {
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         }
         PageInfo pageInfo = new PageInfo(articleDtoList);

@@ -104,10 +104,9 @@
                 <button type="button" class="ui button" onclick="window.history.go(-1)">返回</button>
                 <button type="button" id="add_tag_btn" class="ui positive button">添加标签</button>
                 <button type="button" id="add_type_btn" class="ui positive button">添加话题</button>
-                <button type="button" onclick="commit_article(0)" class="ui secondary button">保存</button>
-                <button type="button" onclick="commit_article(1)" class="ui violet button">发布</button>
+                <button type="button" onclick="update_article(0)" class="ui secondary button">保存</button>
+                <button type="button" onclick="update_article(1)" class="ui violet button">发布</button>
             </div>
-
         </form>
     </div>
 </div>
@@ -271,27 +270,22 @@
         console.log("1234");
     });
 
-    //保存文章--发布文章
-    function commit_article(published) {
+    //修改文章内容
+    function update_article(published) {
         var title = $('#title').val();
-        var type_id = $('.text div').attr("value");
-        var tag_arr = new Array(3); //定义标签的数组 每篇帖子最多选三个标签
-        $('#tag_div a span').each(function (index, e) {
-            tag_arr[index] = $(e).attr("value");
-        });
+        var content = $('#content').val();
         var firstPicture = $('#firstPicture').val();
         var description = $('#description').val();
-        var content = $('#content').val();
+        var article_id = [[${articleDto.id}]];
         $.ajax({
-            url: '/article/addArticle',
-            data: {
-                title: title,
-                type_id: type_id,
-                tag_arr: tag_arr,
-                firstPicture: firstPicture,
-                description: description,
-                content: content,
-                published: published
+            url:'/article/updateArticle',
+            data:{
+                title:title,
+                content:content,
+                first_picture:firstPicture,
+                description:description,
+                article_id:article_id,
+                published:published
             },
             traditional: true,
             type: 'post',
@@ -299,7 +293,7 @@
             async: 'false',
             success: function (data) {
                 if (data.statusCode == 200) {
-                    window.location.href = "/user/forum_input";
+                    window.location.href = "/article/myArticle";
                     alert("操作成功");
                 } else {
                     alert("服务器出现异常");

@@ -217,10 +217,10 @@
             <!--留言输入区域-->
             <div class="ui form">
                 <div class="field">
-                    <textarea name="content" placeholder="请输入评论信息..."></textarea>
+                    <textarea name="content" id="comment_content" placeholder="请输入评论信息..."></textarea>
                 </div>
                 <div class="field  m-margin-bottom-small m-mobile-wide">
-                    <button class="ui violet button m-mobile-wide"><i class="edit icon"></i>发布</button>
+                    <button class="ui violet button m-mobile-wide" onclick="commitComment(0)" ><i class="edit icon"></i>发布</button>
                 </div>
             </div>
         </div>
@@ -385,9 +385,9 @@
             })
         }
     });
-    $(function () {
-        // console.log(Number(browse_volume)+1);
-    });
+    // $(function () {
+    //
+    // });
     function addArticleBrowseVolume() {
         //浏览量更新函数
         var browse_volume = $('#browse_volume').html();
@@ -464,6 +464,34 @@
             }
         });
 
+    }
+    function commitComment(parent_comment_id) {
+        var article_id = [[${articleDto.id}]];
+        var content = $("#comment_content").val();
+        console.log(article_id);
+        console.log(content);
+        console.log(parent_comment_id);
+        $.ajax({
+            url:'/addComment',
+            data:{
+                article_id:article_id,
+                content:content,
+                parent_comment_id:parent_comment_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    //评论成功
+                    alert(data.msg);
+                } else {
+                    //评论失败
+                    alert(data.msg);
+                }
+                // location.reload();
+            }
+        });
     }
 </script>
 </body>

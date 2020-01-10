@@ -37,14 +37,16 @@ public interface UserService {
      * @return
      */
     User findByNickName(String nick_name);
+
     /**
      * 用户注册
-     * @param nick_name 昵称
+     * @param nick_name 昵称名
      * @param account_name 账户名
      * @param account_password 账户密码
+     * @param user_avatar 用户头像
      * @return
      */
-    Integer insertUser(String nick_name,String account_name,String account_password);
+    Integer insertUser(String nick_name,String account_name,String account_password,String user_avatar);
 
     /**
      * 根据用户id查询用户的角色
@@ -52,4 +54,18 @@ public interface UserService {
      * @return
      */
     Set<String> findRolesById(Integer id);
+
+    /**
+     * 根据id修改用户的信息
+     * @param id
+     * @param avatar
+     * @param nick_name
+     * @param mailbox
+     * @param phone
+     * @param intro
+     * @return
+     */
+    Integer updateUser(Integer id,String avatar,
+                       String nick_name,String mailbox,
+                       String phone,String intro);
 }

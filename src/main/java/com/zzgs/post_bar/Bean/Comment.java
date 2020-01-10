@@ -19,7 +19,7 @@ public class Comment {
      * @content 文章内容
      * @approval_num 点赞数
      * @trample_num 点踩数
-     * @paremt_comment_id 父级评论id
+     * @parent_comment_id 父级评论id
      */
     private Integer id;
     private Integer user_id;
@@ -28,5 +28,5 @@ public class Comment {
     private String content;
     private Integer approval_num;
     private Integer trample_num;
-    private Integer paremt_comment_id;
+    private Integer parent_comment_id;
 }

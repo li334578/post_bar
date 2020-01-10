@@ -55,6 +55,7 @@ public class LoginAndRegisterController {
             articleDto.setComment(1);
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
         }
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
@@ -109,7 +110,8 @@ public class LoginAndRegisterController {
         }else {
             //对密码进行加密
             SimpleHash hash_account_password = new SimpleHash("MD5",register_account_password,register_account_name,10);
-            userService.insertUser(register_nickname,register_account_name,hash_account_password.toString());
+            String defaultAvatar = "../static/images/avatar/Lighthouse.jpg";
+            userService.insertUser(register_nickname,register_account_name,hash_account_password.toString(),defaultAvatar);
             jsonObject.put("statusCode","200");
             //注册成功为用户登录
             Subject subject = SecurityUtils.getSubject();
