@@ -16,6 +16,14 @@ public interface CommentMapper {
     List<Comment> findByArticleId(Integer article_id);
 
     /**
+     * 根据文章id查询该文章的评论数
+     * @param article_id
+     * @return
+     */
+    @Select("select count(id) from comment where article_id = #{article_id}")
+    Integer findCommentTotalByArticleId(Integer article_id);
+
+    /**
      * 根据文章id删除评论
      * @param article_id
      * @return

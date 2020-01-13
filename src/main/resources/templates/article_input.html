@@ -218,7 +218,7 @@
             $('#add_type_msg').html("请输入话题名称");
         } else {
             $.ajax({
-                url: '/addType',
+                url: '/type/addType',
                 data: {
                     type_name: type_name
                 },
@@ -253,7 +253,7 @@
             $('#add_tag_msg').html("请输入标签名称");
         } else {
             $.ajax({
-                url: '/addTag',
+                url: '/tag/addTag',
                 data: {
                     tag_name: tag_name
                 },

@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Service;
 
 import com.zzgs.post_bar.Bean.Tag;
+import com.zzgs.post_bar.Dto.TagDto;
 
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ public interface TagService {
      * 查询所有标签
      * @return
      */
-    List<Tag> findAll();
+    List<TagDto> findAll();
 
     /**
      * 根据标签名查询标签

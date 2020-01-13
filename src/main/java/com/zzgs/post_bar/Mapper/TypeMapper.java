@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.Type;
+import com.zzgs.post_bar.Dto.TypeDto;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +27,7 @@ public interface TypeMapper {
      * @return
      */
     @Select("select * from type")
-    List<Type> findAll();
+    List<TypeDto> findAll();
 
     /**
      * 根据话题名查询话题

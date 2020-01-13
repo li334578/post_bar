@@ -6,6 +6,9 @@ import com.zzgs.post_bar.Bean.ArticleAttitude;
 import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Mapper.ArticleMapper;
 import com.zzgs.post_bar.Service.ArticleService;
+import com.zzgs.post_bar.Service.CommentService;
+import com.zzgs.post_bar.Service.TypeService;
+import com.zzgs.post_bar.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,15 @@ import java.util.List;
 public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TypeService typeService;
+
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 分页查询所有帖子
@@ -26,6 +38,12 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleDto> findAll(Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         List<ArticleDto> list = articleMapper.findAll();
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+        }
         return list;
     }
 
@@ -176,5 +194,68 @@ public class ArticleServiceImpl implements ArticleService {
                                             String first_picture, Integer published,
                                             String description, String update_time) {
         return articleMapper.updateArticleByArticleId(id,title,content,first_picture,published,description,update_time);
+    }
+
+    /**
+     * 根据type_id 查询该分类下的文章总数
+     *
+     * @param type_id
+     * @return
+     */
+    @Override
+    public Integer findTotalByTypeId(Integer type_id) {
+        return articleMapper.findTotalByTypeId(type_id);
+    }
+
+    /**
+     * 根据type_id 查询该分类下的文章
+     * @param type_id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<ArticleDto> findArticleByTypeId(Integer type_id,Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<ArticleDto> list = articleMapper.findArticleByTypeId(type_id);
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+        }
+        return list;
+    }
+
+    /**
+     * 根据tag_id 查询该分类下的文章
+     *
+     * @param tag_id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<ArticleDto> findArticleByTagId(Integer tag_id, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<ArticleDto> list = articleMapper.findArticleByTagId(tag_id);
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+        }
+        return list;
+    }
+
+    /**
+     * 根据tag_id查询当前标签下的文章数
+     *
+     * @param tag_id
+     * @return
+     */
+    @Override
+    public Integer findTotalByTagId(Integer tag_id) {
+        return articleMapper.findTotalByTagId(tag_id);
     }
 }

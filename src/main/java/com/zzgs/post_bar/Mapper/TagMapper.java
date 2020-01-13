@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.Tag;
+import com.zzgs.post_bar.Dto.TagDto;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -32,7 +33,7 @@ public interface TagMapper {
      * @return
      */
     @Select("select * from tag")
-    List<Tag> findAll();
+    List<TagDto> findAll();
 
     /**
      * 根据标签名查询标签

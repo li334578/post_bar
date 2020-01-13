@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.zzgs.post_bar.Bean.*;
 import com.zzgs.post_bar.Dto.ArticleDto;
+import com.zzgs.post_bar.Dto.TagDto;
+import com.zzgs.post_bar.Dto.TypeDto;
 import com.zzgs.post_bar.Service.ArticleService;
 import com.zzgs.post_bar.Service.TagService;
 import com.zzgs.post_bar.Service.TypeService;
@@ -54,8 +56,8 @@ public class ArticleController {
         Subject subject = SecurityUtils.getSubject();
         String accountname = subject.getPrincipal().toString();
         User user = userService.findByAccountName(accountname);
-        List<Type> typeList = typeService.findAll();
-        List<Tag> tagList = tagService.findAll();
+        List<TypeDto> typeList = typeService.findAll();
+        List<TagDto> tagList = tagService.findAll();
         model.addAttribute("user",user);
         model.addAttribute("typeList",typeList);
         model.addAttribute("tagList",tagList);
@@ -231,7 +233,7 @@ public class ArticleController {
         User user = userService.findByAccountName(accountname);
         ArticleDto articleDto = articleService.findById(id);
         articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
-        List<Type> typeList = typeService.findAll();
+        List<TypeDto> typeList = typeService.findAll();
         List<Tag> tagList = tagService.findByArticleId(id);
         model.addAttribute("articleDto",articleDto);
         model.addAttribute("user",user);

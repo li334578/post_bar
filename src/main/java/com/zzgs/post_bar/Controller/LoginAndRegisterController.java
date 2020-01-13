@@ -51,12 +51,7 @@ public class LoginAndRegisterController {
         }
         //查询帖子
         List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
-        for (ArticleDto articleDto : articleDtoList) {
-            articleDto.setComment(1);
-            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
-            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
-            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
-        }
+
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);

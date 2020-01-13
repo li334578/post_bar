@@ -121,4 +121,36 @@ public interface ArticleService {
     Integer updateArticleByArticleId(Integer id,String title,
                                      String content,String first_picture,
                                      Integer published,String description,String update_time);
+
+    /**
+     * 根据type_id 查询该分类下的文章总数
+     * @param type_id
+     * @return
+     */
+    Integer findTotalByTypeId(Integer type_id);
+
+    /**
+     * 根据type_id 查询该分类下的文章
+     * @param type_id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<ArticleDto> findArticleByTypeId(Integer type_id,Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据tag_id 查询该分类下的文章
+     * @param tag_id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<ArticleDto> findArticleByTagId(Integer tag_id,Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据tag_id查询当前标签下的文章数
+     * @param tag_id
+     * @return
+     */
+    Integer findTotalByTagId(Integer tag_id);
 }

@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Service.impl;
 
 import com.zzgs.post_bar.Bean.Tag;
+import com.zzgs.post_bar.Dto.TagDto;
 import com.zzgs.post_bar.Mapper.TagMapper;
 import com.zzgs.post_bar.Service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class TagServiceImpl implements TagService {
      * @return
      */
     @Override
-    public List<Tag> findAll() {
+    public List<TagDto> findAll() {
         return tagMapper.findAll();
     }
     /**

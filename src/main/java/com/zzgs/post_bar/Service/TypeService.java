@@ -2,6 +2,7 @@ package com.zzgs.post_bar.Service;
 
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Bean.Type;
+import com.zzgs.post_bar.Dto.TypeDto;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface TypeService {
      * 查询所有话题
      * @return
      */
-    List<Type> findAll();
+    List<TypeDto> findAll();
 
     /**
      * 根据话题名查询话题

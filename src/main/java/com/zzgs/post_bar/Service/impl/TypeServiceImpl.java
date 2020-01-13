@@ -2,6 +2,8 @@ package com.zzgs.post_bar.Service.impl;
 
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Bean.Type;
+import com.zzgs.post_bar.Dto.TypeDto;
+import com.zzgs.post_bar.Mapper.ArticleMapper;
 import com.zzgs.post_bar.Mapper.TypeMapper;
 import com.zzgs.post_bar.Service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class TypeServiceImpl implements TypeService {
 
     @Autowired
     private TypeMapper typeMapper;
+
+    @Autowired
+    private ArticleMapper articleMapper;
     /**
      * 新增一个话题
      * @param type_name 话题名
@@ -29,8 +34,12 @@ public class TypeServiceImpl implements TypeService {
      * @return
      */
     @Override
-    public List<Type> findAll() {
-        return typeMapper.findAll();
+    public List<TypeDto> findAll() {
+        List<TypeDto> typeDtoList = typeMapper.findAll();
+        for (TypeDto typeDto : typeDtoList) {
+            typeDto.setTotal_num(articleMapper.findTotalByTypeId(typeDto.getId()));
+        }
+        return typeDtoList;
     }
 
     /**

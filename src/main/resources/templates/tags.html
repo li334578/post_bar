@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/my.css">
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../static/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
     <title>标签</title>
 </head>
 <body>
@@ -15,31 +15,37 @@
             <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
             <a href="../templates/index.html" th:href="@{/index}" class="m-item item m-mobile-hide"><i
                     class="mini home icon"></i>首页</a>
-            <a href="../templates/types.html" class="m-item item m-mobile-hide"><i
+            <a href="../templates/types.html" th:href="@{/type/types}" class="m-item item m-mobile-hide"><i
                     class="mini microphone icon"></i>话题</a>
-            <a href="../templates/tags.html" class="active m-item item m-mobile-hide"><i
-                    class="mini tags icon"></i>标签</a>
+            <a href="../templates/tags.html" th:href="@{/tag/tags}" class="active m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
             <a href="../templates/author.html" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
             <a href="../templates/about.html" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
-            <div class="right item m-mobile-hide">
+            <div class="right  item m-mobile-hide">
                 <div class="ui icon input">
                     <input type="text" placeholder="请输入搜索的内容">
                     <i class="search link icon"></i>
                 </div>
             </div>
             <div class="right m-item m-mobile-hide menu">
-                <div class="item">
-                    <a href="#">登录</a>
+                <div class="item login_btn" th:unless="${user}">
+                    <button class="ui login violet button">登录</button>
+                    &nbsp
+                    <button class="ui register violet button">注册</button>
                 </div>
-                <div class="ui dropdown item">
+                <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
-                        <img class="ui avatar image" src="https://picsum.photos/id/1033/100/100">
-                        李文博
+                        <span th:if="${user}">
+                        <img class="ui avatar image" th:src="${user.user_avatar}"
+                             src="https://picsum.photos/id/1033/100/100">
+                            <span th:text="${user.nick_name}">李文博</span>
+                        </span>
                     </div>
                     <i class="dropdown icon"></i>
                     <div class="menu">
-                        <a href="#" class="item">我的帖子</a>
-                        <a href="#" class="item">注销</a>
+                        <a href="/user/userSetting" class="item">个人资料</a>
+                        <a href="/article/article_input" class="item">我要发帖</a>
+                        <a href="/article/myArticle" class="item">我的帖子</a>
+                        <a href="/logout" class="item">注销</a>
                     </div>
                 </div>
             </div>
@@ -55,81 +61,207 @@
         <div class="ui top attached segment">
             <div class="ui middle aligned two column grid">
                 <div class="column">
-                    <h3 class="ui violet header">标签</h3>
+                    <h3 class="ui violet header">话题分类</h3>
                 </div>
                 <div class="right aligned column">
-                    共<h3 class="ui orange header m-inline-block m-text-thin">15</h3>个
+                    共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${tagTotalNum}">15</h3>个
                 </div>
             </div>
         </div>
         <!--分类列表-->
         <div class="ui attached segment m-padded-tb-large">
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic violet button">思考与感悟</a>
-                <div class="ui basic violet left pointing label">24</div>
-            </div>
-            <div class="ui labeled button m-margin-tb-tiny">
-                <a href="#" class="ui basic violet button">问题与解答</a>
-                <div class="ui basic violet left pointing label">12</div>
+            <div class="ui labeled button m-margin-tb-tiny" th:each="tagDto : ${tagDtoList}">
+                <a th:href="'/tag/findArticleByTagId/'+${tagDto.id}" class="ui basic violet button"
+                   th:text="${tagDto.tag_name}"
+                   th:if="${tagDto.id == currentTagId}">思考与感悟</a>
+                <div class="ui basic violet left pointing label" th:text="${tagDto.total_num}"
+                     th:if="${tagDto.id == currentTagId}">24</div>
+                <a th:href="'/tag/findArticleByTagId/'+${tagDto.id}" class="ui basic button" th:text="${tagDto.tag_name}"
+                   th:unless="${tagDto.id == currentTagId}">思考与感悟</a>
+                <div class="ui basic left pointing label" th:text="${tagDto.total_num}"
+                     th:unless="${tagDto.id == currentTagId}">24</div>
             </div>
         </div>
-    </div>
-    <!--帖子列表-->
-    <div class="ui top attached violet segment">
-        <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-            <div class="ui mobile reversed stackable grid">
-                <div class="eleven wide column">
-                    <h3 class="ui header">几米经典语录</h3>
-                    <p class="m-text">1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
-                        2.但是冬天总是会过去，春天总是会来。
-                        3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
-                    </p>
-                    <div class="ui stackable grid">
-                        <div class="eleven wide column">
-                            <div class="ui mini horizontal link list">
-                                <div class="item">
-                                    <img src="https://picsum.photos/id/1033/100/100" alt=""
-                                         class="ui avatar image">
-                                    <div class="content">
-                                        <div class="header"><a href="#">李文博</a></div>
+        <!--中间文章内容-->
+        <div class="ui attached segment">
+            <div class="ui padded vertical segment m-padded-tb-large" th:each="articleDto : ${articleDtoList}">
+                <div class="ui mobile reversed stackable grid">
+                    <div class="eleven wide column">
+                        <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}"><h3
+                                class="ui header" th:text="${articleDto.title}">
+                            几米经典语录</h3>
+                            <p class="m-text" th:text="${articleDto.description}">
+                                1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
+                                2.但是冬天总是会过去，春天总是会来。
+                                3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
+                            </p>
+                        </a>
+                        <div class="ui stackable grid">
+                            <div class="thirteen wide column">
+                                <div class="ui mini horizontal link list">
+                                    <div class="item">
+                                        <img src="https://picsum.photos/id/1033/100/100" alt=""
+                                             class="ui avatar image" th:src="${articleDto.user_avatar}">
+                                        <div class="content">
+                                            <div class="header">
+                                                <a href="#" th:text="${articleDto.author_name}">李文博</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <i class="calendar icon"></i>
+                                        <span th:text="${articleDto.create_time}">2019-10-02</span>
                                     </div>
                                 </div>
-                                <div class="item">
-                                    <i class="calendar icon"></i>2019-10-02
-                                </div>
-                                <div class="item">
-                                    <i class="eye icon"></i>2333
+                                <div class="ui mini horizontal link list">
+                                    <div class="item">
+                                        <i class="eye icon"></i>
+                                        <span th:text="${articleDto.browse_volume}">2333</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="comment alternate outline icon"></i>
+                                        <span th:text="${articleDto.comment}">15</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="thumbs up icon"></i>
+                                        <span th:text="${articleDto.approval_num}">10</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="thumbs down icon"></i>
+                                        <span th:text="${articleDto.trample_num}">1</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="right aligned five wide column">
-                            <a href="#" target="_blank" class="ui violet basic label m-padded-mini">个人感悟</a>
+                            <div class="right aligned three wide column">
+                                <a href="#" target="_blank" class="ui violet basic label m-padded-mini"
+                                   th:text="${articleDto.type_name}">个人感悟</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="five wide column">
-                    <a href="#" target="_blank">
-                        <img src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
-                    </a>
+                    <div class="five wide column">
+                        <a href="#" target="_blank">
+                            <img th:src="${articleDto.first_picture}" src="https://picsum.photos/id/1033/800/450" alt=""
+                                 class="ui rounded image">
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!--底部页码内容-->
-    <div class="ui center aligned bottom attached segment">
-        <div class="ui buttons">
-            <button class="ui basic violet button">上一页</button>
-            <button class="ui basic violet button">1</button>
-            <button class="ui basic violet button">2</button>
-            <button class="ui violet button">3</button>
-            <button class="ui basic violet button">4</button>
-            <button class="ui basic violet button">5</button>
-            <button class="ui basic violet button">下一页</button>
+        <!--底部页码内容-->
+        <div class="ui center aligned bottom attached segment">
+            <div class="ui buttons">
+                <li th:if="${pageInfo.hasPreviousPage}">
+                    <a th:href="'/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                </li>
+                <li th:if="!${pageInfo.hasPreviousPage}">
+                    <button class="ui basic disabled violet button">上一页</button>
+                </li>
+                <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                    <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                </li>
+                <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
+                    th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                    <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                </li>
+                <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
+                    th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                    <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                </li>
+                <li th:if="${pageInfo.hasNextPage}">
+                    <a th:href="'/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                </li>
+                <li th:if="!${pageInfo.hasNextPage}">
+                    <button class="ui basic disabled violet button">下一页</button>
+                </li>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
+<!--登录的模态框-->
+<div class="container">
+    <div class="ui login modal tiny">
+        <div class="header">
+            登录
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>账号：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="login_account_name" name="account_name" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>密码：</label>
+                    <div class="ui input focus">
+                        <input type="password" id="login_account_password" name="account_password" placeholder="请输入密码">
+                    </div>
+                    <div class="ui error message"></div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="login_submit_btn">登录</button>
+                    <button class="ui button red" id="login_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="login_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+<!--注册的模态框-->
+<div class="container">
+    <div class="ui register modal tiny">
+        <div class="header">
+            注册
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>昵称：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_nickname" id="register_nickname" placeholder="请输入昵称">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>账号：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_account_name" id="register_account_name" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>密码：</label>
+                    <div class="ui input focus">
+                        <input type="password" name="register_account_password" id="register_account_password"
+                               placeholder="请输入密码">
+                    </div>
+                    <div class="ui error message"></div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="register_submit_btn">注册</button>
+                    <button class="ui button red" id="register_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="register_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
 <!--底部-->
 <footer class="ui attached segment">
     <div class="ui center aligned container">
@@ -138,11 +270,84 @@
 </footer>
 
 
-<script src="../static/js/jquery.min.js"></script>
-<script src="../static/js/semantic.min.js"></script>
+<script src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
+<script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown();
+    $('.ui.login.violet.button').click(function () {
+        $(".ui.login.modal").modal("setting", "closable", false);
+        $(".ui.login.modal").modal("show");
+    });
+    $('.ui.register.violet.button').click(function () {
+        $(".ui.register.modal").modal("setting", "closable", false);
+        $(".ui.register.modal").modal("show");
+    });
+    $('#login_reset_btn').click(function () {
+        $('#login_account_name').val('');
+        $('#login_account_password').val('');
+        $('#login_msg').html('');
+    });
+    $('#login_submit_btn').click(function () {
+        var account_name = $('#login_account_name').val();
+        var account_password = $('#login_account_password').val();
+        if (account_name == '' || account_password == '') {
+            $('#login_msg').html("请完整填写字段");
+        } else {
+            $.ajax({
+                url: '/login',
+                data: {
+                    account_name: account_name,
+                    account_password: account_password
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        location.reload();
+                    } else {
+                        $('#login_msg').html(data.msg);
+                    }
+                }
+            })
+        }
+    });
+    $('#register_reset_btn').click(function () {
+        $('#register_nickname').val('');
+        $('#register_account_name').val('');
+        $('#register_account_password').val('');
+        $('#register_msg').html('');
+    });
+    $('#register_submit_btn').click(function () {
+        var register_nickname = $('#register_nickname').val();
+        var register_account_name = $('#register_account_name').val();
+        var register_account_password = $('#register_account_password').val();
+        if (register_account_name == '' || register_account_password == '' || register_nickname == '') {
+            $('#register_msg').html("请完整填写字段");
+        } else {
+            $.ajax({
+                url: '/register',
+                data: {
+                    register_nickname: register_nickname,
+                    register_account_name: register_account_name,
+                    register_account_password: register_account_password
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        location.reload();
+                        alert("注册成功,已为您自动登录");
+                    } else {
+                        $('#register_msg').html(data.msg);
+                    }
+                }
+            })
+        }
     });
 </script>
 </body>

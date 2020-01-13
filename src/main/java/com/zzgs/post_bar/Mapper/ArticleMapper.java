@@ -165,4 +165,37 @@ public interface ArticleMapper {
      */
     @Delete("delete from article_tag where article_id = #{article_id}")
     Integer deleteArticleTag(Integer article_id);
+
+    /**
+     * 根据type_id查询该分类下的文章数量
+     * @param type_id
+     * @return
+     */
+    @Select("select count(id) from article where type_id = #{type_id}")
+    Integer findTotalByTypeId(Integer type_id);
+
+    /**
+     * 根据type_id查询该分类下的所有文章
+     * @param type_id
+     * @return
+     */
+    @Select("select * from article where type_id = #{type_id}")
+    List<ArticleDto> findArticleByTypeId(Integer type_id);
+
+    /**
+     * 根据tag_id查询该标签下的所有文章
+     * @param tag_id
+     * @return
+     */
+    @Select("SELECT * FROM article WHERE article.id IN " +
+            "(SELECT article_tag.id FROM article_tag WHERE article_tag.tag_id = #{tag_id})")
+    List<ArticleDto> findArticleByTagId(Integer tag_id);
+
+    /**
+     * 根据tag_id查询该分类下的文章数量
+     * @param tag_id
+     * @return
+     */
+    @Select("select count(id) from article_tag where tag_id = #{tag_id}")
+    Integer findTotalByTagId(Integer tag_id);
 }
