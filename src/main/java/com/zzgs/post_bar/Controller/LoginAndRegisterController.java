@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.TagDto;
+import com.zzgs.post_bar.Dto.TypeDto;
 import com.zzgs.post_bar.Service.ArticleService;
 import com.zzgs.post_bar.Service.TagService;
 import com.zzgs.post_bar.Service.TypeService;
@@ -38,6 +40,8 @@ public class LoginAndRegisterController {
     ArticleService articleService;
     @Autowired
     TypeService typeService;
+    @Autowired
+    TagService tagService;
 
 
 
@@ -51,11 +55,29 @@ public class LoginAndRegisterController {
         }
         //查询帖子
         List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
-
+        //查询所有的分类的前五个
+        List<TypeDto> typeDtoList = typeService.findAll().subList(0,5);
+        model.addAttribute("typeDtoList",typeDtoList);
+        //查询所有的标签的前五个
+        List<TagDto> tagDtoList = tagService.findAll().subList(0,5);
+        //查询点赞数最多的文章的前五个
+        List<ArticleDto> orderArticleDtoList = articleService.findAllOrderByApprovalNum().subList(0,2);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("typeDtoList",typeDtoList);
+        model.addAttribute("tagDtoList",tagDtoList);
+        model.addAttribute("orderArticleDtoList",orderArticleDtoList);
         return "index";
+    }
+
+    @RequestMapping("/about")
+    public String aboutUs(Model model){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        return "about";
     }
 
     @RequestMapping("/login")

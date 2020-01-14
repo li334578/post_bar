@@ -17,6 +17,12 @@ public interface ArticleService {
     List<ArticleDto> findAll(Integer pageNum, Integer pageSize);
 
     /**
+     * 根据点赞数降序查询所有文章
+     * @return
+     */
+    List<ArticleDto> findAllOrderByApprovalNum();
+
+    /**
      * 根据id查询article
      * @param id
      * @return

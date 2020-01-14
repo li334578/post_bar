@@ -1,6 +1,9 @@
 package com.zzgs.post_bar.Service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.UserDto;
+import com.zzgs.post_bar.Mapper.ArticleMapper;
 import com.zzgs.post_bar.Mapper.UserMapper;
 import com.zzgs.post_bar.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    ArticleMapper articleMapper;
 
     /**
      * 查询所有用户方法
@@ -103,5 +109,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer updateUser(Integer id, String avatar, String nick_name, String mailbox, String phone, String intro) {
         return userMapper.updateUser(id,avatar,nick_name,mailbox,phone,intro);
+    }
+
+    /**
+     * 查询所有的作者author (发表过文章的user)
+     *
+     * @return
+     */
+    @Override
+    public List<UserDto> findAllAuthor(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<UserDto> userDtoList = userMapper.findAllAuthor();
+        for (UserDto userDto : userDtoList) {
+            userDto.setArticle_total_num(articleMapper.findAuthorArticleTotalNum(userDto.getId()));
+        }
+        return userDtoList;
     }
 }

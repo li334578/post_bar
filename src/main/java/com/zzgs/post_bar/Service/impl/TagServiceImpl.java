@@ -3,6 +3,7 @@ package com.zzgs.post_bar.Service.impl;
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Dto.TagDto;
 import com.zzgs.post_bar.Mapper.TagMapper;
+import com.zzgs.post_bar.Service.ArticleService;
 import com.zzgs.post_bar.Service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class TagServiceImpl implements TagService {
 
     @Autowired
     private TagMapper tagMapper;
+
+    @Autowired
+    private ArticleService articleService;
     /**
      * 新增一个标签
      * @param tag_name 标签名
@@ -31,7 +35,11 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public List<TagDto> findAll() {
-        return tagMapper.findAll();
+        List<TagDto>tagDtoList =  tagMapper.findAll();
+        for (TagDto tagDto : tagDtoList) {
+            tagDto.setTotal_num(articleService.findTotalByTagId(tagDto.getId()));
+        }
+        return tagDtoList;
     }
     /**
      * 根据标签名查询标签

@@ -1,9 +1,14 @@
 package com.zzgs.post_bar.Controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
+import com.zzgs.post_bar.Bean.Article;
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Bean.Type;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.ArticleDto;
+import com.zzgs.post_bar.Dto.UserDto;
+import com.zzgs.post_bar.Service.ArticleService;
 import com.zzgs.post_bar.Service.TagService;
 import com.zzgs.post_bar.Service.TypeService;
 import com.zzgs.post_bar.Service.UserService;
@@ -17,10 +22,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -42,6 +44,11 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ArticleService articleService;
+
+    @Autowired
+    TypeService typeService;
 
 
 
@@ -108,6 +115,45 @@ public class UserController {
         jsonObject.put("path","../static/images/avatar/"+fileName);
         jsonObject.put("statusCode",200);
         return jsonObject.toString();
+    }
+
+    @RequestMapping("/author")
+    public String author(Model model,
+                         @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                         @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        List<UserDto> userDtoList = userService.findAllAuthor(pageNum, pageSize);
+        PageInfo pageInfo = new PageInfo(userDtoList);
+        model.addAttribute("userDtoList",userDtoList);
+        model.addAttribute("pageInfo",pageInfo);
+        return "author";
+    }
+
+    @RequestMapping("/author_details/{id}")
+    public String authorDetails(Model model,
+                                @PathVariable("id") Integer author_id,
+                                @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                                @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        //根据作者id 查询出作者的信息
+        User author = userService.findById(author_id);
+        //根据作者id查询作者的文章
+        List<ArticleDto> articleDtoList = articleService.findAllArticleByUserId(author_id, pageNum, pageSize);
+        for (ArticleDto articleDto : articleDtoList) {
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+        }
+        PageInfo pageInfo = new PageInfo(articleDtoList);
+        model.addAttribute("articleDtoList",articleDtoList);
+        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("author",author);
+        return "author_details";
     }
 
 

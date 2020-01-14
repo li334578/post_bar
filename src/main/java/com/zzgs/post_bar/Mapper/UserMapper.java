@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.UserDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -81,5 +82,13 @@ public interface UserMapper {
     Integer updateUser(@Param("id") Integer id,@Param("avatar")String avatar,
                        @Param("nick_name")String nick_name,@Param("mailbox")String mailbox,
                        @Param("phone")String phone,@Param("intro")String intro);
+
+    /**
+     * 查询所有作者author (发表过文章的user)
+     * @return
+     */
+    @Select("SELECT * FROM USER WHERE id IN (SELECT user_id FROM article GROUP BY user_id)")
+    List<UserDto> findAllAuthor();
+
 
 }

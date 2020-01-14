@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Service;
 
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.UserDto;
 
 import java.util.List;
 import java.util.Set;
@@ -68,4 +69,10 @@ public interface UserService {
     Integer updateUser(Integer id,String avatar,
                        String nick_name,String mailbox,
                        String phone,String intro);
+
+    /**
+     * 分页查询所有的作者author (发表过文章的user)
+     * @return
+     */
+    List<UserDto> findAllAuthor(Integer pageNum, Integer pageSize);
 }

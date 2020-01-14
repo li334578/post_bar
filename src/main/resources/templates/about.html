@@ -13,11 +13,44 @@
     <div class="ui container">
         <div class="ui menu secondary stackable">
             <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
-            <a href="../templates/index.html" th:href="@{/index}" class="m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
-            <a href="../templates/types.html" class="m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
-            <a href="../templates/tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
-            <a href="../templates/author.html" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
-            <a href="../templates/about.html" class="active m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
+            <a href="../templates/index.html" th:href="@{/index}" class="m-item item m-mobile-hide">
+                <i class="mini home icon"></i>首页</a>
+            <a href="../templates/types.html" th:href="@{/type/types}" class="m-item item m-mobile-hide">
+                <i class="mini microphone icon"></i>话题</a>
+            <a href="../templates/tags.html" th:href="@{/tag/tags}" class="m-item item m-mobile-hide">
+                <i class="mini tags icon"></i>标签</a>
+            <a href="../templates/author.html" th:href="@{/user/author}" class="m-item item m-mobile-hide">
+                <i class="mini user icon"></i>作者</a>
+            <a href="../templates/about.html" th:href="@{/about}" class="active m-item item m-mobile-hide">
+                <i class="mini user secret icon"></i>关于我们</a>
+            <div class="right  item m-mobile-hide">
+                <div class="ui icon input">
+                    <input type="text" placeholder="请输入搜索的内容">
+                    <i class="search link icon"></i>
+                </div>
+            </div>
+            <div class="right m-item m-mobile-hide menu">
+                <div class="item login_btn" th:unless="${user}">
+                    <button class="ui login violet button">登录</button>
+                    &nbsp
+                    <button class="ui register violet button">注册</button>
+                </div>
+                <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
+                    <div class="text">
+                        <span th:if="${user}">
+                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                            <span th:text="${user.nick_name}">李文博</span>
+                        </span>
+                    </div>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a href="/user/userSetting" class="item">个人资料</a>
+                        <a href="/article/article_input" class="item">我要发帖</a>
+                        <a href="/article/myArticle" class="item">我的帖子</a>
+                        <a href="/logout" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i
@@ -65,12 +98,153 @@
     </div>
 </footer>
 
-
+<!--登录的模态框-->
+<div class="container">
+    <div class="ui login modal tiny">
+        <div class="header">
+            登录
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>账号：</label>
+                    <div class="ui input focus">
+                        <input type="text" id="login_account_name" name="account_name" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>密码：</label>
+                    <div class="ui input focus">
+                        <input type="password" id="login_account_password" name="account_password" placeholder="请输入密码">
+                    </div>
+                    <div class="ui error message"></div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="login_submit_btn">登录</button>
+                    <button class="ui button red" id="login_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="login_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
+<!--注册的模态框-->
+<div class="container">
+    <div class="ui register modal tiny">
+        <div class="header">
+            注册
+        </div>
+        <i class="close icon"></i>
+        <div class="content">
+            <div class="ui form segment">
+                <div class="inline field">
+                    <label>昵称：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_nickname" id="register_nickname" placeholder="请输入昵称">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>账号：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_account_name" id="register_account_name" placeholder="请输入账号">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>密码：</label>
+                    <div class="ui input focus">
+                        <input type="password" name="register_account_password" id="register_account_password"
+                               placeholder="请输入密码">
+                    </div>
+                    <div class="ui error message"></div>
+                </div>
+                <div class="actions">
+                    <button class="ui violet button" id="register_submit_btn">注册</button>
+                    <button class="ui button red" id="register_reset_btn">重置</button>
+                </div>
+            </div>
+            <span id="register_msg" style="color: red"></span>
+        </div>
+    </div>
+</div>
 <script src="../static/js/jquery.min.js"></script>
 <script src="../static/js/semantic.min.js"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown();
+    $('.ui.login.violet.button').click(function () {
+        $(".ui.login.modal").modal("setting", "closable", false);
+        $(".ui.login.modal").modal("show");
+    });
+    $('.ui.register.violet.button').click(function () {
+        $(".ui.register.modal").modal("setting", "closable", false);
+        $(".ui.register.modal").modal("show");
+    });
+    $('#login_reset_btn').click(function () {
+        $('#login_account_name').val('');
+        $('#login_account_password').val('');
+        $('#login_msg').html('');
+    });
+    $('#login_submit_btn').click(function () {
+        var account_name = $('#login_account_name').val();
+        var account_password = $('#login_account_password').val();
+        if (account_name == '' || account_password == '') {
+            $('#login_msg').html("请完整填写字段");
+        } else {
+            $.ajax({
+                url: '/login',
+                data: {
+                    account_name: account_name,
+                    account_password: account_password
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        location.reload();
+                    } else {
+                        $('#login_msg').html(data.msg);
+                    }
+                }
+            })
+        }
+    });
+    $('#register_reset_btn').click(function () {
+        $('#register_nickname').val('');
+        $('#register_account_name').val('');
+        $('#register_account_password').val('');
+        $('#register_msg').html('');
+    });
+    $('#register_submit_btn').click(function () {
+        var register_nickname = $('#register_nickname').val();
+        var register_account_name = $('#register_account_name').val();
+        var register_account_password = $('#register_account_password').val();
+        if (register_account_name == '' || register_account_password == '' || register_nickname == '') {
+            $('#register_msg').html("请完整填写字段");
+        } else {
+            $.ajax({
+                url: '/register',
+                data: {
+                    register_nickname: register_nickname,
+                    register_account_name: register_account_name,
+                    register_account_password: register_account_password
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        window.location.replace('/user/userSetting');
+                        alert("注册成功,已为您自动登录");
+                    } else {
+                        $('#register_msg').html(data.msg);
+                    }
+                }
+            })
+        }
     });
     $('.wechat').popup({
         popup: $('.wechat-qr'),

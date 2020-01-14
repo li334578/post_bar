@@ -9,8 +9,11 @@ import com.zzgs.post_bar.Dto.TypeDto;
 import com.zzgs.post_bar.Service.ArticleService;
 import com.zzgs.post_bar.Service.TagService;
 import com.zzgs.post_bar.Service.TypeService;
+import com.zzgs.post_bar.Service.UserService;
 import com.zzgs.post_bar.Utils.DateUtil;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +34,8 @@ public class TagController {
     ArticleService articleService;
     @Autowired
     private TypeService typeService;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/addTag")
     @ResponseBody
@@ -55,15 +60,16 @@ public class TagController {
     public String tags(Model model,
                        @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
                        @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
         List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);
         //查询所有的标签
         List<TagDto> tagDtoList = tagService.findAll();
-        for (TagDto tagDto : tagDtoList) {
-            tagDto.setTotal_num(articleService.findTotalByTagId(tagDto.getId()));
-        }
         model.addAttribute("tagTotalNum",tagDtoList.size());
         model.addAttribute("tagDtoList",tagDtoList);
         return "tags";

@@ -48,6 +48,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * 根据点赞数降序查询所有文章
+     *
+     * @return
+     */
+    @Override
+    public List<ArticleDto> findAllOrderByApprovalNum() {
+        List<ArticleDto> list = articleMapper.findAllOrderByApprovalNum();
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+        }
+        return list;
+    }
+
+    /**
      * 根据id查询article
      * @param id
      * @return

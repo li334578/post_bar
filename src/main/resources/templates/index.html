@@ -19,8 +19,10 @@
                 <i class="mini microphone icon"></i>话题</a>
             <a href="../templates/tags.html" th:href="@{/tag/tags}" class="m-item item m-mobile-hide">
                 <i class="mini tags icon"></i>标签</a>
-            <a href="../templates/author.html" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
-            <a href="../templates/about.html" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
+            <a href="../templates/author.html" th:href="@{/user/author}" class="m-item item m-mobile-hide">
+                <i class="mini user icon"></i>作者</a>
+            <a href="../templates/about.html" th:href="@{/about}" class="m-item item m-mobile-hide">
+                <i class="mini user secret icon"></i>关于我们</a>
             <div class="right  item m-mobile-hide">
                 <div class="ui icon input">
                     <input type="text" placeholder="请输入搜索的内容">
@@ -36,7 +38,8 @@
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
                         <span th:if="${user}">
-                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="${user.user_avatar}"
+                             src="https://picsum.photos/id/1033/100/100">
                             <span th:text="${user.nick_name}">李文博</span>
                         </span>
                     </div>
@@ -67,7 +70,8 @@
                             <h3 class="ui violet header">帖子</h3>
                         </div>
                         <div class="right aligned column">
-                            当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">15</h3>篇
+                            当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
+                            15</h3>篇
                         </div>
                     </div>
                 </div>
@@ -76,8 +80,9 @@
                     <div class="ui padded vertical segment m-padded-tb-large" th:each="articleDto : ${articleDtoList}">
                         <div class="ui mobile reversed stackable grid">
                             <div class="eleven wide column">
-                                <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}"><h3 class="ui header" th:text="${articleDto.title}">
-                                    几米经典语录</h3>
+                                <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}">
+                                    <h3 class="ui header" th:text="${articleDto.title}">
+                                        几米经典语录</h3>
                                     <p class="m-text" th:text="${articleDto.description}">
                                         1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
                                         2.但是冬天总是会过去，春天总是会来。
@@ -92,7 +97,9 @@
                                                      class="ui avatar image" th:src="${articleDto.user_avatar}">
                                                 <div class="content">
                                                     <div class="header">
-                                                        <a href="#" th:text="${articleDto.author_name}">李文博</a>
+                                                        <a href="#"
+                                                           th:href="'/user/author_details/'+${articleDto.user_id}"
+                                                           th:text="${articleDto.author_name}">李文博</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -121,14 +128,16 @@
                                         </div>
                                     </div>
                                     <div class="right aligned three wide column">
-                                        <a href="#" target="_blank" class="ui violet basic label m-padded-mini"
+                                        <a href="#" th:href="'/type/findArticleByTypeId/'+${articleDto.type_id}"
+                                           target="_blank" class="ui violet basic label m-padded-mini"
                                            th:text="${articleDto.type_name}">个人感悟</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img th:src="${articleDto.first_picture}" src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
+                                    <img th:src="${articleDto.first_picture}"
+                                         src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
                                 </a>
                             </div>
                         </div>
@@ -180,21 +189,24 @@
             </div>
             <!--右边的卡片-->
             <div class="five wide column">
-                <!--分类-->
+                <!--话题-->
                 <div class="ui segments">
                     <div class="ui secondary segment">
                         <div class="ui two column grid">
-                            <div class="column"><i class="idea icon"></i>分类</div>
+                            <div class="column"><i class="idea icon"></i>话题</div>
                             <div class="right aligned column">
-                                <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
+                                <a href="#" th:href="@{/type/types}" target="_blank">
+                                    more<i class="angle double right icon"></i></a>
                             </div>
                         </div>
                     </div>
                     <div class="ui violet segment">
-                        <div class="ui fluid vertical menu">
-                            <a href="" class="item">
-                                个人感悟
-                                <div class="ui violet basic left pointing label">23</div>
+                        <div class="ui fluid vertical menu m-margin-tb-tiny" th:each="typeDto : ${typeDtoList}">
+                            <a href="" th:href="'/type/findArticleByTypeId/'+${typeDto.id}" class="item">
+                                <span th:text="${typeDto.type_name}">个人感悟</span>
+                                <div class="ui violet basic left pointing label"
+                                     th:text="${typeDto.total_num}">23
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -205,27 +217,32 @@
                         <div class="ui two column grid">
                             <div class="column"><i class="tags icon"></i>标签</div>
                             <div class="right aligned column">
-                                <a href="#" target="_blank">more <i class="angle double right icon"></i></a>
+                                <a href="#" th:href="@{/tag/tags}" target="_blank">
+                                    more<i class="angle double right icon"></i></a>
                             </div>
                         </div>
                     </div>
                     <div class="ui violet segment">
-                        <a href="#" target="_blank" class="ui violet basic left pointing label m-margin-tb-tiny">Java
-                            <div class="detail">23</div>
-                        </a>
+                        <span th:each="tagDto : ${tagDtoList}">
+                            <a href="#" target="_blank" th:href="'/tag/findArticleByTagId/'+${tagDto.id}"
+                               class="ui violet basic left pointing label m-margin-tb-tiny">
+                                <span th:text="${tagDto.tag_name}">Java</span>
+                                <div class="detail" th:text="${tagDto.total_num}">23</div>
+                            </a>
+                        </span>
                     </div>
                 </div>
                 <!--最新推荐-->
                 <div class="ui segments">
                     <div class="ui secondary segment">
-                        <i class="bookmark icon"></i>最新推荐
+                        <i class="bookmark icon"></i>最多点赞
                     </div>
-                    <div class="ui segment">
-                        <a href="#" target="_blank" class="m-black m-text-thin">用户故事</a>
-                    </div>
-                    <div class="ui segment">
-                        <a href="#" target="_blank" class="m-black m-text-thin">用户故事</a>
-                    </div>
+                    <span th:each="articleDto : ${orderArticleDtoList}">
+                        <div class="ui segment">
+                            <a href="#" th:href="'/article/article_details/'+${articleDto.id}" target="_blank"
+                               class="m-black m-text-thin" th:text="${articleDto.title}">用户故事</a>
+                        </div>
+                    </span>
                 </div>
             </div>
         </div>
@@ -381,7 +398,7 @@
                 async: 'false',
                 success: function (data) {
                     if (data.statusCode == 200) {
-                        location.reload();
+                        window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
                         $('#register_msg').html(data.msg);

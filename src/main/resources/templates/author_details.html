@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:javascript="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../static/css/semantic.min.css}">
-    <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
-    <title>分类</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/semantic.min.css"
+          th:href="@{../../static/css/semantic.min.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/my.css"
+          th:href="@{../../static/css/my.css}">
+    <title>作者详情</title>
 </head>
 <body>
 <!--导航-->
@@ -15,11 +17,11 @@
             <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
             <a href="../templates/index.html" th:href="@{/index}" class="m-item item m-mobile-hide">
                 <i class="mini home icon"></i>首页</a>
-            <a href="../templates/types.html" th:href="@{/type/types}" class="active m-item item m-mobile-hide">
+            <a href="../templates/types.html" th:href="@{/type/types}" class="m-item item m-mobile-hide">
                 <i class="mini microphone icon"></i>话题</a>
             <a href="../templates/tags.html" th:href="@{/tag/tags}" class="m-item item m-mobile-hide">
                 <i class="mini tags icon"></i>标签</a>
-            <a href="../templates/author.html" th:href="@{/user/author}" class="m-item item m-mobile-hide">
+            <a href="../templates/author.html" th:href="@{/user/author}" class="active m-item item m-mobile-hide">
                 <i class="mini user icon"></i>作者</a>
             <a href="../templates/about.html" th:href="@{/about}" class="m-item item m-mobile-hide">
                 <i class="mini user secret icon"></i>关于我们</a>
@@ -60,143 +62,167 @@
 <!--中间内容-->
 <div class="m-container-small m-padded-tb-big">
     <div class="ui container">
-        <!--头部-->
-        <div class="ui top attached segment">
-            <div class="ui middle aligned two column grid">
-                <div class="column">
-                    <h3 class="ui violet header">话题分类</h3>
-                </div>
-                <div class="right aligned column">
-                    共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${typeTotalNum}">15</h3>个
+        <div class="ui stackable grid">
+            <!--左边的卡片-->
+            <div class="five wide column">
+                <div class="no example">
+                    <div class="ui card">
+                        <div class="image dimmable">
+                            <div class="ui dimmer transition hidden">
+                                <div class="content">
+                                    <div class="center">
+                                        <div class="ui inverted button">Add Friend</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <img src="#" th:src="'../'+${author.user_avatar}">
+                        </div>
+                        <div class="content">
+                            <div class="header" th:text="${author.nick_name}">史蒂夫·乔布斯</div>
+                            <div class="description" th:text="${author.user_intro}">
+                                Steve Jobes is a fictional character designed to resemble someone familiar to readers.
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <a javascript:; class="right floated created" th:text="${author.user_mailbox}">email</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!--话题列表-->
-        <div class="ui attached segment m-padded-tb-large">
-            <div class="ui labeled button m-margin-tb-tiny" th:each="typeDto : ${typeDtoList}">
-                <a th:href="'/type/findArticleByTypeId/'+${typeDto.id}" th:if="${typeDto.id == currentTypeId}"
-                   class="ui basic violet button" th:text="${typeDto.type_name}">思考与感悟</a>
-                <div class="ui basic violet left pointing label" th:if="${typeDto.id == currentTypeId}"
-                     th:text="${typeDto.total_num}">24</div>
-                <a th:href="'/type/findArticleByTypeId/'+${typeDto.id}" th:unless="${typeDto.id == currentTypeId}"
-                   class="ui basic button" th:text="${typeDto.type_name}">思考与感悟</a>
-                <div class="ui basic left pointing label" th:unless="${typeDto.id == currentTypeId}"
-                     th:text="${typeDto.total_num}">24</div>
-            </div>
-        </div>
-        <!--中间文章内容-->
-        <div class="ui attached segment">
-            <div class="ui padded vertical segment m-padded-tb-large" th:each="articleDto : ${articleDtoList}">
-                <div class="ui mobile reversed stackable grid">
-                    <div class="eleven wide column">
-                        <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}"><h3
-                                class="ui header" th:text="${articleDto.title}">
-                            几米经典语录</h3>
-                            <p class="m-text" th:text="${articleDto.description}">
-                                1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
-                                2.但是冬天总是会过去，春天总是会来。
-                                3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
-                            </p>
-                        </a>
-                        <div class="ui stackable grid">
-                            <div class="thirteen wide column">
-                                <div class="ui mini horizontal link list">
-                                    <div class="item">
-                                        <img src="https://picsum.photos/id/1033/100/100" alt=""
-                                             class="ui avatar image" th:src="'../'+${articleDto.user_avatar}">
-                                        <div class="content">
-                                            <div class="header">
-                                                <a href="#"
-                                                   th:href="'/user/author_details/'+${articleDto.user_id}"
-                                                   th:text="${articleDto.author_name}">李文博</a>
+            <div class="eleven wide column">
+                <!--文章列表头部-->
+                <div class="ui top attached segment">
+                    <div class="ui middle aligned two column grid">
+                        <div class="column">
+                            <h3 class="ui violet header">帖子</h3>
+                        </div>
+                        <div class="right aligned column">
+                            当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
+                            15</h3>篇
+                        </div>
+                    </div>
+                </div>
+                <!--中间文章内容-->
+                <div class="ui attached segment">
+                    <div class="ui padded vertical segment m-padded-tb-large" th:each="articleDto : ${articleDtoList}">
+                        <div class="ui mobile reversed stackable grid">
+                            <div class="eleven wide column">
+                                <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}">
+                                    <h3 class="ui header" th:text="${articleDto.title}">
+                                        几米经典语录</h3>
+                                    <p class="m-text" th:text="${articleDto.description}">
+                                        1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
+                                        2.但是冬天总是会过去，春天总是会来。
+                                        3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
+                                    </p>
+                                </a>
+                                <div class="ui stackable grid">
+                                    <div class="twelve wide column">
+                                        <div class="ui mini horizontal link list">
+                                            <div class="item">
+                                                <img src="https://picsum.photos/id/1033/100/100" alt=""
+                                                     class="ui avatar image" th:src="'../'+${articleDto.user_avatar}">
+                                                <div class="content">
+                                                    <div class="header">
+                                                        <a href="#" th:text="${articleDto.author_name}">李文博</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <i class="calendar icon"></i>
+                                                <span th:text="${articleDto.create_time}">2019-10-02</span>
+                                            </div>
+                                        </div>
+                                        <div class="ui mini horizontal link list">
+                                            <div class="item">
+                                                <i class="eye icon"></i>
+                                                <span th:text="${articleDto.browse_volume}">2333</span>
+                                            </div>
+                                            <div class="item">
+                                                <i class="comment alternate outline icon"></i>
+                                                <span th:text="${articleDto.comment}">15</span>
+                                            </div>
+                                            <div class="item">
+                                                <i class="thumbs up icon"></i>
+                                                <span th:text="${articleDto.approval_num}">10</span>
+                                            </div>
+                                            <div class="item">
+                                                <i class="thumbs down icon"></i>
+                                                <span th:text="${articleDto.trample_num}">1</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="item">
-                                        <i class="calendar icon"></i>
-                                        <span th:text="${articleDto.create_time}">2019-10-02</span>
-                                    </div>
-                                </div>
-                                <div class="ui mini horizontal link list">
-                                    <div class="item">
-                                        <i class="eye icon"></i>
-                                        <span th:text="${articleDto.browse_volume}">2333</span>
-                                    </div>
-                                    <div class="item">
-                                        <i class="comment alternate outline icon"></i>
-                                        <span th:text="${articleDto.comment}">15</span>
-                                    </div>
-                                    <div class="item">
-                                        <i class="thumbs up icon"></i>
-                                        <span th:text="${articleDto.approval_num}">10</span>
-                                    </div>
-                                    <div class="item">
-                                        <i class="thumbs down icon"></i>
-                                        <span th:text="${articleDto.trample_num}">1</span>
+                                    <div class="right aligned four wide column">
+                                        <a href="#" th:href="'/type/findArticleByTypeId/'+${articleDto.type_id}"
+                                           target="_blank" class="ui violet basic label m-padded-mini"
+                                           th:text="${articleDto.type_name}">个人感悟</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="right aligned three wide column">
-                                <a href="#" th:href="'/type/findArticleByTypeId/'+${articleDto.type_id}"
-                                   target="_blank" class="ui violet basic label m-padded-mini"
-                                   th:text="${articleDto.type_name}">个人感悟</a>
+                            <div class="five wide column">
+                                <a href="#" target="_blank">
+                                    <img th:src="${articleDto.first_picture}"
+                                         src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="five wide column">
-                        <a href="#" target="_blank">
-                            <img th:src="${articleDto.first_picture}" src="https://picsum.photos/id/1033/800/450" alt=""
-                                 class="ui rounded image">
-                        </a>
+                </div>
+                <!--底部页码内容-->
+                <div class="ui center aligned bottom attached segment">
+                    <div class="ui buttons">
+                        <li th:if="${pageInfo.hasPreviousPage}">
+                            <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                        </li>
+                        <li th:if="!${pageInfo.hasPreviousPage}">
+                            <button class="ui basic disabled violet button">上一页</button>
+                        </li>
+                        <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${page}"
+                                   class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                            <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${page}"
+                                   class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                        </li>
+                        <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
+                            th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${page}"
+                                   class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                            <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${page}"
+                                   class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                        </li>
+                        <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
+                            th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${page}"
+                                   class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                            <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${page}"
+                                   class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                        </li>
+                        <li th:if="${pageInfo.hasNextPage}">
+                            <a th:href="'/user/author_details/'+${author.id}+'?pageNum='+${pageInfo.pageNum+1}"
+                               class="ui basic violet button">下一页</a>
+                        </li>
+                        <li th:if="!${pageInfo.hasNextPage}">
+                            <button class="ui basic disabled violet button">下一页</button>
+                        </li>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!--底部页码内容-->
-        <div class="ui center aligned bottom attached segment">
-            <div class="ui buttons">
-                <li th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
-                </li>
-                <li th:if="!${pageInfo.hasPreviousPage}">
-                    <button class="ui basic disabled violet button">上一页</button>
-                </li>
-                <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
-                            <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
-                            </span>
-                    <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
-                            </span>
-                </li>
-                <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
-                    th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
-                            <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
-                            </span>
-                    <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
-                            </span>
-                </li>
-                <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
-                    th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
-                            <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
-                            </span>
-                    <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
-                            </span>
-                </li>
-                <li th:if="${pageInfo.hasNextPage}">
-                    <a th:href="'/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
-                </li>
-                <li th:if="!${pageInfo.hasNextPage}">
-                    <button class="ui basic disabled violet button">下一页</button>
-                </li>
             </div>
         </div>
     </div>
 </div>
+
 <!--登录的模态框-->
 <div class="container">
     <div class="ui login modal tiny">
@@ -266,17 +292,17 @@
         </div>
     </div>
 </div>
+
 <!--底部-->
 <footer class="ui attached segment">
     <div class="ui center aligned container">
         <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
     </div>
 </footer>
-
-
 <script src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
 <script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
 <script>
+    //控制个人资料处的下拉选框
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });

@@ -23,6 +23,13 @@ public interface ArticleMapper {
     List<ArticleDto> findAll();
 
     /**
+     * 根据点赞数降序查找所有文章
+     * @return
+     */
+    @Select("select * from article where published = 1 order by approval_num DESC")
+    List<ArticleDto> findAllOrderByApprovalNum();
+
+    /**
      * 根据id查询article
      * @param id
      * @return
@@ -192,10 +199,18 @@ public interface ArticleMapper {
     List<ArticleDto> findArticleByTagId(Integer tag_id);
 
     /**
-     * 根据tag_id查询该分类下的文章数量
+     * 根据tag_id查询该标签下的文章数量
      * @param tag_id
      * @return
      */
     @Select("select count(id) from article_tag where tag_id = #{tag_id}")
     Integer findTotalByTagId(Integer tag_id);
+
+    /**
+     * 根据用户id查询该用户发表的文章数
+     * @param user_id
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM article WHERE user_id = #{user_id} AND published = 1")
+    Integer findAuthorArticleTotalNum(Integer user_id);
 }

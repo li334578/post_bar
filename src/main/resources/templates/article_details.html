@@ -9,18 +9,21 @@
 </head>
 <body onload="addArticleBrowseVolume()">
 <!--导航-->
-<nav class="ui attached segment m-padded-tb-mini">
+<nav class="ui attached segment m-padded-tb-mini m-shadow-small">
     <div class="ui container">
         <div class="ui menu secondary stackable">
             <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
-            <a href="../templates/index.html" th:href="@{/index}" class="active m-item item m-mobile-hide"><i
-                    class="mini home icon"></i>首页</a>
-            <a href="../templates/types.html" class="m-item item m-mobile-hide"><i
-                    class="mini microphone icon"></i>话题</a>
-            <a href="../templates/tags.html" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
-            <a href="../templates/author.html" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
-            <a href="../templates/about.html" class="m-item item m-mobile-hide"><i class="mini user secret icon"></i>关于我们</a>
-            <div class="right item m-mobile-hide">
+            <a href="../templates/index.html" th:href="@{/index}" class="active m-item item m-mobile-hide">
+                <i class="mini home icon"></i>首页</a>
+            <a href="../templates/types.html" th:href="@{/type/types}" class="m-item item m-mobile-hide">
+                <i class="mini microphone icon"></i>话题</a>
+            <a href="../templates/tags.html" th:href="@{/tag/tags}" class="m-item item m-mobile-hide">
+                <i class="mini tags icon"></i>标签</a>
+            <a href="../templates/author.html" th:href="@{/user/author}" class="m-item item m-mobile-hide">
+                <i class="mini user icon"></i>作者</a>
+            <a href="../templates/about.html" th:href="@{/about}" class="m-item item m-mobile-hide">
+                <i class="mini user secret icon"></i>关于我们</a>
+            <div class="right  item m-mobile-hide">
                 <div class="ui icon input">
                     <input type="text" placeholder="请输入搜索的内容">
                     <i class="search link icon"></i>
@@ -34,8 +37,8 @@
                 </div>
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
-                        <img class="ui avatar image" src="https://picsum.photos/id/1033/100/100">
                         <span th:if="${user}">
+                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
                             <span th:text="${user.nick_name}">李文博</span>
                         </span>
                     </div>
@@ -43,7 +46,7 @@
                     <div class="menu">
                         <a href="/user/userSetting" class="item">个人资料</a>
                         <a href="/article/article_input" class="item">我要发帖</a>
-                        <a href="#" id="myPost" class="item">我的帖子</a>
+                        <a href="/article/myArticle" class="item">我的帖子</a>
                         <a href="/logout" class="item">注销</a>
                     </div>
                 </div>
@@ -63,7 +66,9 @@
                     <img src="https://picsum.photos/id/1033/100/100" alt=""
                          class="ui avatar image">
                     <div class="content">
-                        <div class="header"><a href="#" th:text="${articleDto.author_name}">李文博</a></div>
+                        <div class="header">
+                            <a href="#" th:href="'/user/author_details/'+${articleDto.user_id}"
+                               th:text="${articleDto.author_name}">李文博</a></div>
                     </div>
                 </div>
                 <div class="item">
@@ -91,7 +96,8 @@
         <div class="ui attached padded segment">
             <!--内容-->
             <div class="ui right aligned basic segment">
-                <div class="ui violet label basic" th:text="${articleDto.type_name}">原创</div>
+                <a th:href="'/type/findArticleByTypeId/'+${articleDto.type_id}"
+                   class="ui violet label basic" th:text="${articleDto.type_name}">经典例题</a>
             </div>
             <h2 class="ui center aligned header" th:text="${articleDto.title}">几米经典语录</h2>
             <br>
@@ -131,7 +137,8 @@
         <div class="ui attached positive message">
             <div class="ui middle aligned grid m-padded-lr-responsive">
                 <ui class="list">
-                    <li>作者：<span th:text="${articleDto.author_name}">李文博</span></li>
+                    <li>作者：<a th:href="'/user/author_details/'+${articleDto.user_id}"
+                              th:text="${articleDto.author_name}">李文博</a></li>
                     <li>发表时间：<span th:text="${articleDto.create_time}">2019-10-03</span></li>
                     <li>最后更新时间：<span th:text="${articleDto.update_time}">2019-10-03</span></li>
                 </ui>
@@ -376,7 +383,7 @@
                 async: 'false',
                 success: function (data) {
                     if (data.statusCode == 200) {
-                        location.reload();
+                        window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
                         $('#register_msg').html(data.msg);

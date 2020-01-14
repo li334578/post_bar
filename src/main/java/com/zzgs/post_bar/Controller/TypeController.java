@@ -10,6 +10,8 @@ import com.zzgs.post_bar.Service.TypeService;
 import com.zzgs.post_bar.Service.UserService;
 import com.zzgs.post_bar.Utils.DateUtil;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +56,10 @@ public class TypeController {
     public String types(Model model,
                         @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
                         @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
         //查询帖子
         List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
@@ -61,7 +67,6 @@ public class TypeController {
         model.addAttribute("pageInfo",pageInfo);
         //查询所有的分类
         List<TypeDto> typeDtoList = typeService.findAll();
-        System.out.println(typeDtoList.size());
         model.addAttribute("typeTotalNum",typeDtoList.size());
         model.addAttribute("typeDtoList",typeDtoList);
         return "types";
