@@ -30,17 +30,24 @@ public class TagServiceImpl implements TagService {
         return tagMapper.addTag(tag_name,create_time);
     }
     /**
-     * 查询所有标签
+     * 查询所有标签并按照标签下的文章数量降序排列
      * @return
      */
     @Override
     public List<TagDto> findAll() {
-        List<TagDto>tagDtoList =  tagMapper.findAll();
-        for (TagDto tagDto : tagDtoList) {
-            tagDto.setTotal_num(articleService.findTotalByTagId(tagDto.getId()));
-        }
-        return tagDtoList;
+        return tagMapper.findAll();
     }
+
+    /**
+     * 查询所有标签
+     *
+     * @return
+     */
+    @Override
+    public List<Tag> findAllTag() {
+        return tagMapper.findAllTag();
+    }
+
     /**
      * 根据标签名查询标签
      * @param tag_name 标签名

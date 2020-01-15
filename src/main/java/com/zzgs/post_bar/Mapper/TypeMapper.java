@@ -23,11 +23,20 @@ public interface TypeMapper {
                    @Param("create_time") String create_time);
 
     /**
-     * 查询所有话题
+     * 查询所有话题并按照话题下的文章数量统计降序排列
+     * @return
+     */
+    @Select("SELECT type.id,type.type_name,type.create_time,COUNT(type.id) AS total_num" +
+            " FROM TYPE RIGHT JOIN article ON type.id = article.type_id" +
+            " GROUP BY type.id ORDER BY COUNT(type.id) DESC")
+    List<TypeDto> findAll();
+
+    /**
+     * 查询所有的分类
      * @return
      */
     @Select("select * from type")
-    List<TypeDto> findAll();
+    List<Type> findAllType();
 
     /**
      * 根据话题名查询话题

@@ -61,8 +61,8 @@ public class ArticleController {
         Subject subject = SecurityUtils.getSubject();
         String accountname = subject.getPrincipal().toString();
         User user = userService.findByAccountName(accountname);
-        List<TypeDto> typeList = typeService.findAll();
-        List<TagDto> tagList = tagService.findAll();
+        List<Type> typeList = typeService.findAllType();
+        List<Tag> tagList = tagService.findAllTag();
         model.addAttribute("user",user);
         model.addAttribute("typeList",typeList);
         model.addAttribute("tagList",tagList);

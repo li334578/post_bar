@@ -29,12 +29,18 @@ public interface TagMapper {
                    @Param("create_time") String create_time);
 
     /**
+     * 查询所有标签并按照标签下的文章数量降序排列
+     * @return
+     */
+    @Select("SELECT tag.id,tag.tag_name,tag.create_time, COUNT(tag.id) AS total_num FROM tag RIGHT JOIN article_tag ON tag.id = article_tag.tag_id GROUP BY tag.id ORDER BY COUNT(tag.id) DESC")
+    List<TagDto> findAll();
+
+    /**
      * 查询所有标签
      * @return
      */
     @Select("select * from tag")
-    List<TagDto> findAll();
-
+    List<Tag> findAllTag();
     /**
      * 根据标签名查询标签
      * @param tag_name 标签名

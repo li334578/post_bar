@@ -56,12 +56,21 @@ public class LoginAndRegisterController {
         //查询帖子
         List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
         //查询所有的分类的前五个
-        List<TypeDto> typeDtoList = typeService.findAll().subList(0,5);
+        List<TypeDto> typeDtoList = typeService.findAll();
+        if (typeDtoList.size()>=5){
+            typeDtoList = typeDtoList.subList(0,5);
+        }
         model.addAttribute("typeDtoList",typeDtoList);
         //查询所有的标签的前五个
-        List<TagDto> tagDtoList = tagService.findAll().subList(0,5);
+        List<TagDto> tagDtoList = tagService.findAll();
+        if (tagDtoList.size()>=5){
+            tagDtoList = tagDtoList.subList(0,5);
+        }
         //查询点赞数最多的文章的前五个
-        List<ArticleDto> orderArticleDtoList = articleService.findAllOrderByApprovalNum().subList(0,2);
+        List<ArticleDto> orderArticleDtoList = articleService.findAllOrderByApprovalNum();
+        if (orderArticleDtoList.size()>=5){
+            orderArticleDtoList = orderArticleDtoList.subList(0,5);
+        }
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);

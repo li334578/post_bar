@@ -30,16 +30,22 @@ public class TypeServiceImpl implements TypeService {
         return typeMapper.addType(type_name,create_time);
     }
     /**
-     * 查询所有话题
+     * 查询所有话题并按照话题下的文章数量统计降序排列
      * @return
      */
     @Override
     public List<TypeDto> findAll() {
-        List<TypeDto> typeDtoList = typeMapper.findAll();
-        for (TypeDto typeDto : typeDtoList) {
-            typeDto.setTotal_num(articleMapper.findTotalByTypeId(typeDto.getId()));
-        }
-        return typeDtoList;
+        return typeMapper.findAll();
+    }
+
+    /**
+     * 查询所有分类
+     *
+     * @return
+     */
+    @Override
+    public List<Type> findAllType() {
+        return typeMapper.findAllType();
     }
 
     /**

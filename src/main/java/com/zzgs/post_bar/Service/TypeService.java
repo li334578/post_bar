@@ -17,10 +17,16 @@ public interface TypeService {
     Integer addTag(String type_name, String create_time);
 
     /**
-     * 查询所有话题
+     * 查询所有话题并按照话题下的文章数量统计降序排列
      * @return
      */
     List<TypeDto> findAll();
+
+    /**
+     * 查询所有分类
+     * @return
+     */
+    List<Type> findAllType();
 
     /**
      * 根据话题名查询话题

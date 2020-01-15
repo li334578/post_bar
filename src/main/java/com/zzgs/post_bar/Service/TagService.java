@@ -17,10 +17,16 @@ public interface TagService {
     Integer addTag(String tag_name, String create_time);
 
     /**
-     * 查询所有标签
+     * 查询所有标签并按照标签下的文章数量降序排列
      * @return
      */
     List<TagDto> findAll();
+
+    /**
+     * 查询所有标签
+     * @return
+     */
+    List<Tag> findAllTag();
 
     /**
      * 根据标签名查询标签
