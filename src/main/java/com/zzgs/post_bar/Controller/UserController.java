@@ -97,7 +97,6 @@ public class UserController {
     @ResponseBody
     public String uploadImages(@RequestParam("file") MultipartFile file)throws IOException{
         JSONObject jsonObject = new JSONObject();
-        System.out.println("upload方法执行了.....");
         String fileName = System.currentTimeMillis()+file.getOriginalFilename();
         String url=System.getProperty("user.dir")+"\\src\\main\\resources\\static\\images\\avatar";
         String url_target= System.getProperty("user.dir")+"\\target\\classes\\static\\images\\avatar";

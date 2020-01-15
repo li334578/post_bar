@@ -1,9 +1,13 @@
 package com.zzgs.post_bar.Service.impl;
 
+import com.zzgs.post_bar.Bean.Comment;
+import com.zzgs.post_bar.Dto.CommentDto;
 import com.zzgs.post_bar.Mapper.CommentMapper;
 import com.zzgs.post_bar.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -36,5 +40,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Integer findCommentTotalByArticleId(Integer article_id) {
         return commentMapper.findCommentTotalByArticleId(article_id);
+    }
+
+    /**
+     * 根据文章id查询文章的评论
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public List<CommentDto> findAllCommentByArticleId(Integer article_id) {
+        return commentMapper.findAllCommentByArticleId(article_id);
     }
 }

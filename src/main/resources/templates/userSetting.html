@@ -102,9 +102,15 @@
                         </div>
                         <input type="text" id="mailbox" th:value="${user.user_mailbox}" disabled="disabled"
                                placeholder="请输入你的邮箱">
-                        <button class="ui violet right labeled icon button toggle updateBtn">
+                        <button th:unless="${user.user_mailbox}"
+                                class="ui violet right labeled icon button toggle updateBtn">
                             <i class="edit icon"></i>
                             Edit
+                        </button>
+                        <button th:if="${user.user_mailbox}"
+                                class="ui violet right labeled icon button toggle">
+                            <i class="save icon"></i>
+                            Save
                         </button>
                     </div>
                 </div>
@@ -117,9 +123,15 @@
                         </div>
                         <input type="text" id="phone" th:value="${user.user_phone}" disabled="disabled"
                                placeholder="请输入你的手机号">
-                        <button class="ui violet right labeled icon button toggle updateBtn">
+                        <button th:unless="${user.user_phone}"
+                                class="ui violet right labeled icon button toggle updateBtn">
                             <i class="edit icon"></i>
                             Edit
+                        </button>
+                        <button th:if="${user.user_phone}"
+                                class="ui violet right labeled icon button toggle">
+                            <i class="save icon"></i>
+                            Save
                         </button>
                     </div>
                 </div>
@@ -138,9 +150,10 @@
                         </button>
                     </div>
                 </div>
+                <div class="ui error message" style="display: none;"></div>
                 <div class="ui bottom attached segment">
                     <div class="ui fluid" style="text-align: center">
-                        <button class="ui negative button">返回上一页</button>
+                        <button class="ui negative button" onclick="window.history.go(-1)">返回上一页</button>
                         <button class="ui violet button" onclick="saveUpdate()">提交修改</button>
                     </div>
                 </div>
@@ -197,35 +210,78 @@
     }
 
     function saveUpdate() {
+        var errmsg = $('.ui.error.message');
+        var flag = true;
+        //清空一下提示信息区域的内容
+        errmsg.html('');
         var avatar = $('#avatar').attr('src');
         var nick_name = $('#nick_name').val();
         var mailbox = $('#mailbox').val();
         var phone = $('#phone').val();
         var intro = $('#intro').val();
         //进行格式校验
-        $.ajax({
-            url: '/user/updateUser',
-            data: {
-                avatar: avatar,
-                nick_name: nick_name,
-                mailbox: mailbox,
-                phone: phone,
-                intro: intro
-            },
-            type: 'post',
-            dataType: 'json',
-            async: 'false',
-            success: function (data) {
-                if (data.statusCode == 200) {
-                    //修改成功
-                    location.reload();
-                    alert(data.msg);
-                } else {
-                    //修改失败
-                    alert(data.msg);
-                }
+        if (!phone){
+            errmsg.append("<p>● 手机号不能为空</p>");
+            flag = false;
+        }else {
+            var phone_reg = /^(13[0-9]|14[5|7]|15[0|1|2|3|4|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+            if(phone_reg.test(phone)){
+                //验证通过
+            }else {
+                //验证不通过
+                errmsg.append("<p>● 手机号格式不正确</p>");
+                flag = false;
             }
-        });
+        }
+        if (!nick_name){
+            errmsg.append("<p>● 昵称不能为空</p>");
+            flag = false;
+        }
+        if(!mailbox){
+            errmsg.append("<p>● 邮箱不能为空</p>");
+            flag = false;
+        }else {
+            var mailbox_reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+            if (mailbox_reg.test(mailbox)){
+                //邮箱格式正确
+            }else {
+                //邮箱格式不正确
+                errmsg.append("<p>● 邮箱格式不正确</p>");
+                flag = false;
+            }
+        }
+        if (!intro){
+            errmsg.append("<p>● 简介不能为空</p>");
+            flag = false;
+        }
+        if (flag){
+            $.ajax({
+                url: '/user/updateUser',
+                data: {
+                    avatar: avatar,
+                    nick_name: nick_name,
+                    mailbox: mailbox,
+                    phone: phone,
+                    intro: intro
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    if (data.statusCode == 200) {
+                        //修改成功
+                        location.reload();
+                        errmsg.append("<p>● "+data.msg+"</p>");
+                    } else {
+                        //修改失败
+                        errmsg.append("<p>● "+data.msg+"</p>");
+                    }
+                    errmsg.css('display','block');
+                }
+            });
+        }else {
+            errmsg.css('display','block');
+        }
     }
 
     $(function () {

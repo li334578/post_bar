@@ -141,6 +141,40 @@ public class LoginAndRegisterController {
         return jsonObject.toString();
     }
 
+    @RequestMapping("/findAccountName")
+    @ResponseBody
+    public String findAccountName(@Param("account_name")String account_name){
+        JSONObject jsonObject = new JSONObject();
+        //查询用户名是否存在
+        User user = userService.findByAccountName(account_name);
+        if (user == null) {
+            //用户不存在
+            jsonObject.put("statusCode",200);
+        }else {
+            //用户名存在
+            jsonObject.put("statusCode",500);
+            jsonObject.put("msg","账户名已存在");
+        }
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/findNickname")
+    @ResponseBody
+    public String findNickname(@Param("nickname")String nickname){
+        JSONObject jsonObject = new JSONObject();
+        //查询用户名是否存在
+        User user = userService.findByNickName(nickname);
+        if (user == null) {
+            //用户不存在
+            jsonObject.put("statusCode",200);
+        }else {
+            //用户名存在
+            jsonObject.put("statusCode",500);
+            jsonObject.put("msg","昵称已存在");
+        }
+        return jsonObject.toString();
+    }
+
     @RequestMapping("/logout")
     public String logout(Model model){
         model.addAttribute("nickname","");

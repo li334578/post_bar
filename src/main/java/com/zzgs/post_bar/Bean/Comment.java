@@ -24,7 +24,7 @@ public class Comment {
     private Integer id;
     private Integer user_id;
     private Integer article_id;
-    private Date create_time;
+    private String create_time;
     private String content;
     private Integer approval_num;
     private Integer trample_num;

@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.Comment;
+import com.zzgs.post_bar.Dto.CommentDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface CommentMapper {
      * @return
      */
     @Select("select * from comment where article_id = #{article_id}")
-    List<Comment> findByArticleId(Integer article_id);
+    List<CommentDto> findAllCommentByArticleId(Integer article_id);
 
     /**
      * 根据文章id查询该文章的评论数

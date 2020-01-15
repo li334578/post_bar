@@ -38,7 +38,8 @@
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
                         <span th:if="${user}">
-                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}"
+                             src="https://picsum.photos/id/1033/100/100">
                             <span th:text="${user.nick_name}">李文博</span>
                         </span>
                     </div>
@@ -117,20 +118,20 @@
         <div class="ui attached segment" style="text-align: center">
             <label>点赞</label>
             <a href="javascript:publishAttitude(1)" id="thumbs_up" th:unless="${attitude}">
-                <i id = "icon_up" class="thumbs up outline icon large"></i>
+                <i id="icon_up" class="thumbs up outline icon large"></i>
             </a>
             <a href="javascript:publishAttitude(1)" th:id="thumbs_up" th:if="${attitude}">
-                <i th:id = "icon_up" class="thumbs up icon large" th:if="${attitude.attitude==1}"></i>
-                <i th:id = "icon_up" class="thumbs up outline icon large" th:unless="${attitude.attitude==1}"></i>
+                <i th:id="icon_up" class="thumbs up icon large" th:if="${attitude.attitude==1}"></i>
+                <i th:id="icon_up" class="thumbs up outline icon large" th:unless="${attitude.attitude==1}"></i>
             </a>
             <label th:text="${articleDto.approval_num}" id="approval_num_bottom">2333</label>
             <label>点踩</label>
             <a href="javascript:publishAttitude(0)" id="thumbs_down" th:unless="${attitude}">
-                <i id = "icon_down" class="thumbs down outline icon large"></i>
+                <i id="icon_down" class="thumbs down outline icon large"></i>
             </a>
             <a href="javascript:publishAttitude(0)" th:id="thumbs_down" th:if="${attitude}">
-                <i th:id = "icon_down" class="thumbs down icon large" th:if="${attitude.attitude==0}"></i>
-                <i th:id = "icon_down" class="thumbs down outline icon large" th:unless="${attitude.attitude==0}"></i>
+                <i th:id="icon_down" class="thumbs down icon large" th:if="${attitude.attitude==0}"></i>
+                <i th:id="icon_down" class="thumbs down outline icon large" th:unless="${attitude.attitude==0}"></i>
             </a>
             <label th:text="${articleDto.trample_num}" id="trample_num_bottom">2333</label>
         </div>
@@ -147,39 +148,27 @@
         <div class="ui bottom attached segment">
             <!--留言区域-->
             <div class="ui violet segment">
-                <div class="ui threaded comments">
-                    <h3 class="ui dividing header">Comments</h3>
+                <h3 class="ui dividing header">评论</h3>
+                <div class="ui threaded comments" th:each="commentDto : ${commentDtoList}">
                     <div class="comment">
                         <a class="avatar">
-                            <img src="https://picsum.photos/id/1033/100/100">
+                            <img th:src="'../'+${commentDto.user_avatar}"
+                                 src="https://picsum.photos/id/1033/100/100">
                         </a>
                         <div class="content">
-                            <a class="author">Matt</a>
+                            <a class="author" th:text="${commentDto.user_name}">Elliot Fu</a>
                             <div class="metadata">
-                                <span class="date">Today at 5:42PM</span>
+                                <span class="date" th:text="${commentDto.create_time}">Yesterday at 12:30AM</span>
                             </div>
                             <div class="text">
-                                How artistic!
+                                <p th:text="${commentDto.content}">
+                                    This has been very useful for my research. Thanks as well!
+                                </p>
                             </div>
                             <div class="actions">
-                                <a class="reply">回复</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <a class="avatar">
-                            <img src="https://picsum.photos/id/1033/100/100">
-                        </a>
-                        <div class="content">
-                            <a class="author">Elliot Fu</a>
-                            <div class="metadata">
-                                <span class="date">Yesterday at 12:30AM</span>
-                            </div>
-                            <div class="text">
-                                <p>This has been very useful for my research. Thanks as well!</p>
-                            </div>
-                            <div class="actions">
-                                <a class="reply">回复</a>
+                                <input type="hidden" th:value="${commentDto.user_name}" class="comment_nickname">
+                                <input type="hidden" th:value="${commentDto.id}" class="comment_id">
+                                <a class="reply" onclick="changefunction(this)">回复</a>
                             </div>
                         </div>
                         <div class="comments">
@@ -202,23 +191,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="comment">
-                        <a class="avatar">
-                            <img src="https://picsum.photos/id/1033/100/100">
-                        </a>
-                        <div class="content">
-                            <a class="author">Joe Henderson</a>
-                            <div class="metadata">
-                                <span class="date">5 days ago</span>
-                            </div>
-                            <div class="text">
-                                Dude, this is awesome. Thanks so much
-                            </div>
-                            <div class="actions">
-                                <a class="reply">回复</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!--留言输入区域-->
@@ -227,7 +199,9 @@
                     <textarea name="content" id="comment_content" placeholder="请输入评论信息..."></textarea>
                 </div>
                 <div class="field  m-margin-bottom-small m-mobile-wide">
-                    <button class="ui violet button m-mobile-wide" onclick="commitComment(0)" ><i class="edit icon"></i>发布</button>
+                    <button class="ui violet button m-mobile-wide" id="commitCommentBtn" onclick="commitComment(0)">
+                        <i class="edit icon"></i>发布
+                    </button>
                 </div>
             </div>
         </div>
@@ -261,7 +235,7 @@
                     <button class="ui button red" id="login_reset_btn">重置</button>
                 </div>
             </div>
-            <span id="login_msg" style="color: red"></span>
+            <div class="ui error message login" style="display: none;"></div>
         </div>
     </div>
 </div>
@@ -299,7 +273,7 @@
                     <button class="ui button red" id="register_reset_btn">重置</button>
                 </div>
             </div>
-            <span id="register_msg" style="color: red"></span>
+            <div class="ui error message register" style="display: none;"></div>
         </div>
     </div>
 </div>
@@ -331,14 +305,23 @@
     $('#login_reset_btn').click(function () {
         $('#login_account_name').val('');
         $('#login_account_password').val('');
-        $('#login_msg').html('');
+        $('.ui.error.message.login').html('');
     });
     $('#login_submit_btn').click(function () {
+        //清空提示信息
+        $('.ui.error.message.register').html("");
+        var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
-        if (account_name == '' || account_password == '') {
-            $('#login_msg').html("请完整填写字段");
-        } else {
+        if (account_name == ''){
+            $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
+            flag = false;
+        }
+        if (account_password == ''){
+            $('.ui.error.message.login').append("<p>● 请填写密码</p>");
+            flag = false;
+        }
+        if (flag) {
             $.ajax({
                 url: '/login',
                 data: {
@@ -352,25 +335,86 @@
                     if (data.statusCode == 200) {
                         location.reload();
                     } else {
-                        $('#login_msg').html(data.msg);
+                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
                     }
                 }
-            })
+            });
+        } else {
+            $('.ui.error.message.login').css('display','block');
         }
     });
     $('#register_reset_btn').click(function () {
         $('#register_nickname').val('');
         $('#register_account_name').val('');
         $('#register_account_password').val('');
-        $('#register_msg').html('');
+        $('.ui.error.message.register').html('');
     });
     $('#register_submit_btn').click(function () {
+        //清空提示信息
+        $('.ui.error.message.register').html("");
+        var flag = true;
         var register_nickname = $('#register_nickname').val();
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
-        if (register_account_name == '' || register_account_password == '' || register_nickname == '') {
-            $('#register_msg').html("请完整填写字段");
-        } else {
+        if (register_nickname == ''){
+            $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
+            flag = false;
+        }else {
+            //查询该昵称是否存在
+            $.ajax({
+                url:'/findNickname',
+                data: {
+                    nickname: register_nickname
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success:function (data) {
+                    if (data.statusCode==200){
+                        //昵称可用
+                    }else {
+                        //昵称不可用
+                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        flag = false;
+                    }
+                }
+            });
+        }
+        if (register_account_name == ''){
+            $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
+            flag = false;
+        }else {
+            //查询账户名是否存在
+            $.ajax({
+                url:'/findAccountName',
+                data: {
+                    account_name: register_account_name
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success:function (data) {
+                    if (data.statusCode==200){
+                        //账户名可用
+                    }else {
+                        //账户名不可用
+                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        flag = false;
+                    }
+                }
+            });
+        }
+        if (register_account_password == ''){
+            $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
+            flag = false;
+        }else {
+            //密码长度应在4-16位之间
+            if (register_account_password.length<=4||register_account_password.length>=16){
+                $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
+                flag = false;
+            }
+        }
+        if (flag) {
             $.ajax({
                 url: '/register',
                 data: {
@@ -386,10 +430,12 @@
                         window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
-                        $('#register_msg').html(data.msg);
+                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
                     }
                 }
-            })
+            });
+        } else {
+            $('.ui.error.message.register').css('display','block');
         }
     });
     // $(function () {
@@ -400,105 +446,123 @@
         var browse_volume = $('#browse_volume').html();
         var article_id = [[${articleDto.id}]];
         $.ajax({
-            url:'/article/addArticleBrowseVolume',
+            url: '/article/addArticleBrowseVolume',
             data: {
-                article_id:article_id
-            },
-            type: 'post',
-            dataType: 'json',
-            async: 'false',
-            success:function (data) {
-                if (data.statusCode==200){
-                    $('#browse_volume').html(Number(browse_volume)+1);
-                }else {
-                    console.log("服务器错误")
-                }
-            }
-        });
-    }
-    function publishAttitude(flag) {
-        //更新点赞/点踩数
-        var article_id = [[${articleDto.id}]];
-        //查询当前用户是否登录  登录了判断是否对该文章发表过态度
-        $.ajax({
-            url:'/article/findArticleAttitude',
-            type: 'post',
-            async: 'false',
-            data:{
-                article_id:article_id
-            },
-            dataType:'json',
-            success: function (data) {
-                if (data.statusCode==200){
-                    //可以发表态度
-                    if (flag==1){
-                        //点赞
-                        $("#icon_up").removeClass("outline");
-                        //更新页面的点赞数
-                        var approval_num_top = $('#approval_num_top').html();
-                        var approval_num_bottom = $('#approval_num_bottom').html();
-                        $('#approval_num_top').html(Number(approval_num_top)+1);
-                        $('#approval_num_bottom').html(Number(approval_num_bottom)+1);
-                    }else {
-                        $("#icon_down").removeClass("outline");
-                        //更新页面的点踩数
-                        var trample_num_top = $('#trample_num_top').html();
-                        var trample_num_bottom = $('#trample_num_bottom').html();
-                        $('#trample_num_top').html(Number(trample_num_top)+1);
-                        $('#trample_num_bottom').html(Number(trample_num_bottom)+1);
-                    }
-                    // console.log(flag);
-                    $.ajax({
-                        url:'/article/addArticleAttitude',
-                        data:{
-                            flag:flag,
-                            article_id:article_id
-                        },
-                        type: 'post',
-                        dataType: 'json',
-                        async: 'false',
-                        success:function (data) {
-                            if (data.statusCode==200){
-                                console.log("发表态度成功");
-                            }else {
-                                console.log("服务器出现异常");
-                            }
-                        }
-                    });
-                }else {
-                    alert(data.msg);
-                }
-            }
-        });
-
-    }
-    function commitComment(parent_comment_id) {
-        var article_id = [[${articleDto.id}]];
-        var content = $("#comment_content").val();
-        console.log(article_id);
-        console.log(content);
-        console.log(parent_comment_id);
-        $.ajax({
-            url:'/addComment',
-            data:{
-                article_id:article_id,
-                content:content,
-                parent_comment_id:parent_comment_id
+                article_id: article_id
             },
             type: 'post',
             dataType: 'json',
             async: 'false',
             success: function (data) {
                 if (data.statusCode == 200) {
-                    //评论成功
-                    alert(data.msg);
+                    $('#browse_volume').html(Number(browse_volume) + 1);
                 } else {
-                    //评论失败
-                    alert(data.msg);
+                    console.log("服务器错误")
                 }
-                // location.reload();
             }
         });
+    }
+
+    function publishAttitude(flag) {
+        //更新点赞/点踩数
+        var article_id = [[${articleDto.id}]];
+        //查询当前用户是否登录  登录了判断是否对该文章发表过态度
+        $.ajax({
+            url: '/article/findArticleAttitude',
+            type: 'post',
+            async: 'false',
+            data: {
+                article_id: article_id
+            },
+            dataType: 'json',
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    //可以发表态度
+                    if (flag == 1) {
+                        //点赞
+                        $("#icon_up").removeClass("outline");
+                        //更新页面的点赞数
+                        var approval_num_top = $('#approval_num_top').html();
+                        var approval_num_bottom = $('#approval_num_bottom').html();
+                        $('#approval_num_top').html(Number(approval_num_top) + 1);
+                        $('#approval_num_bottom').html(Number(approval_num_bottom) + 1);
+                    } else {
+                        $("#icon_down").removeClass("outline");
+                        //更新页面的点踩数
+                        var trample_num_top = $('#trample_num_top').html();
+                        var trample_num_bottom = $('#trample_num_bottom').html();
+                        $('#trample_num_top').html(Number(trample_num_top) + 1);
+                        $('#trample_num_bottom').html(Number(trample_num_bottom) + 1);
+                    }
+                    // console.log(flag);
+                    $.ajax({
+                        url: '/article/addArticleAttitude',
+                        data: {
+                            flag: flag,
+                            article_id: article_id
+                        },
+                        type: 'post',
+                        dataType: 'json',
+                        async: 'false',
+                        success: function (data) {
+                            if (data.statusCode == 200) {
+                                console.log("发表态度成功");
+                            } else {
+                                console.log("服务器出现异常");
+                            }
+                        }
+                    });
+                } else {
+                    alert(data.msg);
+                }
+            }
+        });
+
+    }
+
+    function commitComment(parent_comment_id) {
+        //判断用户是否登录
+        var article_id = [[${articleDto.id}]];
+        var content = $("#comment_content").val();
+        if([[${articleDto.id}]]){
+            alert("请登录后再进行评论");
+        }else {
+            var article_id = [[${articleDto.id}]];
+            var content = $("#comment_content").val();
+            console.log(article_id);
+            console.log(content);
+            console.log(parent_comment_id);
+            $.ajax({
+                url: '/addComment',
+                data: {
+                    article_id: article_id,
+                    content: content,
+                    parent_comment_id: parent_comment_id
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success: function (data) {
+                    console.log("1234");
+                    if (data.statusCode == 200) {
+                        //评论成功
+                        alert(data.msg);
+                    } else {
+                        //评论失败
+                        console.log(data.msg);
+                        alert(data.msg);
+                    }
+                    // location.reload();
+                }
+            });
+        }
+    }
+    function changefunction(obj) {
+        var comment_id = $(obj).prev().val();
+        var comment_nickname = $(obj).prev().prev().val();
+        console.log(comment_nickname);
+        $("#comment_content").val("@"+comment_nickname+": ");
+        $('#commitCommentBtn').attr("onclick",'commitComment('+comment_id+')');
     }
 </script>
 </body>

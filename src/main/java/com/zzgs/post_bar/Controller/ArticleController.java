@@ -4,14 +4,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.zzgs.post_bar.Bean.*;
 import com.zzgs.post_bar.Dto.ArticleDto;
+import com.zzgs.post_bar.Dto.CommentDto;
 import com.zzgs.post_bar.Dto.TagDto;
 import com.zzgs.post_bar.Dto.TypeDto;
-import com.zzgs.post_bar.Service.ArticleService;
-import com.zzgs.post_bar.Service.TagService;
-import com.zzgs.post_bar.Service.TypeService;
-import com.zzgs.post_bar.Service.UserService;
+import com.zzgs.post_bar.Service.*;
 import com.zzgs.post_bar.Utils.DateUtil;
 import com.zzgs.post_bar.Utils.MarkdownUtil;
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -22,7 +21,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -46,6 +48,9 @@ public class ArticleController {
     @Autowired
     TypeService typeService;
 
+    @Autowired
+    CommentService commentService;
+
     /**
      * 跳转到article_input页面
      * @param model 页面模型
@@ -62,6 +67,29 @@ public class ArticleController {
         model.addAttribute("typeList",typeList);
         model.addAttribute("tagList",tagList);
         return "article_input";
+    }
+
+    @RequestMapping("/upload")
+    @ResponseBody
+    public String uploadImages(@RequestParam("file") MultipartFile file)throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        String fileName = System.currentTimeMillis()+file.getOriginalFilename();
+        String url=System.getProperty("user.dir")+"\\src\\main\\resources\\static\\images\\cover";
+        String url_target= System.getProperty("user.dir")+"\\target\\classes\\static\\images\\cover";
+
+        try {
+            file.transferTo(new File(url,fileName));
+            File file_resources = new File(url+"\\"+fileName);
+            File file_target = new File(url_target+"\\"+fileName);
+            FileUtils.copyFile(file_resources,file_target);
+        } catch (IOException e) {
+            //文件保存出现异常
+            jsonObject.put("msg","保存图片失败");
+            e.printStackTrace();
+        }
+        jsonObject.put("path","../static/images/cover/"+fileName);
+        jsonObject.put("statusCode",200);
+        return jsonObject.toString();
     }
 
     /**
@@ -87,8 +115,15 @@ public class ArticleController {
         articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
         articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         List<Tag> tagList = tagService.findByArticleId(id);
+        //查询该文章的所有评论信息
+        List<CommentDto> commentDtoList = commentService.findAllCommentByArticleId(id);
+        for (CommentDto commentDto : commentDtoList) {
+            commentDto.setUser_name(userService.findById(commentDto.getUser_id()).getNick_name());
+            commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
+        }
         model.addAttribute("articleDto",articleDto);
         model.addAttribute("tagList",tagList);
+        model.addAttribute("commentDtoList",commentDtoList);
         return "article_details";
     }
 

@@ -161,7 +161,7 @@
                             </div>
                             <div class="five wide column">
                                 <a href="#" target="_blank">
-                                    <img th:src="${articleDto.first_picture}"
+                                    <img th:src="'../'+${articleDto.first_picture}" width="150px" height="100px"
                                          src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
                                 </a>
                             </div>
@@ -250,7 +250,7 @@
                     <button class="ui button red" id="login_reset_btn">重置</button>
                 </div>
             </div>
-            <span id="login_msg" style="color: red"></span>
+            <div class="ui error message login" style="display: none;"></div>
         </div>
     </div>
 </div>
@@ -288,7 +288,7 @@
                     <button class="ui button red" id="register_reset_btn">重置</button>
                 </div>
             </div>
-            <span id="register_msg" style="color: red"></span>
+            <div class="ui error message register" style="display: none;"></div>
         </div>
     </div>
 </div>
@@ -318,14 +318,23 @@
     $('#login_reset_btn').click(function () {
         $('#login_account_name').val('');
         $('#login_account_password').val('');
-        $('#login_msg').html('');
+        $('.ui.error.message.login').html('');
     });
     $('#login_submit_btn').click(function () {
+        //清空提示信息
+        $('.ui.error.message.register').html("");
+        var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
-        if (account_name == '' || account_password == '') {
-            $('#login_msg').html("请完整填写字段");
-        } else {
+        if (account_name == ''){
+            $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
+            flag = false;
+        }
+        if (account_password == ''){
+            $('.ui.error.message.login').append("<p>● 请填写密码</p>");
+            flag = false;
+        }
+        if (flag) {
             $.ajax({
                 url: '/login',
                 data: {
@@ -339,25 +348,86 @@
                     if (data.statusCode == 200) {
                         location.reload();
                     } else {
-                        $('#login_msg').html(data.msg);
+                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
                     }
                 }
-            })
+            });
+        } else {
+            $('.ui.error.message.login').css('display','block');
         }
     });
     $('#register_reset_btn').click(function () {
         $('#register_nickname').val('');
         $('#register_account_name').val('');
         $('#register_account_password').val('');
-        $('#register_msg').html('');
+        $('.ui.error.message.register').html('');
     });
     $('#register_submit_btn').click(function () {
+        //清空提示信息
+        $('.ui.error.message.register').html("");
+        var flag = true;
         var register_nickname = $('#register_nickname').val();
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
-        if (register_account_name == '' || register_account_password == '' || register_nickname == '') {
-            $('#register_msg').html("请完整填写字段");
-        } else {
+        if (register_nickname == ''){
+            $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
+            flag = false;
+        }else {
+            //查询该昵称是否存在
+            $.ajax({
+                url:'/findNickname',
+                data: {
+                    nickname: register_nickname
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success:function (data) {
+                    if (data.statusCode==200){
+                        //昵称可用
+                    }else {
+                        //昵称不可用
+                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        flag = false;
+                    }
+                }
+            });
+        }
+        if (register_account_name == ''){
+            $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
+            flag = false;
+        }else {
+            //查询账户名是否存在
+            $.ajax({
+                url:'/findAccountName',
+                data: {
+                    account_name: register_account_name
+                },
+                type: 'post',
+                dataType: 'json',
+                async: 'false',
+                success:function (data) {
+                    if (data.statusCode==200){
+                        //账户名可用
+                    }else {
+                        //账户名不可用
+                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        flag = false;
+                    }
+                }
+            });
+        }
+        if (register_account_password == ''){
+            $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
+            flag = false;
+        }else {
+            //密码长度应在4-16位之间
+            if (register_account_password.length<=4||register_account_password.length>=16){
+                $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
+                flag = false;
+            }
+        }
+        if (flag) {
             $.ajax({
                 url: '/register',
                 data: {
@@ -373,10 +443,12 @@
                         window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
-                        $('#register_msg').html(data.msg);
+                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
                     }
                 }
-            })
+            });
+        } else {
+            $('.ui.error.message.register').css('display','block');
         }
     });
 </script>

@@ -32,7 +32,7 @@ public class CommentController {
         JSONObject jsonObject = new JSONObject();
         if (subject.getPrincipal() == null) {
             //用户没有登录
-            jsonObject.put("statusCode",420);
+            jsonObject.put("statusCode",407);
             jsonObject.put("msg","需登录后才能评论");
         }else {
             String accountname = subject.getPrincipal().toString();
