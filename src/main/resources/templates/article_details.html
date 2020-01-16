@@ -64,7 +64,7 @@
             <!--头部-->
             <div class="ui horizontal link list">
                 <div class="item">
-                    <img src="https://picsum.photos/id/1033/100/100" alt=""
+                    <img src="https://picsum.photos/id/1033/100/100" alt="" th:src="${articleDto.user_avatar}"
                          class="ui avatar image">
                     <div class="content">
                         <div class="header">
@@ -91,7 +91,8 @@
         </div>
         <div class="ui attached segment">
             <!--图片区域-->
-            <img src="https://picsum.photos/id/1033/800/450" th:src="${articleDto.first_picture}" alt=""
+            <img src="https://picsum.photos/id/1033/800/450" width="800px" height="450px"
+                 th:src="'../'+${articleDto.first_picture}" alt=""
                  class="ui rounded fluid image">
         </div>
         <div class="ui attached padded segment">

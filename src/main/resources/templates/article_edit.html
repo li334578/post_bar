@@ -9,6 +9,10 @@
           th:href="@{../../static/editormd/css/editormd.min.css}"/>
     <link rel="stylesheet" href="../static/css/my.css"
           th:href="@{../../static/css/my.css}">
+    <link rel="stylesheet" href="../static/fileUpload/css/iconfont.css"
+          th:href="@{../../static/fileUpload/css/iconfont.css}">
+    <link rel="stylesheet" href="../static/fileUpload/css/fileUpload.css"
+          th:href="@{../../static/fileUpload/css/fileUpload.css}">
     <title>发布新贴</title>
 </head>
 <body>
@@ -42,7 +46,7 @@
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
                         <span th:if="${user}">
-                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
                             <span th:text="${user.nick_name}">李文博</span>
                         </span>
                     </div>
@@ -85,12 +89,15 @@
                     </div>
                 </div>
             </div>
-            <div class="required field">
-                <div class="ui left labeled input">
-                    <label class="ui violet basic label">首图</label>
-                    <input type="text" name="firstPicture" th:value="${articleDto.first_picture}" id="firstPicture"
-                           placeholder="首图引用地址">
+            <div class="ui segment large attached">
+                <div class="ui big label">封面:</div>
+                <div class="ui small image">
+                    <img src="../static/images/cover/city.jpg" th:src="'../'+${articleDto.first_picture}"
+                         width="150px" height="120px" id="cover">
                 </div>
+                <div id="fileUploadContent" class="fileUploadContent m-margin-top"></div>
+                <button class="ui violet basic button" type="button" onclick="uploadImages()">上传</button>
+                <label>点击上传图片(仅支持jpg、png格式。若不上传将会使用默认图片)</label>
             </div>
             <div class="required field">
                 <textarea name="description" id="description" th:text="${articleDto.description}" placeholder="帖子简介..."
@@ -177,6 +184,7 @@
 <script type="text/javascript" src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
 <script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
 <script src="../static/editormd/js/editormd.min.js" th:src="@{../../static/editormd/js/editormd.min.js}"></script>
+<script src="../static/fileUpload/js/fileUpload.js" th:src="@{../../static/fileUpload/js/fileUpload.js}"></script>
 <script>
     //调用编辑器
     var Editor;
@@ -270,16 +278,43 @@
     $('#add_tag_reset_btn').click(function () {
         $('#add_tag_name').val("");
     });
-    //删除已选中标签事件
-    $('a.ui.label.transition.visible').click(function () {
-        console.log("1234");
+    $("#fileUploadContent").initUpload({
+        "uploadUrl": "/article/upload",//上传文件信息地址
+        //"size":350,//文件大小限制，单位kb,默认不限制
+        "maxFileNumber": 1,//文件个数限制，为整数
+        "fileSavePath": "../static/images/cover/",//文件上传地址，后台设置的根目录
+        "beforeUpload": beforeUploadFun,//在上传前执行的函数
+        "onUpload": onUploadFun,//在上传后执行的函数
+        //autoCommit:true,//文件是否自动上传
+        "fileType": ['png', 'jpg']//文件类型限制，默认不限制，注意写的是文件后缀
     });
+
+    function beforeUploadFun(opt) {
+        opt.otherData = [{"name": "name", "value": "zxm"}];
+    }
+
+    function onUploadFun(opt, data) {
+        var obj = JSON.parse(data);
+        console.log(obj.statusCode);
+        if (obj.statusCode == 200) {
+            uploadTools.uploadSuccess(opt);//显示上传成功
+            $('#cover').attr('src', obj.path);
+        } else {
+            uploadTools.uploadError(opt);//显示上传错误
+        }
+    }
+
+    function uploadImages() {
+        var opt = uploadTools.getOpt("fileUploadContent");
+        uploadEvent.uploadFileEvent(opt);
+    }
 
     //修改文章内容
     function update_article(published) {
         var title = $('#title').val();
         var content = $('#content').val();
-        var firstPicture = $('#firstPicture').val();
+        var firstPicture = $('#cover').attr("src");
+        console.log(firstPicture);
         var description = $('#description').val();
         var article_id = [[${articleDto.id}]];
         $.ajax({

@@ -87,6 +87,8 @@ public class TypeController {
         model.addAttribute("typeTotalNum",typeDtoList.size());
         model.addAttribute("typeDtoList",typeDtoList);
         model.addAttribute("currentTypeId",type_id);
+        //根据分类进行查询 在model中放入标志
+        model.addAttribute("type_id",type_id);
         return "types";
     }
 }

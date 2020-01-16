@@ -93,6 +93,8 @@ public class TagController {
         model.addAttribute("tagTotalNum",tagDtoList.size());
         model.addAttribute("tagDtoList",tagDtoList);
         model.addAttribute("currentTagId",tag_id);
+        //根据标签进行查询 在model中放入标志
+        model.addAttribute("tag_id",tag_id);
         return "tags";
     }
 
