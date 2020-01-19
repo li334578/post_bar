@@ -21,4 +21,4 @@ pagehelper:
   params: count=countSql
 logging:
   level:
-    com.zzgs.post_bar.Mapper: debug
+    com.zzgs.post_bar: debug

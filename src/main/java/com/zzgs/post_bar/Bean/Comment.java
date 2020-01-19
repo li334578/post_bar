@@ -20,6 +20,7 @@ public class Comment {
      * @approval_num 点赞数
      * @trample_num 点踩数
      * @parent_comment_id 父级评论id
+     * @son_comment_id 子级评论id的list.toString()
      */
     private Integer id;
     private Integer user_id;
@@ -29,4 +30,5 @@ public class Comment {
     private Integer approval_num;
     private Integer trample_num;
     private Integer parent_comment_id;
+    private String son_comment_id;
 }

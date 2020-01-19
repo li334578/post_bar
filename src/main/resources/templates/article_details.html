@@ -157,7 +157,8 @@
                                  src="https://picsum.photos/id/1033/100/100">
                         </a>
                         <div class="content">
-                            <a class="author" th:text="${commentDto.user_name}">Elliot Fu</a>
+                            <a class="author" th:href="'/user/author_details/'+${commentDto.user_id}"
+                               th:text="${commentDto.user_name}">Elliot Fu</a>
                             <div class="metadata">
                                 <span class="date" th:text="${commentDto.create_time}">Yesterday at 12:30AM</span>
                             </div>
@@ -172,25 +173,31 @@
                                 <a class="reply" onclick="changefunction(this)">回复</a>
                             </div>
                         </div>
-                        <div class="comments">
-                            <div class="comment">
-                                <a class="avatar">
-                                    <img src="https://picsum.photos/id/1033/100/100">
-                                </a>
-                                <div class="content">
-                                    <a class="author">Jenny Hess</a>
-                                    <div class="metadata">
-                                        <span class="date">Just now</span>
-                                    </div>
-                                    <div class="text">
-                                        Elliot you are always so right :)
-                                    </div>
-                                    <div class="actions">
-                                        <a class="reply">回复</a>
+                        <span th:if="${commentDto.son_comment}">
+                            <div class="comments" th:if="${#arrays.length(commentDto.son_comment)}>0">
+                                <div class="comment" th:each="comment_son : ${commentDto.son_comment}">
+                                    <a class="avatar">
+                                        <img src="https://picsum.photos/id/1033/100/100"
+                                             th:src="'../'+${comment_son.user_avatar}">
+                                    </a>
+                                    <div class="content">
+                                        <a class="author" th:href="'/user/author_details/'+${comment_son.user_id}"
+                                           th:text="${comment_son.user_name}">Jenny Hess</a>
+                                        <div class="metadata">
+                                            <span class="date" th:text="${comment_son.create_time}">Just now</span>
+                                        </div>
+                                        <div class="text" th:text="${comment_son.content}">
+                                            Elliot you are always so right :)
+                                        </div>
+                                        <div class="actions">
+                                            <input type="hidden" th:value="${comment_son.user_name}" class="comment_nickname">
+                                            <input type="hidden" th:value="${comment_son.id}" class="comment_id">
+                                            <a class="reply" onclick="changefunction(this)">回复</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -314,11 +321,11 @@
         var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
-        if (account_name == ''){
+        if (account_name == '') {
             $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
             flag = false;
         }
-        if (account_password == ''){
+        if (account_password == '') {
             $('.ui.error.message.login').append("<p>● 请填写密码</p>");
             flag = false;
         }
@@ -336,12 +343,12 @@
                     if (data.statusCode == 200) {
                         location.reload();
                     } else {
-                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.login').append("<p>● " + data.msg + "</p>");
                     }
                 }
             });
         } else {
-            $('.ui.error.message.login').css('display','block');
+            $('.ui.error.message.login').css('display', 'block');
         }
     });
     $('#register_reset_btn').click(function () {
@@ -357,60 +364,60 @@
         var register_nickname = $('#register_nickname').val();
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
-        if (register_nickname == ''){
+        if (register_nickname == '') {
             $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询该昵称是否存在
             $.ajax({
-                url:'/findNickname',
+                url: '/findNickname',
                 data: {
                     nickname: register_nickname
                 },
                 type: 'post',
                 dataType: 'json',
                 async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //昵称可用
-                    }else {
+                    } else {
                         //昵称不可用
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_account_name == ''){
+        if (register_account_name == '') {
             $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询账户名是否存在
             $.ajax({
-                url:'/findAccountName',
+                url: '/findAccountName',
                 data: {
                     account_name: register_account_name
                 },
                 type: 'post',
                 dataType: 'json',
                 async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //账户名可用
-                    }else {
+                    } else {
                         //账户名不可用
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_account_password == ''){
+        if (register_account_password == '') {
             $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //密码长度应在4-16位之间
-            if (register_account_password.length<=4||register_account_password.length>=16){
+            if (register_account_password.length <= 4 || register_account_password.length >= 16) {
                 $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
                 flag = false;
             }
@@ -431,12 +438,12 @@
                         window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
-                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>●" + data.msg + "</p>");
                     }
                 }
             });
         } else {
-            $('.ui.error.message.register').css('display','block');
+            $('.ui.error.message.register').css('display', 'block');
         }
     });
     // $(function () {
@@ -522,48 +529,39 @@
     }
 
     function commitComment(parent_comment_id) {
-        //判断用户是否登录
         var article_id = [[${articleDto.id}]];
         var content = $("#comment_content").val();
-        if([[${articleDto.id}]]){
-            alert("请登录后再进行评论");
-        }else {
-            var article_id = [[${articleDto.id}]];
-            var content = $("#comment_content").val();
-            console.log(article_id);
-            console.log(content);
-            console.log(parent_comment_id);
-            $.ajax({
-                url: '/addComment',
-                data: {
-                    article_id: article_id,
-                    content: content,
-                    parent_comment_id: parent_comment_id
-                },
-                type: 'post',
-                dataType: 'json',
-                async: 'false',
-                success: function (data) {
-                    console.log("1234");
-                    if (data.statusCode == 200) {
-                        //评论成功
-                        alert(data.msg);
-                    } else {
-                        //评论失败
-                        console.log(data.msg);
-                        alert(data.msg);
-                    }
-                    // location.reload();
+        $.ajax({
+            url: '/addComment',
+            data: {
+                article_id: article_id,
+                content: content,
+                parent_comment_id: parent_comment_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    //评论成功
+                    alert(data.msg);
+                    //刷新此页面
+                    location.reload();
+                } else {
+                    //评论失败
+                    alert(data.msg);
                 }
-            });
-        }
+                // location.reload();
+            }
+        });
     }
+
     function changefunction(obj) {
         var comment_id = $(obj).prev().val();
         var comment_nickname = $(obj).prev().prev().val();
         console.log(comment_nickname);
-        $("#comment_content").val("@"+comment_nickname+": ");
-        $('#commitCommentBtn').attr("onclick",'commitComment('+comment_id+')');
+        $("#comment_content").val("@" + comment_nickname + ": ");
+        $('#commitCommentBtn').attr("onclick", 'commitComment(' + comment_id + ')');
     }
 </script>
 </body>

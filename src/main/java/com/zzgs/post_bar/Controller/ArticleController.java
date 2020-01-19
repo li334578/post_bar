@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,10 +117,31 @@ public class ArticleController {
         articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         List<Tag> tagList = tagService.findByArticleId(id);
         //查询该文章的所有评论信息
-        List<CommentDto> commentDtoList = commentService.findAllCommentByArticleId(id);
+//        List<CommentDto> commentDtoList = commentService.findAllCommentByArticleId(id);
+//        for (CommentDto commentDto : commentDtoList) {
+//            commentDto.setUser_name(userService.findById(commentDto.getUser_id()).getNick_name());
+//            commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
+//        }
+        //查询文章的一级评论信息 没有父级评论的
+        List<CommentDto> commentDtoList = commentService.findAllCommentByArticleIdAndParentCommentId(id);
         for (CommentDto commentDto : commentDtoList) {
             commentDto.setUser_name(userService.findById(commentDto.getUser_id()).getNick_name());
             commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
+            //设置子评论
+            String son_comment_id = commentDto.getSon_comment_id();
+            if (son_comment_id != null) {
+                //存在子评论信息
+                List<CommentDto> son_comment_list = new ArrayList<>();
+                String[] son_comment_id_arr = son_comment_id.split(",");
+                for (String temp_son_comment_id : son_comment_id_arr) {
+                    //根据子评论id查询评论信息
+                    CommentDto son_commentDto = commentService.findCommentDtoById(Integer.valueOf(temp_son_comment_id));
+                    son_commentDto.setUser_name(userService.findById(son_commentDto.getUser_id()).getNick_name());
+                    son_commentDto.setUser_avatar(userService.findById(son_commentDto.getUser_id()).getUser_avatar());
+                    son_comment_list.add(son_commentDto);
+                }
+                commentDto.setSon_comment(son_comment_list);
+            }
         }
         model.addAttribute("articleDto",articleDto);
         model.addAttribute("tagList",tagList);
