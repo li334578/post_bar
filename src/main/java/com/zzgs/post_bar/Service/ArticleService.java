@@ -108,11 +108,20 @@ public interface ArticleService {
     Integer updateArticleAttitudeTrample_num(Integer article_id);
 
     /**
-     * 根据用户id查询用户的所有文章
+     * 根据用户id查询用户的所有已发布的文章
      * @param user_id
      * @return
      */
     List<ArticleDto> findAllArticleByUserId(Integer user_id,Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据用户id查询用户的所有文章 包括草稿
+     * @param user_id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<ArticleDto> findMyArticleByUserId(Integer user_id,Integer pageNum, Integer pageSize);
 
     /**
      * 根据文章id更新文章标题、内容、封面图、是否发布、描述信息等

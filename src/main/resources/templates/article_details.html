@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../static/css/semantic.min.css}">
     <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{../../static/css/typo.css}">
     <title>帖子详情</title>
 </head>
 <body onload="addArticleBrowseVolume()">
@@ -58,7 +59,7 @@
             class="sidebar icon"></i></a>
 </nav>
 <!--中间内容-->
-<div class="m-container-small m-padded-tb-big">
+<div id="waypoint" class="m-container-small m-padded-tb-big">
     <div class="ui container">
         <div class="ui top attached segment">
             <!--头部-->
@@ -103,7 +104,7 @@
             </div>
             <h2 class="ui center aligned header" th:text="${articleDto.title}">几米经典语录</h2>
             <br>
-            <div id="content" class="m-padded-lr-responsive m-padded-tb-large" th:text="${articleDto.content}">
+            <div id="content" class="typo typo-selection m-padded-lr-responsive m-padded-tb-large" th:utext="${articleDto.content}">
                 <p>1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。</p>
                 <p>2.但是冬天总是会过去，春天总是会来。</p>
                 <p>3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。</p>
@@ -148,7 +149,7 @@
         </div>
         <div class="ui bottom attached segment">
             <!--留言区域-->
-            <div class="ui violet segment">
+            <div class="ui violet segment" id="comment-container">
                 <h3 class="ui dividing header">评论</h3>
                 <div class="ui threaded comments" th:each="commentDto : ${commentDtoList}">
                     <div class="comment">
@@ -157,7 +158,7 @@
                                  src="https://picsum.photos/id/1033/100/100">
                         </a>
                         <div class="content">
-                            <a class="author" th:href="'/user/author_details/'+${commentDto.user_id}"
+                            <a class="author" style="color: deepskyblue" th:href="'/user/author_details/'+${commentDto.user_id}"
                                th:text="${commentDto.user_name}">Elliot Fu</a>
                             <div class="metadata">
                                 <span class="date" th:text="${commentDto.create_time}">Yesterday at 12:30AM</span>
@@ -181,7 +182,7 @@
                                              th:src="'../'+${comment_son.user_avatar}">
                                     </a>
                                     <div class="content">
-                                        <a class="author" th:href="'/user/author_details/'+${comment_son.user_id}"
+                                        <a class="author" style="color: deepskyblue" th:href="'/user/author_details/'+${comment_son.user_id}"
                                            th:text="${comment_son.user_name}">Jenny Hess</a>
                                         <div class="metadata">
                                             <span class="date" th:text="${comment_son.create_time}">Just now</span>
@@ -201,7 +202,7 @@
                     </div>
                 </div>
             </div>
-            <!--留言输入区域-->
+            <!--评论输入区域-->
             <div class="ui form">
                 <div class="field">
                     <textarea name="content" id="comment_content" placeholder="请输入评论信息..."></textarea>
@@ -286,6 +287,16 @@
     </div>
 </div>
 
+<!--右下角工具组-->
+<div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none">
+    <div class="ui vertical icon buttons ">
+        <button type="button" class="ui toc violet button" >目录</button>
+        <a href="#comment-container" class="ui violet button" >留言</a>
+        <button class="ui wechat icon button"><i class="weixin icon"></i></button>
+        <div id="toTop-button" class="ui icon button" ><i class="chevron up icon"></i></div>
+    </div>
+</div>
+
 
 <!--底部-->
 <footer class="ui attached segment">
@@ -295,8 +306,14 @@
 </footer>
 
 
-<script type="text/javascript" src="../static/js/jquery.min.js" th:src="@{../../static/js/jquery.min.js}"></script>
-<script src="../static/js/semantic.min.js" th:src="@{../../static/js/semantic.min.js}"></script>
+<script type="text/javascript" src="../static/js/jquery.min.js"
+        th:src="@{../../static/js/jquery.min.js}"></script>
+<script src="../static/js/semantic.min.js"
+        th:src="@{../../static/js/semantic.min.js}"></script>
+<script src="../static/waypoints/jquery.waypoints.min.js"
+        th:src="@{../../static/waypoints/jquery.waypoints.min.js}"></script>
+<script src="../static/scrollTo/jquery.scrollTo.min.js"
+        th:src="@{../../static/scrollTo/jquery.scrollTo.min.js}"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
@@ -446,9 +463,7 @@
             $('.ui.error.message.register').css('display', 'block');
         }
     });
-    // $(function () {
-    //
-    // });
+
     function addArticleBrowseVolume() {
         //浏览量更新函数
         var browse_volume = $('#browse_volume').html();
@@ -563,6 +578,23 @@
         $("#comment_content").val("@" + comment_nickname + ": ");
         $('#commitCommentBtn').attr("onclick", 'commitComment(' + comment_id + ')');
     }
+
+    var waypoint = new Waypoint({
+        //控制右下角工具组的显示与隐藏
+        element: document.getElementById('waypoint'),
+        handler: function(direction) {
+            if (direction == 'down') {
+                $('#toolbar').show(100);
+            } else {
+                $('#toolbar').hide(500);
+            }
+            console.log('Scrolled to waypoint!  ' + direction);
+        }
+    });
+    <!--滚动到顶部的按钮-->
+    $('#toTop-button').click(function () {
+        $(window).scrollTo(0,500);
+    });
 </script>
 </body>
 </html>

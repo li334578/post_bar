@@ -116,12 +116,6 @@ public class ArticleController {
         articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
         articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         List<Tag> tagList = tagService.findByArticleId(id);
-        //查询该文章的所有评论信息
-//        List<CommentDto> commentDtoList = commentService.findAllCommentByArticleId(id);
-//        for (CommentDto commentDto : commentDtoList) {
-//            commentDto.setUser_name(userService.findById(commentDto.getUser_id()).getNick_name());
-//            commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
-//        }
         //查询文章的一级评论信息 没有父级评论的
         List<CommentDto> commentDtoList = commentService.findAllCommentByArticleIdAndParentCommentId(id);
         for (CommentDto commentDto : commentDtoList) {
@@ -158,6 +152,7 @@ public class ArticleController {
     @ResponseBody
     public String addArticleBrowseVolume(@Param("article_id")Integer article_id){
         JSONObject jsonObject = new JSONObject();
+        //更新文章的浏览量
         Integer flag = articleService.updateArticleBrowseVolume(article_id);
         if (flag == 1) {
             //更新成功
@@ -186,6 +181,7 @@ public class ArticleController {
             //用户登录了 需判断用户之前是否对文章发表过态度
             String accountname = subject.getPrincipal().toString();
             User user = userService.findByAccountName(accountname);
+            //查询用户对文章的态度
             ArticleAttitude articleAttitude = articleService.
                     findArticleAttitudeByUserIdAndArticleId(article_id, user.getId());
             if (articleAttitude == null) {
@@ -251,7 +247,13 @@ public class ArticleController {
                              @Param("content") String content,
                              @Param("published") Integer published){
         //数据校验....
-
+        System.out.println("title = " + title);
+        System.out.println("type_id = " + type_id);
+        System.out.println("tag_arr = " + tag_arr.toString());
+        System.out.println("firstPicture = " + firstPicture);
+        System.out.println("description = " + description);
+        System.out.println("content = " + content);
+        System.out.println("published = " + published);
         //获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
         String accountname = subject.getPrincipal().toString();
@@ -329,12 +331,12 @@ public class ArticleController {
     @RequestMapping("/myArticle")
     public String myArticle(Model model,
                             @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                            @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+                            @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
         //获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
         String accountName = subject.getPrincipal().toString();
         User user = userService.findByAccountName(accountName);
-        List<ArticleDto> articleDtoList = articleService.findAllArticleByUserId(user.getId(),pageNum,pageSize);
+        List<ArticleDto> articleDtoList = articleService.findMyArticleByUserId(user.getId(),pageNum,pageSize);
         for (ArticleDto articleDto : articleDtoList) {
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());

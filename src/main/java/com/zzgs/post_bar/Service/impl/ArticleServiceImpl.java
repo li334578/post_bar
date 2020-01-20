@@ -184,7 +184,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
-     * 根据用户id查询用户的所有文章
+     * 根据用户id查询用户的所有已发布的文章
      *
      * @param user_id
      * @return
@@ -193,6 +193,20 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleDto> findAllArticleByUserId(Integer user_id,Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         return articleMapper.findAllArticleByUserId(user_id);
+    }
+
+    /**
+     * 根据用户id查询用户的所有文章 包括草稿
+     *
+     * @param user_id
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<ArticleDto> findMyArticleByUserId(Integer user_id, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        return articleMapper.findMyArticleByUserId(user_id);
     }
 
     /**

@@ -36,7 +36,7 @@ public class CommentController {
             jsonObject.put("statusCode", 407);
             jsonObject.put("msg", "需登录后才能评论");
         } else {
-            //用户登录判断评论内容是否为空
+            //用户登录  判断评论内容是否为空
             if (content != null && !content.equals("")) {
                 String accountname = subject.getPrincipal().toString();
                 User user = userService.findByAccountName(accountname);
@@ -53,6 +53,7 @@ public class CommentController {
                     //根据parent_comment_id 查询是否存在该评论
                     Comment parent_comment = commentService.findById(parent_comment_id);
                     if (parent_comment != null) {
+                        //存在该评论的父级评论
                         //当前评论
                         Comment comment = commentService.findByUserIdAndCommentTime(user.getId(), create_time);
                         String son_comment_id = null;

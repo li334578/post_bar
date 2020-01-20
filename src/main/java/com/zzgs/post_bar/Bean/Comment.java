@@ -17,8 +17,6 @@ public class Comment {
      * @article_id 帖子id
      * @create_time 创建时间
      * @content 文章内容
-     * @approval_num 点赞数
-     * @trample_num 点踩数
      * @parent_comment_id 父级评论id
      * @son_comment_id 子级评论id的list.toString()
      */
@@ -27,8 +25,6 @@ public class Comment {
     private Integer article_id;
     private String create_time;
     private String content;
-    private Integer approval_num;
-    private Integer trample_num;
     private Integer parent_comment_id;
     private String son_comment_id;
 }

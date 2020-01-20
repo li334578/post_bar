@@ -119,7 +119,7 @@ public class UserController {
     @RequestMapping("/author")
     public String author(Model model,
                          @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                         @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+                         @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
         Subject subject = SecurityUtils.getSubject();
         if (subject.getPrincipal()!=null){
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
@@ -135,7 +135,7 @@ public class UserController {
     public String authorDetails(Model model,
                                 @PathVariable("id") Integer author_id,
                                 @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                                @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+                                @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
         Subject subject = SecurityUtils.getSubject();
         if (subject.getPrincipal()!=null){
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));

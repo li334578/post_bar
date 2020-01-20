@@ -55,7 +55,7 @@ public class TypeController {
     @RequestMapping("/types")
     public String types(Model model,
                         @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                        @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize){
+                        @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
         Subject subject = SecurityUtils.getSubject();
         if (subject.getPrincipal()!=null){
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
@@ -75,7 +75,7 @@ public class TypeController {
     @RequestMapping("/findArticleByTypeId/{id}")
     public String findTypeByTypeId(Model model,
                                    @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                                   @RequestParam(defaultValue = "2",value = "pageSize")Integer pageSize,
+                                   @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
                                    @PathVariable("id")Integer type_id){
         //根据type_id查询文章
         List<ArticleDto> articleDtoList = articleService.findArticleByTypeId(type_id,pageNum,pageSize);

@@ -40,7 +40,7 @@
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
                         <span th:if="${user}">
-                        <img class="ui avatar image" th:src="${user.user_avatar}"
+                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}"
                              src="https://picsum.photos/id/1033/100/100">
                             <span th:text="${user.nick_name}">李文博</span>
                         </span>

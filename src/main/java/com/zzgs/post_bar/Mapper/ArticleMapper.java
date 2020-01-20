@@ -135,12 +135,20 @@ public interface ArticleMapper {
     Integer updateArticleAttitudeTrample_num(@Param("article_id")Integer article_id);
 
     /**
-     * 根据用户id查询该用户的所有文章 create_time降序排列
+     * 根据用户id查询该用户的所有已发布的文章 create_time降序排列
       * @param user_id
      * @return
      */
-    @Select("select * from article where user_id = #{user_id} ORDER BY create_time DESC")
+    @Select("select * from article where user_id = #{user_id} and published = 1 ORDER BY create_time DESC")
     List<ArticleDto> findAllArticleByUserId(Integer user_id);
+
+    /**
+     * 查询用户的所有文章 包括未发布
+     * @param user_id
+     * @return
+     */
+    @Select("select * from article where user_id = #{user_id} ORDER BY create_time DESC")
+    List<ArticleDto> findMyArticleByUserId(Integer user_id);
 
     @Update("update article set title = #{title},content = #{content},first_picture = #{first_picture}," +
             "published = #{published},description = #{description},update_time = #{update_time} where id = #{article_id}")
@@ -178,7 +186,7 @@ public interface ArticleMapper {
      * @param type_id
      * @return
      */
-    @Select("select count(id) from article where type_id = #{type_id}")
+    @Select("select count(id) from article where type_id = #{type_id} and published = 1")
     Integer findTotalByTypeId(Integer type_id);
 
     /**
@@ -186,7 +194,7 @@ public interface ArticleMapper {
      * @param type_id
      * @return
      */
-    @Select("select * from article where type_id = #{type_id}")
+    @Select("select * from article where type_id = #{type_id} and published = 1")
     List<ArticleDto> findArticleByTypeId(Integer type_id);
 
     /**
@@ -195,15 +203,19 @@ public interface ArticleMapper {
      * @return
      */
     @Select("SELECT * FROM article WHERE article.id IN " +
-            "(SELECT article_tag.id FROM article_tag WHERE article_tag.tag_id = #{tag_id})")
+            "(SELECT article_tag.article_id FROM article_tag WHERE article_tag.tag_id = #{tag_id}) and published = 1")
     List<ArticleDto> findArticleByTagId(Integer tag_id);
 
     /**
      * 根据tag_id查询该标签下的文章数量
+     * SELECT COUNT(article_tag.id) from article_tag RIGHT JOIN article
+     * ON article.id = article_tag.article_id and published = 1 and article_tag.tag_id = 2;
+     * select count(id) from article_tag where tag_id = #{tag_id}
      * @param tag_id
      * @return
      */
-    @Select("select count(id) from article_tag where tag_id = #{tag_id}")
+    @Select("SELECT COUNT(article_tag.id) from article_tag RIGHT JOIN article" +
+            " ON article.id = article_tag.article_id and published = 1 and article_tag.tag_id = #{tag_id}")
     Integer findTotalByTagId(Integer tag_id);
 
     /**

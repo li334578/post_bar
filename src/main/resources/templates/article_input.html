@@ -330,11 +330,13 @@
         errmsg.html('');
         var title = $('#title').val();
         var type_id = $('.text div').attr("value");
-        var alist = $('#tag_div a');
+        var taglist = $('#tag_div a');
         var tag_arr = new Array(3); //定义标签的数组 每篇帖子最多选三个标签
-        $('#tag_div a span').each(function (index,e) {
+        console.log(tag_arr);
+        $('#tag_item div[class=\'item active filtered\']').each(function (index,e) {
             tag_arr[index] = $(e).attr("value");
         });
+        console.log(tag_arr);
         var firstPicture = $('#cover').attr("src");
         var description = $('#description').val();
         var content = $('#content').val();
@@ -354,7 +356,7 @@
             errmsg.append("<p>● 文章内容不能为空</p>");
             flag = false;
         }
-        if (alist.length>3){
+        if (taglist.length>3){
             errmsg.append("<p>● 文章的标签不能超过三个请检查</p>");
             flag = false;
         }
@@ -378,7 +380,8 @@
                 async: 'false',
                 success:function (data) {
                     if (data.statusCode==200){
-                        window.location.href="/user/forum_input";
+                        window.location.href="/article/article_input";
+                        alert("操作成功");
                         errmsg.append("<p>● 操作成功</p>");
                     }else {
                         errmsg.append("<p>● 服务器出现异常</p>");
