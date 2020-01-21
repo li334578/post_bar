@@ -184,3 +184,9 @@ body {
         width: 100% !important;
     }
 }
+pre {
+    overflow-y: auto;
+    max-height: 500px;
+    max-width: 100%;
+    color: darkviolet;
+}
