@@ -57,17 +57,14 @@ public class CommentServiceImpl implements CommentService {
      * @param article_id
      * @param create_time
      * @param content
-     * @param approval_num
-     * @param trample_num
      * @param parent_comment_id
      * @return
      */
     @Override
     public Integer insertArticleComment(Integer user_id, Integer article_id,
                                         String create_time, String content,
-                                        Integer approval_num, Integer trample_num,
                                         Integer parent_comment_id,String son_comment_id) {
-        return commentMapper.insertArticleComment(user_id,article_id,create_time,content,approval_num,trample_num,parent_comment_id,son_comment_id);
+        return commentMapper.insertArticleComment(user_id,article_id,create_time,content,parent_comment_id,son_comment_id);
     }
 
     /**
@@ -112,5 +109,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto findCommentDtoById(Integer comment_id) {
         return commentMapper.findCommentDtoById(comment_id);
+    }
+
+    /**
+     * 根据评论id删除评论
+     *
+     * @param comment_id
+     * @return
+     */
+    @Override
+    public Integer deleteByCommentId(Integer comment_id) {
+        return commentMapper.deleteByCommentId(comment_id);
     }
 }

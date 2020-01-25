@@ -3,8 +3,11 @@ package com.zzgs.post_bar.Controller;
 import com.alibaba.fastjson.JSONObject;
 import com.zzgs.post_bar.Bean.Comment;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.ArticleDto;
+import com.zzgs.post_bar.Service.ArticleService;
 import com.zzgs.post_bar.Service.CommentService;
 import com.zzgs.post_bar.Service.UserService;
+import com.zzgs.post_bar.Utils.CommentUtil;
 import com.zzgs.post_bar.Utils.DateUtil;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
@@ -22,6 +25,9 @@ public class CommentController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ArticleService articleService;
 
     @RequestMapping("/addComment")
     @ResponseBody
@@ -43,7 +49,7 @@ public class CommentController {
                 DateUtil dateUtil = new DateUtil();
                 String create_time = dateUtil.getNowDate();
                 Integer integer = commentService.insertArticleComment(user.getId(), article_id, create_time,
-                        content, 0, 0, parent_comment_id, null);
+                        content, parent_comment_id, null);
                 if (integer == 0) {
                     //插入不成功
                     jsonObject.put("statusCode", 500);
@@ -60,7 +66,7 @@ public class CommentController {
                         //存在父级评论 将id添加到父级评论的 son_comment_id
                         //获取到父级评论的原有子评论
                         son_comment_id = parent_comment.getSon_comment_id();
-                        if (son_comment_id != null) {
+                        if (son_comment_id != null&&!"".equals(son_comment_id)) {
                             //说明评论有子评论
                             son_comment_id = son_comment_id + "," + comment.getId();
                         } else {
@@ -71,13 +77,13 @@ public class CommentController {
                         commentService.updateSon_comment_idById(parent_comment.getId(), son_comment_id);
                         //判断父级评论是否有父级评论
                         Integer parent_parent_comment_id = parent_comment.getParent_comment_id();
-                        if (parent_parent_comment_id != 0){
+                        if (parent_parent_comment_id != 0) {
                             //父级评论有父级评论 改变父级评论的父级评论的子评论信息
                             Comment parent_parent_comment = commentService.findById(parent_parent_comment_id);
                             String parent_son_comment_id = parent_parent_comment.getSon_comment_id();
                             parent_son_comment_id = parent_son_comment_id + "," + comment.getId();
                             //更新父级评论的父级评论的son_comment_id信息
-                            commentService.updateSon_comment_idById(parent_parent_comment_id,parent_son_comment_id);
+                            commentService.updateSon_comment_idById(parent_parent_comment_id, parent_son_comment_id);
                         }
                     }
                     jsonObject.put("statusCode", 200);
@@ -86,6 +92,38 @@ public class CommentController {
             } else {
                 jsonObject.put("statusCode", 503);
                 jsonObject.put("msg", "评论内容不能为空");
+            }
+        }
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/delComment")
+    @ResponseBody
+    public String delComment(@Param("comment_id") Integer comment_id,
+                             @Param("article_id") Integer article_id) {
+        //获取当前登录的用户
+        Subject subject = SecurityUtils.getSubject();
+        JSONObject jsonObject = new JSONObject();
+
+        if (subject.getPrincipal() == null) {
+            //用户没有登录
+            jsonObject.put("statusCode", 407);
+            jsonObject.put("msg", "需登录后才能删除评论");
+        } else {
+            String accountname = subject.getPrincipal().toString();
+            User user = userService.findByAccountName(accountname);
+            ArticleDto articleDto = articleService.findById(article_id);
+            Comment comment = commentService.findById(comment_id);
+
+            if (user.getId()==articleDto.getUser_id()||user.getId()==comment.getUser_id()){
+                //删除评论及其父级评论和子级评论
+//            CommentUtil commentUtil = new CommentUtil();
+                CommentUtil.delSonComment(commentService,comment);
+                jsonObject.put("statusCode", 200);
+                jsonObject.put("msg", "删除评论及其子评论成功");
+            }else {
+                jsonObject.put("statusCode", 408);
+                jsonObject.put("msg", "您对该评论没有删除权限");
             }
         }
         return jsonObject.toString();

@@ -171,7 +171,9 @@
                             <div class="actions">
                                 <input type="hidden" th:value="${commentDto.user_name}" class="comment_nickname">
                                 <input type="hidden" th:value="${commentDto.id}" class="comment_id">
-                                <a class="reply" onclick="changefunction(this)">回复</a>
+                                <a class="reply" style="color: blueviolet;" onclick="changefunction(this)">回复</a>
+                                <a style="color: red;"
+                                   th:onclick="'javascript:deleteComment('+${commentDto.id}+');'">删除</a>
                             </div>
                         </div>
                         <span th:if="${commentDto.son_comment}">
@@ -193,7 +195,10 @@
                                         <div class="actions">
                                             <input type="hidden" th:value="${comment_son.user_name}" class="comment_nickname">
                                             <input type="hidden" th:value="${comment_son.id}" class="comment_id">
-                                            <a class="reply" onclick="changefunction(this)">回复</a>
+                                            <a class="reply" style="color: blueviolet;"
+                                               onclick="changefunction(this)">回复</a>
+                                            <a style="color: red;"
+                                               th:onclick="'javascript:deleteComment('+${comment_son.id}+');'">删除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -595,6 +600,33 @@
     $('#toTop-button').click(function () {
         $(window).scrollTo(0,500);
     });
+
+    function deleteComment(comment_id) {
+        //获取当前文章的id
+        var article_id = [[${articleDto.id}]];
+        $.ajax({
+            url:'/delComment',
+            data: {
+                comment_id: comment_id,
+                article_id: article_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    //删除评论成功
+                    alert(data.msg);
+                    //刷新此页面
+                    location.reload();
+                } else {
+                    //删除评论失败
+                    alert(data.msg);
+                }
+                // location.reload();
+            }
+        });
+    }
 </script>
 </body>
 </html>

@@ -36,14 +36,11 @@ public interface CommentService {
      * @param article_id
      * @param create_time
      * @param content
-     * @param approval_num
-     * @param trample_num
      * @param parent_comment_id
      * @return
      */
     Integer insertArticleComment(Integer user_id,Integer article_id,
                                  String create_time,String content,
-                                 Integer approval_num,Integer trample_num,
                                  Integer parent_comment_id,String son_comment_id);
 
     /**
@@ -73,4 +70,11 @@ public interface CommentService {
      * @return
      */
     CommentDto findCommentDtoById(Integer comment_id);
+
+    /**
+     * 根据评论id删除评论
+     * @param comment_id
+     * @return
+     */
+    Integer deleteByCommentId(Integer comment_id);
 }

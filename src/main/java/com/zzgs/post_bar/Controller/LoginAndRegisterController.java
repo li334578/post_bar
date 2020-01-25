@@ -186,6 +186,9 @@ public class LoginAndRegisterController {
 
     @RequestMapping("/logout")
     public String logout(Model model){
-        return index(model,1,5);
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        model.addAttribute("user",null);
+        return "redirect:/index";
     }
 }

@@ -69,12 +69,12 @@ public interface CommentMapper {
                                      @Param("son_comment_id")String son_comment_id);
 
     /**
-     * 根据文章id删除评论
-     * @param article_id
+     * 根据评论id删除评论
+     * @param comment_id
      * @return
      */
-    @Delete("delete comment where article_id = #{article_id}")
-    Integer deleteByArticleId(Integer article_id);
+    @Delete("delete from comment where id = #{comment_id}")
+    Integer deleteByCommentId(Integer comment_id);
 
     /**
      * 新增一条评论
@@ -82,16 +82,13 @@ public interface CommentMapper {
      * @param article_id
      * @param create_time
      * @param content
-     * @param approval_num
-     * @param trample_num
      * @param parent_comment_id
      * @return
      */
     @Insert("insert into comment VALUES(null,#{user_id},#{article_id}," +
-            "#{create_time},#{content},#{approval_num},#{trample_num},#{parent_comment_id},#{son_comment_id})")
+            "#{create_time},#{content},#{parent_comment_id},#{son_comment_id})")
     Integer insertArticleComment(@Param("user_id")Integer user_id,@Param("article_id")Integer article_id,
                                  @Param("create_time")String create_time,@Param("content")String content,
-                                 @Param("approval_num")Integer approval_num,@Param("trample_num")Integer trample_num,
                                  @Param("parent_comment_id")Integer parent_comment_id,
                                  @Param("son_comment_id")String son_comment_id);
 

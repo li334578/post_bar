@@ -124,7 +124,7 @@ public class ArticleController {
             commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
             //设置子评论
             String son_comment_id = commentDto.getSon_comment_id();
-            if (son_comment_id != null) {
+            if (son_comment_id != null&&!"".equals(son_comment_id)) {
                 //存在子评论信息
                 List<CommentDto> son_comment_list = new ArrayList<>();
                 String[] son_comment_id_arr = son_comment_id.split(",");
