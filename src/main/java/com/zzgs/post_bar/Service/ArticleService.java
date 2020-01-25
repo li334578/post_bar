@@ -168,4 +168,32 @@ public interface ArticleService {
      * @return
      */
     Integer findTotalByTagId(Integer tag_id);
+
+    /**
+     * 根据文章id删除文章
+     * @param aritcle_id
+     * @return
+     */
+    Integer deleteArticleByArticleId(Integer aritcle_id);
+
+    /**
+     * 根据文章id删除文章的标签
+     * @param article_id
+     * @return
+     */
+    Integer deleteArticleTag(Integer article_id);
+
+    /**
+     * 根据文章id删除用户对文章的点赞和点踩
+     * @param article_id
+     * @return
+     */
+    Integer deleteArticleAttitudeByArticleId(Integer article_id);
+
+    /**
+     * 根据文章id删除文章下的所有评论
+     * @param article_id
+     * @return
+     */
+    Integer deleteArticleComment(Integer article_id);
 }

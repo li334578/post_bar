@@ -182,6 +182,14 @@ public interface ArticleMapper {
     Integer deleteArticleTag(Integer article_id);
 
     /**
+     * 根据文章id删除文章下的所有评论
+     * @param article_id
+     * @return
+     */
+    @Delete("delete from comment where article_id = #{article_id}")
+    Integer deleteArticleComment(Integer article_id);
+
+    /**
      * 根据type_id查询该分类下的文章数量
      * @param type_id
      * @return

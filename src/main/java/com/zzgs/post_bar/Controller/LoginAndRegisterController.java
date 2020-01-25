@@ -186,7 +186,6 @@ public class LoginAndRegisterController {
 
     @RequestMapping("/logout")
     public String logout(Model model){
-        model.addAttribute("nickname","");
-        return "index";
+        return index(model,1,5);
     }
 }

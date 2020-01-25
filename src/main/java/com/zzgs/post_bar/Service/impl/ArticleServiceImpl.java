@@ -39,7 +39,7 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(pageNum,pageSize);
         List<ArticleDto> list = articleMapper.findAll();
         for (ArticleDto articleDto : list) {
-            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
@@ -56,8 +56,8 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleDto> findAllOrderByApprovalNum() {
         List<ArticleDto> list = articleMapper.findAllOrderByApprovalNum();
         for (ArticleDto articleDto : list) {
-            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
         }
@@ -288,5 +288,49 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Integer findTotalByTagId(Integer tag_id) {
         return articleMapper.findTotalByTagId(tag_id);
+    }
+
+    /**
+     * 根据文章id删除文章
+     *
+     * @param aritcle_id
+     * @return
+     */
+    @Override
+    public Integer deleteArticleByArticleId(Integer aritcle_id) {
+        return articleMapper.deleteArticleByArticleId(aritcle_id);
+    }
+
+    /**
+     * 根据文章id删除文章的标签
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Integer deleteArticleTag(Integer article_id) {
+        return articleMapper.deleteArticleTag(article_id);
+    }
+
+    /**
+     * 根据文章id删除用户对文章的点赞和点踩
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Integer deleteArticleAttitudeByArticleId(Integer article_id) {
+        return articleMapper.deleteArticleAttitudeByArticleId(article_id);
+    }
+
+    /**
+     * 根据文章id删除文章下的所有评论
+     *
+     * @param article_id
+     * @return
+     */
+    @Override
+    public Integer deleteArticleComment(Integer article_id) {
+        return articleMapper.deleteArticleComment(article_id);
     }
 }

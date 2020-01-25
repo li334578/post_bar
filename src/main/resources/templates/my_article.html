@@ -78,7 +78,8 @@
                                 <div class="buttons">
                                     <a th:href="'/article/articleEdit/'+${articleDto.id}"
                                             class="ui positive button mini">编辑</a>
-                                    <a class="ui negative button mini">删除</a>
+                                    <a th:onclick="'javascript:deleteArticle('+${articleDto.id}+');'"
+                                       class="ui negative button mini">删除</a>
                                 </div>
                             </div>
                             <div class="ui mini horizontal link list">
@@ -326,6 +327,24 @@
             })
         }
     });
+
+    function deleteArticle(article_id) {
+        console.log(article_id);
+        $.ajax({
+            url: '/article/deleteMyArticle/'+article_id,
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                if (data.statusCode == 200) {
+                    location.reload();
+                    alert(data.msg);
+                } else {
+                    $('#register_msg').html(data.msg);
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

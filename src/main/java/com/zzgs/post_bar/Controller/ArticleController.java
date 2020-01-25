@@ -113,6 +113,7 @@ public class ArticleController {
             ArticleAttitude attitude = articleService.findArticleAttitudeByUserIdAndArticleId(id, user.getId());
             model.addAttribute("attitude",attitude);
         }
+        articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
         articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
         articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         List<Tag> tagList = tagService.findByArticleId(id);
@@ -347,5 +348,29 @@ public class ArticleController {
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);
         return "my_article";
+    }
+
+    /**
+     * 根据id删除文章
+     * @param id
+     * @return
+     */
+    @RequestMapping("/deleteMyArticle/{id}")
+    @ResponseBody
+    public String deleteMyArticle(@PathVariable("id")Integer id){
+        //删除文章并删除其他用户对文章的态度以及评论
+        //1.删除文章
+        articleService.deleteArticleByArticleId(id);
+        //2.删除文章和文章标签的对应关系 article_tag
+        articleService.deleteArticleTag(id);
+        //3.删除文章其用户对文章的点赞/点踩态度
+        articleService.deleteArticleAttitudeByArticleId(id);
+        //4.删除文章及文章下的所有评论信息
+        articleService.deleteArticleComment(id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("statusCode","200");
+        jsonObject.put("msg","删除文章成功");
+
+        return jsonObject.toString();
     }
 }

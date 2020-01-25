@@ -95,11 +95,4 @@ public interface CommentMapper {
                                  @Param("parent_comment_id")Integer parent_comment_id,
                                  @Param("son_comment_id")String son_comment_id);
 
-    /**
-     * 根据评论id删除评论态度
-     * @param comment_id
-     * @return
-     */
-    @Delete("delete comment_attitude where comment_id = #{comment_id}")
-    Integer deleteCommentAttitudeByCommentId(Integer comment_id);
 }
