@@ -75,4 +75,10 @@ public interface UserService {
      * @return
      */
     List<UserDto> findAllAuthor(Integer pageNum, Integer pageSize);
+
+    /**
+     * 为用户添加用户角色
+     * @param user_id
+     */
+    void addUserRole(Integer user_id);
 }

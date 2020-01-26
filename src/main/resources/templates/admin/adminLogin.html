@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../../static/css/semantic.min.css">
+    <link rel="stylesheet" href="../../static/css/my.css">
+    <title>管理员登录</title>
+</head>
+<body>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="m-container-small m-padded-tb-massive" style="max-width: 30em !important;">
+    <div class="ur container">
+        <div class="ui middle aligned center aligned grid">
+            <div class="column">
+                <h2 class="ui violet image header">
+                    <div class="content">
+                        <i class="user secret icon"></i>
+                        管理后台登录
+                    </div>
+                </h2>
+                <form class="ui large form" >
+                    <div class="ui  segment">
+                        <div class="field">
+                            <div class="ui left icon input">
+                                <i class="user icon"></i>
+                                <input type="text" id="adminName" name="username" placeholder="用户名">
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui left icon input">
+                                <i class="lock icon"></i>
+                                <input type="password" id="adminPassword" name="password" placeholder="密码">
+                            </div>
+                        </div>
+                        <button class="ui fluid large violet button" type="button" id="login">登   录</button>
+                    </div>
+                    <div class="ui error message login"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<!--底部-->
+<footer class="ui attached segment">
+    <div class="ui center aligned container">
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
+    </div>
+</footer>
+
+<script src="../../static/js/jquery.min.js"></script>
+<script src="../../static/js/semantic.min.js"></script>
+<script>
+    $('#login').click(function () {
+        var adminName = $("#adminName").val();
+        var adminPassword = $("#adminPassword").val();
+        console.log(adminName);
+        console.log(adminPassword);
+        $.ajax({
+            url:'/admin/login',
+            data: {
+                adminName: adminName,
+                adminPassword: adminPassword
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                $('.ui.error.message.login').html("");
+                if (data.statusCode == 200) {
+                    alert("验证通过");
+                } else {
+                    $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
+                    $('.ui.error.message.login').css('display','block');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

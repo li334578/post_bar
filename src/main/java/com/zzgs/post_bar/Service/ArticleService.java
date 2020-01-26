@@ -17,6 +17,14 @@ public interface ArticleService {
     List<ArticleDto> findAll(Integer pageNum, Integer pageSize);
 
     /**
+     * 分页查询所有包含关键字的文章
+     * @param pageNum 起始页码
+     * @param pageSize 每页数据条数
+     * @param keyword 关键字
+     * @return
+     */
+    List<ArticleDto> findAllByKeyword(Integer pageNum, Integer pageSize,String keyword);
+    /**
      * 根据点赞数降序查询所有文章
      * @return
      */

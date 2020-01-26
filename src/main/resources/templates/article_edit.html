@@ -31,12 +31,7 @@
                 <i class="mini user icon"></i>作者</a>
             <a href="../templates/about.html" th:href="@{/about}" class="m-item item m-mobile-hide">
                 <i class="mini user secret icon"></i>关于我们</a>
-            <div class="right  item m-mobile-hide">
-                <div class="ui icon input">
-                    <input type="text" placeholder="请输入搜索的内容">
-                    <i class="search link icon"></i>
-                </div>
-            </div>
+
             <div class="right m-item m-mobile-hide menu">
                 <div class="item login_btn" th:unless="${user}">
                     <button class="ui login violet button">登录</button>
@@ -46,8 +41,11 @@
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
                         <span th:if="${user}">
-                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
-                            <span th:text="${user.nick_name}">李文博</span>
+                            <shiro:hasRole name="user">
+                                <img class="ui avatar image" th:src="${user.user_avatar}"
+                                     src="https://picsum.photos/id/1033/100/100">
+                                <span th:text="${user.nick_name}">李文博</span>
+                            </shiro:hasRole>
                         </span>
                     </div>
                     <i class="dropdown icon"></i>

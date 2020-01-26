@@ -125,4 +125,14 @@ public class UserServiceImpl implements UserService {
         }
         return userDtoList;
     }
+
+    /**
+     * 为用户添加用户角色
+     *
+     * @param user_id
+     */
+    @Override
+    public void addUserRole(Integer user_id) {
+        userMapper.addUserRole(user_id);
+    }
 }

@@ -16,12 +16,19 @@ import java.util.List;
 public interface ArticleMapper {
 
     /**
-     * 查询所有帖子
+     * 查询所有文章
      * @return
      */
     @Select("select * from article where published = 1")
     List<ArticleDto> findAll();
 
+    /**
+     * 根据关键字查询所有的文字
+     * @param keyword
+     * @return
+     */
+    @Select("select * from article where published = 1 and content like #{keyword}")
+    List<ArticleDto> findAllByKeyword(String keyword);
     /**
      * 根据点赞数降序查找所有文章
      * @return

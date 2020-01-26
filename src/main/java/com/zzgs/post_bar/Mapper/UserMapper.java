@@ -64,7 +64,9 @@ public interface UserMapper {
      * @param id
      * @return
      */
-    @Select("SELECT role_name FROM role WHERE role.id = (SELECT user_role.id FROM user_role,USER WHERE user.id = #{id} AND user.id = user_role.id)")
+    @Select("SELECT role_name FROM role WHERE role.id = " +
+            "(SELECT user_role.role_id FROM user_role,USER WHERE user.id = #{id}" +
+            " AND user.id = user_role.user_id)")
     Set<String> findRolesById(Integer id);
 
     /**
@@ -90,5 +92,10 @@ public interface UserMapper {
     @Select("SELECT * FROM USER WHERE id IN (SELECT user_id FROM article GROUP BY user_id)")
     List<UserDto> findAllAuthor();
 
-
+    /**
+     * 为用户添加用户角色
+     * @param user_id
+     */
+    @Insert("insert into user_role (id ,user_id ,role_id ) values (null,#{user_id},1)")
+    void addUserRole(Integer user_id);
 }

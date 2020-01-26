@@ -48,6 +48,27 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * 分页查询所有包含关键字的文章
+     *
+     * @param pageNum  起始页码
+     * @param pageSize 每页数据条数
+     * @param keyword  关键字
+     * @return
+     */
+    @Override
+    public List<ArticleDto> findAllByKeyword(Integer pageNum, Integer pageSize, String keyword) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<ArticleDto> list = articleMapper.findAllByKeyword(keyword);
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+        }
+        return list;
+    }
+
+    /**
      * 根据点赞数降序查询所有文章
      *
      * @return

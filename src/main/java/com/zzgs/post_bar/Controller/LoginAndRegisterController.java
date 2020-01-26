@@ -20,6 +20,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -48,13 +49,20 @@ public class LoginAndRegisterController {
     @RequestMapping("/index")
     public String index(Model model,
                         @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                        @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
+                        @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
+                        @RequestParam(defaultValue = "",value = "keyword")String keyword){
         Subject subject = SecurityUtils.getSubject();
         if (subject.getPrincipal()!=null){
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询帖子
-        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+        List<ArticleDto> articleDtoList;
+        if ("".equals(keyword)){
+            articleDtoList = articleService.findAll(pageNum, pageSize);
+        }else {
+            keyword = "%"+keyword+"%";
+            articleDtoList = articleService.findAllByKeyword(pageNum, pageSize,keyword);
+        }
         //查询所有的分类的前五个
         List<TypeDto> typeDtoList = typeService.findAll();
         if (typeDtoList.size()>=5){
@@ -144,6 +152,8 @@ public class LoginAndRegisterController {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(register_account_name,register_account_password);
             subject.login(usernamePasswordToken);
             Integer user_id = userService.findByNickName(register_nickname).getId();
+            //为用户授予角色信息
+            userService.addUserRole(user_id);
             jsonObject.put("nick_name",register_nickname);
             jsonObject.put("user_id",user_id);
         }
