@@ -50,7 +50,7 @@ public interface TagMapper {
      * @return
      */
     @Select("select * from tag")
-    List<Tag> findAllTag();
+    List<TagDto> findAllTag();
     /**
      * 根据标签名查询标签
      * @param tag_name 标签名
@@ -67,4 +67,8 @@ public interface TagMapper {
     @Select("SELECT * FROM tag WHERE tag.id IN " +
             "(SELECT article_tag.tag_id FROM article_tag WHERE article_tag.article_id = #{article_id})")
     List<Tag> findByArticleId(Integer article_id);
+
+
+    @Select("SELECT COUNT(id) FROM article_tag WHERE tag_id = #{tag_id}")
+    Integer findTotalArticleNumById(Integer tag_id);
 }

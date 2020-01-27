@@ -1,5 +1,6 @@
 package com.zzgs.post_bar.Service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Dto.TagDto;
 import com.zzgs.post_bar.Mapper.TagMapper;
@@ -39,12 +40,29 @@ public class TagServiceImpl implements TagService {
     }
 
     /**
+     * 分页查询所有标签
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<TagDto> findAllTagPaging(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<TagDto> tagDtoList = tagMapper.findAllTag();
+        for (TagDto tagDto : tagDtoList) {
+            tagDto.setTotal_num(tagMapper.findTotalArticleNumById(tagDto.getId()));
+        }
+        return tagDtoList;
+    }
+
+    /**
      * 查询所有标签
      *
      * @return
      */
     @Override
-    public List<Tag> findAllTag() {
+    public List<TagDto> findAllTag() {
         return tagMapper.findAllTag();
     }
 

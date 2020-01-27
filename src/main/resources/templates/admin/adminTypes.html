@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,65 +9,129 @@
 	</head>
 	<body>
 		<!--导航-->
-		<nav class="ui attached segment m-padded-tb-mini m-shadow-small">
-			<div class="ui container">
-				<div class="ui menu secondary stackable">
-					<h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
-					<a href="#" class="m-item item m-mobile-hide"><i class="mini home icon"></i>帖子</a>
-					<a href="#" class="active m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
-					<a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
-					<a href="#" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
-				</div>
-			</div>
-			<a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
-		</nav>
+        <nav class="ui attached segment m-padded-tb-mini m-shadow-small">
+            <div class="ui container">
+                <div class="ui menu secondary stackable">
+                    <h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
+                    <a href="adminForums.html" th:href="@{/admin/index}" class="m-item item m-mobile-hide"><i
+                            class="mini home icon"></i>帖子</a>
+                    <a href="adminTypes.html" th:href="@{/admin/types}" class="active m-item item m-mobile-hide"><i
+                            class="mini microphone icon"></i>话题</a>
+                    <a href="adminTags.html" th:href="@{/admin/tags}" class="m-item item m-mobile-hide"><i
+                            class="mini tags icon"></i>标签</a>
+                    <a href="adminAuthor.html" th:href="@{/admin/authors}" class="m-item item m-mobile-hide"><i
+                            class="mini user icon"></i>作者</a>
+                    <div class="right m-item m-mobile-hide menu" th:if="${user}">
+                        <div class="ui item">
+                            <div class="text">
+                                <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
+                                <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
+        </nav>
+
 		<!--中间内容-->
 		<div class="m-container-small m-padded-tb-big">
 			<div class="ui container">
 				<div class="ui stackable grid">
+                    <!--头部-->
 					<div class="ui top attached segment">
+						<div class="ui middle aligned two column grid">
+							<div class="column">
+								<h3 class="ui violet header">分类列表</h3>
+							</div>
+							<div class="right aligned column">
+								当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
+								15</h3>个分类
+							</div>
+						</div>
+					</div>
+                    <!--分类列表-->
+					<div class="ui attached violet segment">
 						<div class="ui mini middle aligned three column grid">
 							<div class="center aligned column">
-								分类名
+                                <h5 class="ui violet header">分类名</h5>
 							</div>
 							<div class="center aligned column">
-								分类下的文章数
+                                <h5 class="ui violet header">分类下的文章数</h5>
 							</div>
 							<div class="center aligned column">
-								操作
+                                <h5 class="ui violet header">操作</h5>
 							</div>
 						</div>
 					</div>
-					<div class="ui attached segment">
-						<div class="ui mini middle aligned three column grid">
+					<div class="ui attached violet segment">
+						<div class="ui mini middle aligned three column grid" th:each="typeDto : ${typeDtoList}">
 							<div class="center aligned column">
-								<a href="#" class="ui basic violet button">思考与感悟</a>
+								<a href="#" class="ui basic violet button" th:text="${typeDto.type_name}">思考与感悟</a>
 							</div>
 							<div class="center aligned column">
-								共<h3 class="ui orange header m-inline-block m-text-thin">15</h3>贴
+								共<h3 class="ui orange header m-inline-block m-text-thin"
+                                     th:text="${typeDto.total_num}">15</h3>篇
 							</div>
 							<div class="center aligned column">
-								<a class="ui negative button mini">删除</a>
+								<a class="ui negative button mini">删除分类</a>
 							</div>
 						</div>
 					</div>
-					<!--底部页码内容-->
-					<div class="ui center aligned bottom attached segment">
-						<div class="ui buttons">
-							<button class="ui basic violet button">上一页</button>
-							<button class="ui basic violet button">1</button>
-							<button class="ui basic violet button">2</button>
-							<button class="ui violet button">3</button>
-							<button class="ui basic violet button">4</button>
-							<button class="ui basic violet button">5</button>
-							<button class="ui basic violet button">下一页</button>
-						</div>
-					</div>
+                    <!--底部页码内容-->
+                    <div class="ui center aligned bottom attached segment">
+                        <div class="ui buttons">
+                            <li th:if="${pageInfo.hasPreviousPage}">
+                                <a th:href="'/admin/types?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                            </li>
+                            <li th:if="!${pageInfo.hasPreviousPage}">
+                                <button class="ui basic disabled violet button">上一页</button>
+                            </li>
+                            <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/admin/types?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                                <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/admin/types?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                            </li>
+                            <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
+                                th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/admin/types?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                                <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/admin/types?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                            </li>
+                            <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
+                                th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/admin/types?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                                <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/admin/types?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                            </li>
+                            <li th:if="${pageInfo.hasNextPage}">
+                                <a th:href="'/admin/types?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                            </li>
+                            <li th:if="!${pageInfo.hasNextPage}">
+                                <button class="ui basic disabled violet button">下一页</button>
+                            </li>
+                        </div>
+                    </div>
 				</div>
 			</div>
 		</div>
 
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 		<!--底部-->
 		<footer class="ui attached segment">
 			<div class="ui center aligned container">

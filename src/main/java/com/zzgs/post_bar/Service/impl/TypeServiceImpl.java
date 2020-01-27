@@ -1,5 +1,6 @@
 package com.zzgs.post_bar.Service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Bean.Type;
 import com.zzgs.post_bar.Dto.TypeDto;
@@ -19,6 +20,22 @@ public class TypeServiceImpl implements TypeService {
 
     @Autowired
     private ArticleMapper articleMapper;
+
+    /**
+     * 分页查询所有话题并按照话题下的文章数量统计降序排列
+     *
+     * @return
+     */
+    @Override
+    public List<TypeDto> findAllPaging(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<TypeDto> typeDtoList = typeMapper.findAllType();
+        for (TypeDto typeDto : typeDtoList) {
+            typeDto.setTotal_num(typeMapper.findTotalArticleNumByTypeId(typeDto.getId()));
+        }
+        return typeDtoList;
+    }
+
     /**
      * 新增一个话题
      * @param type_name 话题名
@@ -44,7 +61,7 @@ public class TypeServiceImpl implements TypeService {
      * @return
      */
     @Override
-    public List<Type> findAllType() {
+    public List<TypeDto> findAllType() {
         return typeMapper.findAllType();
     }
 

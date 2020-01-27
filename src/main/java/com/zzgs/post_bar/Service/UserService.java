@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Service;
 
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.AuthorDto;
 import com.zzgs.post_bar.Dto.UserDto;
 
 import java.util.List;
@@ -81,4 +82,12 @@ public interface UserService {
      * @param user_id
      */
     void addUserRole(Integer user_id);
+
+    /**
+     * 分页查询所有的用户
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<AuthorDto> findAllAuthorDto(Integer pageNum, Integer pageSize);
 }

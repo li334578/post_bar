@@ -26,7 +26,15 @@ public interface TagService {
      * 查询所有标签
      * @return
      */
-    List<Tag> findAllTag();
+    List<TagDto> findAllTag();
+
+    /**
+     * 分页查询所有标签
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<TagDto> findAllTagPaging(Integer pageNum, Integer pageSize);
 
     /**
      * 根据标签名查询标签

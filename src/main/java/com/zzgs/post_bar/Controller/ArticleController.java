@@ -62,11 +62,11 @@ public class ArticleController {
         Subject subject = SecurityUtils.getSubject();
         String accountname = subject.getPrincipal().toString();
         User user = userService.findByAccountName(accountname);
-        List<Type> typeList = typeService.findAllType();
-        List<Tag> tagList = tagService.findAllTag();
+        List<TypeDto> typeDtoList = typeService.findAllType();
+        List<TagDto> tagDtoList = tagService.findAllTag();
         model.addAttribute("user",user);
-        model.addAttribute("typeList",typeList);
-        model.addAttribute("tagList",tagList);
+        model.addAttribute("typeDtoList",typeDtoList);
+        model.addAttribute("tagDtoList",tagDtoList);
         return "article_input";
     }
 

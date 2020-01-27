@@ -37,7 +37,7 @@ public interface TypeMapper {
      * @return
      */
     @Select("select * from type")
-    List<Type> findAllType();
+    List<TypeDto> findAllType();
 
     /**
      * 根据话题名查询话题
@@ -54,4 +54,12 @@ public interface TypeMapper {
      */
     @Select("select * from type where id = #{id}")
     Type findById(Integer id);
+
+    /**
+     * 查询该分类下的已发布的文章是数量
+     * @param id
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM article WHERE type_id = #{id} AND published = 1;")
+    Integer findTotalArticleNumByTypeId(Integer id);
 }

@@ -1,134 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="../../static/css/semantic.min.css">
-		<link rel="stylesheet" href="../../static/css/my.css">
-		<title>帖子管理</title>
-	</head>
-	<body>
-		<!--导航-->
-		<nav class="ui attached segment m-padded-tb-mini m-shadow-small">
-			<div class="ui container">
-				<div class="ui menu secondary stackable">
-					<h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
-					<a href="#" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>帖子</a>
-					<a href="#" class="m-item item m-mobile-hide"><i class="mini microphone icon"></i>话题</a>
-					<a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
-					<a href="#" class="m-item item m-mobile-hide"><i class="mini user icon"></i>作者</a>
-				</div>
-			</div>
-			<a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
-		</nav>
-		<!--中间内容-->
-		<div class="m-container-small m-padded-tb-big">
-			<div class="ui container">
-				<!--头部-->
-				<div class="ui top attached segment">
-					<div class="ui middle aligned two column grid">
-						<div class="column">
-							<h3 class="ui violet header">话题分类</h3>
-						</div>
-						<div class="right aligned column">
-							共<h3 class="ui orange header m-inline-block m-text-thin">15</h3>个
-						</div>
-					</div>
-				</div>
-				<!--分类列表-->
-				<div class="ui attached segment m-padded-tb-large">
-					<div class="ui labeled button m-margin-tb-tiny">
-						<a href="#" class="ui basic violet button">思考与感悟</a>
-						<div class="ui basic violet left pointing label">24</div>
-					</div>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/css/semantic.min.css">
+    <link rel="stylesheet" href="../../static/css/my.css">
+    <title>帖子管理</title>
+</head>
+<body>
+<!--导航-->
+<nav class="ui attached segment m-padded-tb-mini m-shadow-small">
+    <div class="ui container">
+        <div class="ui menu secondary stackable">
+            <h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
+            <a href="adminForums.html" th:href="@{/admin/index}" class="active m-item item m-mobile-hide"><i
+                    class="mini home icon"></i>帖子</a>
+            <a href="adminTypes.html" th:href="@{/admin/types}" class="m-item item m-mobile-hide"><i
+                    class="mini microphone icon"></i>话题</a>
+            <a href="adminTags.html" th:href="@{/admin/tags}" class="m-item item m-mobile-hide"><i
+                    class="mini tags icon"></i>标签</a>
+            <a href="adminAuthor.html" th:href="@{/admin/authors}" class="m-item item m-mobile-hide"><i
+                    class="mini user icon"></i>作者</a>
+            <div class="right m-item m-mobile-hide menu" th:if="${user}">
+                <div class="ui item">
+                    <div class="text">
+                        <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
+                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
+</nav>
+<!--中间内容-->
+<div class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+        <!--头部-->
+        <div class="ui top attached segment">
+            <div class="ui middle aligned two column grid">
+                <div class="column">
+                    <h3 class="ui violet header">文章列表</h3>
+                </div>
+                <div class="right aligned column">
+                    当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
+                    15</h3>篇
+                </div>
+            </div>
+        </div>
 
-					<div class="ui labeled button m-margin-tb-tiny">
-						<a href="#" class="ui basic button">问题与解答</a>
-						<div class="ui basic left pointing label">12</div>
-					</div>
-				</div>
+        <!--文章列表-->
+        <div class="ui attached violet segment">
+            <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
+                 th:each="articleDto : ${articleDtoList}">
+                <div class="ui mobile reversed stackable grid">
+                    <div class="sixteen wide column">
+                        <h3 class="ui header" th:text="${articleDto.title}">几米经典语录</h3>
+                        <p class="m-text" th:text="${articleDto.description}">
+                            1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
+                            2.但是冬天总是会过去，春天总是会来。
+                            3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
+                        </p>
+                        <div class="ui stackable grid">
+                            <div class="eleven wide column">
+                                <div class="ui mini horizontal link list">
+                                    <div class="item">
+                                        <img src="https://picsum.photos/id/1033/100/100"
+                                             th:src="${articleDto.user_avatar}" alt="" class="ui avatar image">
+                                        <div class="content">
+                                            <div class="header">
+                                                <a href="#" th:text="${articleDto.author_name}">李文博</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <i class="calendar icon"></i>
+                                        <span th:text="${articleDto.create_time}">2019-10-02</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="eye icon"></i>
+                                        <span th:text="${articleDto.browse_volume}">2333</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="comment alternate outline icon"></i>
+                                        <span th:text="${articleDto.comment}">15</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="thumbs up icon"></i>
+                                        <span th:text="${articleDto.approval_num}">15</span>
+                                    </div>
+                                    <div class="item">
+                                        <i class="thumbs down icon"></i>
+                                        <span th:text="${articleDto.trample_num}">15</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="right aligned four wide column">
+                                <a href="#" target="_blank" class="ui violet basic label m-padded-mini"
+                                   th:text="${articleDto.type_name}">个人感悟</a>
+                                <a class="ui red button basic label m-padded-mini">删除该文</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--底部页码内容-->
+        <div class="ui center aligned bottom attached segment">
+            <div class="ui buttons">
+                <li th:if="${pageInfo.hasPreviousPage}">
+                    <a th:href="'/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                </li>
+                <li th:if="!${pageInfo.hasPreviousPage}">
+                    <button class="ui basic disabled violet button">上一页</button>
+                </li>
+                <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                    <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                </li>
+                <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
+                    th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                    <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                </li>
+                <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
+                    th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
+                            <span th:if="${pageInfo.pageNum==page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                            </span>
+                    <span th:if="${pageInfo.pageNum!=page}">
+                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                            </span>
+                </li>
+                <li th:if="${pageInfo.hasNextPage}">
+                    <a th:href="'/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                </li>
+                <li th:if="!${pageInfo.hasNextPage}">
+                    <button class="ui basic disabled violet button">下一页</button>
+                </li>
+            </div>
+        </div>
+    </div>
+</div>
 
-				<!--帖子列表-->
-				<div class="ui top attached violet segment">
-					<div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear">
-						<div class="ui mobile reversed stackable grid">
-							<div class="eleven wide column">
-								<h3 class="ui header">几米经典语录</h3>
-								<p class="m-text">1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
-									2.但是冬天总是会过去，春天总是会来。
-									3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
-								</p>
-								<div class="ui stackable grid">
-									<div class="eleven wide column">
-										<div class="ui mini horizontal link list">
-											<div class="item">
-												<img src="https://picsum.photos/id/1033/100/100" alt="" class="ui avatar image">
-												<div class="content">
-													<div class="header"><a href="#">李文博</a></div>
-												</div>
-											</div>
-											<div class="item">
-												<i class="calendar icon"></i>2019-10-02
-											</div>
-											<div class="item">
-												<i class="eye icon"></i>2333
-											</div>
-										</div>
-									</div>
-									<div class="right aligned five wide column">
-										<a href="#" target="_blank" class="ui violet basic label m-padded-mini">个人感悟</a>
-									</div>
-									<div class="ui mini horizontal link list">
-										<div class="item">
-											<div class="ui toggle checkbox">
-												<input type="checkbox" name="isRecommend"/>
-												<label>是否推荐</label>
-											</div>
-											<div class="ui mini red button">删除</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="five wide column">
-								<a href="#" target="_blank">
-									<img src="https://picsum.photos/id/1033/800/450" alt="" class="ui rounded image">
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!--底部页码内容-->
-				<div class="ui center aligned bottom attached segment">
-					<div class="ui buttons">
-						<div class="stackable">
-							<!-- 适配小屏幕上显示三个按钮或者按钮大小变小一些 -->
-							<button class="ui basic violet button">上一页</button>
-							<button class="ui basic violet button">1</button>
-							<button class="ui basic violet button">2</button>
-							<button class="ui violet button">3</button>
-							<button class="ui basic violet button">4</button>
-							<button class="ui basic violet button">5</button>
-							<button class="ui basic violet button">下一页</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!--底部-->
-		<footer class="ui attached segment">
-			<div class="ui center aligned container">
-				<p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
-			</div>
-		</footer>
+<!--底部-->
+<footer class="ui attached segment">
+    <div class="ui center aligned container">
+        <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
+    </div>
+</footer>
 
 
-		<script src="../../static/js/jquery.min.js"></script>
-		<script src="../../static/js/semantic.min.js"></script>
-		<script>
-			$('.menu.toggle').click(function() {
-				$('.m-item').toggleClass('m-mobile-hide');
-			});
-		</script>
-	</body>
+<script src="../../static/js/jquery.min.js"></script>
+<script src="../../static/js/semantic.min.js"></script>
+<script>
+    $('.menu.toggle').click(function () {
+        $('.m-item').toggleClass('m-mobile-hide');
+    });
+</script>
+</body>
 </html>

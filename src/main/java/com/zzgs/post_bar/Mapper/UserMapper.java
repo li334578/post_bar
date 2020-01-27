@@ -1,6 +1,7 @@
 package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.AuthorDto;
 import com.zzgs.post_bar.Dto.UserDto;
 import org.apache.ibatis.annotations.*;
 
@@ -98,4 +99,43 @@ public interface UserMapper {
      */
     @Insert("insert into user_role (id ,user_id ,role_id ) values (null,#{user_id},1)")
     void addUserRole(Integer user_id);
+
+    /**
+     * 查询所有用户
+     * @return
+     */
+    @Select("SELECT * FROM USER WHERE user.id IN  (SELECT user_role.user_id FROM user_role WHERE user_role.role_id = 1)")
+    List<AuthorDto> findAllAuthorDto();
+
+    /**
+     * 根据用户id查询用户发布的文章数
+     * @param user_id
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM article WHERE user_id = #{user_id} AND published = 1")
+    Integer findPublishedArticleNumByUserId(Integer user_id);
+
+    /**
+     * 根据用户id查询用户发布的评论数
+     * @param user_id
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM COMMENT WHERE user_id = #{user_id}")
+    Integer findCommentNumByUserId(Integer user_id);
+
+    /**
+     * 根据用户id发布用户的点赞数
+     * @param user_id
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM article_attitude WHERE user_id = #{user_id} AND attitude = 1")
+    Integer findApprovalNumByUserId(Integer user_id);
+
+    /**
+     * 根据用户id查询用户的点踩数
+     * @param user_id
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM article_attitude WHERE user_id = #{user_id} AND attitude = 0")
+    Integer findTrampleNumByUserId(Integer user_id);
 }

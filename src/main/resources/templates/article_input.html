@@ -77,8 +77,8 @@
                             <i class="dropdown icon"></i>
                             <div class="default text">话题</div>
                             <div class="menu" id="type_item">
-                                <div class="item" th:each="type : ${typeList}">
-                                    <div th:value="${type.id}" th:text="${type.type_name}">错误日志</div>
+                                <div class="item" th:each="typeDto : ${typeDtoList}">
+                                    <div th:value="${typeDto.id}" th:text="${typeDto.type_name}">错误日志</div>
                                 </div>
                             </div>
                         </div>
@@ -91,8 +91,8 @@
                             <i class="dropdown icon"></i>
                             <div class="default text">标签</div>
                             <div class="menu" id="tag_item" >
-                                <div class="item" th:each="tag : ${tagList}"
-                                     th:value="${tag.id}" th:text="${tag.tag_name}">Java</div>
+                                <div class="item" th:each="tagDto : ${tagDtoList}"
+                                     th:value="${tagDto.id}" th:text="${tagDto.tag_name}">Java</div>
                             </div>
                         </div>
                     </div>

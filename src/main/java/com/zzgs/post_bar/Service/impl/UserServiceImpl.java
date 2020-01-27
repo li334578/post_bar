@@ -2,6 +2,7 @@ package com.zzgs.post_bar.Service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.zzgs.post_bar.Bean.User;
+import com.zzgs.post_bar.Dto.AuthorDto;
 import com.zzgs.post_bar.Dto.UserDto;
 import com.zzgs.post_bar.Mapper.ArticleMapper;
 import com.zzgs.post_bar.Mapper.UserMapper;
@@ -134,5 +135,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addUserRole(Integer user_id) {
         userMapper.addUserRole(user_id);
+    }
+
+    /**
+     * 分页查询所有的用户
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @Override
+    public List<AuthorDto> findAllAuthorDto(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<AuthorDto> authorDtoList = userMapper.findAllAuthorDto();
+        for (AuthorDto authorDto : authorDtoList) {
+            authorDto.setTotal_approval_num(userMapper.findApprovalNumByUserId(authorDto.getId()));
+            authorDto.setTotal_comment_num(userMapper.findCommentNumByUserId(authorDto.getId()));
+            authorDto.setTotal_published_article_num(userMapper.findPublishedArticleNumByUserId(authorDto.getId()));
+            authorDto.setTotal_trample_num(userMapper.findTrampleNumByUserId(authorDto.getId()));
+        }
+        return authorDtoList;
     }
 }

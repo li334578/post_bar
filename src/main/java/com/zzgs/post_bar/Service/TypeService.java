@@ -23,10 +23,18 @@ public interface TypeService {
     List<TypeDto> findAll();
 
     /**
+     * 分页查询所有话题并按照话题下的文章数量统计降序排列
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<TypeDto> findAllPaging(Integer pageNum, Integer pageSize);
+
+    /**
      * 查询所有分类
      * @return
      */
-    List<Type> findAllType();
+    List<TypeDto> findAllType();
 
     /**
      * 根据话题名查询话题
