@@ -152,4 +152,23 @@ public class AdminController {
         model.addAttribute("pageInfo",pageInfo);
         return "/admin/adminAuthor";
     }
+
+    @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/delType")
+    @ResponseBody
+    public String delType(@RequestParam("type_id") Integer type_id){
+        JSONObject jsonObject = new JSONObject();
+        //查询该分类下的文章
+        Integer num = typeService.findTotalArticleNumByTypeId(type_id);
+        if (num>0){
+            //说明该分类下有文章
+            jsonObject.put("statusCode",500);
+            jsonObject.put("msg","该分类下有"+num+"篇文章,不能删除该分类.");
+        }else {
+            //直接删除分类
+            jsonObject.put("statusCode",200);
+            jsonObject.put("msg","删除成功");
+        }
+        return jsonObject.toString();
+    }
 }

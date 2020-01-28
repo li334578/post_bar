@@ -56,7 +56,7 @@ public interface TypeMapper {
     Type findById(Integer id);
 
     /**
-     * 查询该分类下的已发布的文章是数量
+     * 查询该分类下的已发布的文章的数量
      * @param id
      * @return
      */

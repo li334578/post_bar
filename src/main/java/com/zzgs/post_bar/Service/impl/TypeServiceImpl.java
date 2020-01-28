@@ -85,4 +85,15 @@ public class TypeServiceImpl implements TypeService {
     public Type findById(Integer id) {
         return typeMapper.findById(id);
     }
+
+    /**
+     * 查询该分类下的文章数量
+     *
+     * @param type_id
+     * @return
+     */
+    @Override
+    public Integer findTotalArticleNumByTypeId(Integer type_id) {
+        return typeMapper.findTotalArticleNumByTypeId(type_id);
+    }
 }

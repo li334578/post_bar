@@ -49,4 +49,12 @@ public interface TypeService {
      * @return
      */
     Type findById(Integer id);
+
+
+    /**
+     * 查询该分类下的文章数量
+     * @param type_id
+     * @return
+     */
+    Integer findTotalArticleNumByTypeId(Integer type_id);
 }
