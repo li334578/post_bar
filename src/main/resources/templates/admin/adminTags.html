@@ -26,6 +26,7 @@
                     <div class="text">
                         <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
                         <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <span style="margin-left: 5px"><a href="/admin/logout">注销</a></span>
                     </div>
                 </div>
             </div>
@@ -72,7 +73,8 @@
             <div class="ui attached violet segment">
                 <div class="ui mini middle aligned three column grid" th:each="tagDto : ${tagDtoList}">
                     <div class="center aligned column">
-                        <a href="#" class="ui tag label violet" th:text="${tagDto.tag_name}">思考与感悟</a>
+                        <a href="#" class="ui tag label violet"
+                           th:text="${tagDto.tag_name}" th:href="'/admin/tag/'+${tagDto.id}">思考与感悟</a>
                     </div>
                     <div class="center aligned column">
                         共<h3 class="ui orange header m-inline-block m-text-thin"
@@ -191,7 +193,7 @@
         $.ajax({
             url: '/admin/delTag',
             data: {
-                tag_id: tag_id
+                tag_id: type_id
             },
             type: 'post',
             dataType: 'json',

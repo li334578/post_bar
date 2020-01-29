@@ -25,7 +25,7 @@
                 <div class="ui item">
                     <div class="text">
                         <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
-                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
                         <span style="margin-left: 5px"><a href="/admin/logout">注销</a></span>
                     </div>
                 </div>
@@ -44,8 +44,8 @@
                     <h3 class="ui violet header">文章列表</h3>
                 </div>
                 <div class="right aligned column">
-                    当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
-                    15</h3>篇
+                    共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${typeTotalNum}">
+                    15</h3>个话题
                 </div>
             </div>
         </div>
@@ -53,6 +53,19 @@
         <div class="ui attached message segment hidden" id="tipMsg">
             <i class="close icon" onclick="hideTipMsg()"></i>
             <h3 id="tipMsgContent"></h3>
+        </div>
+        <!--话题列表-->
+        <div class="ui attached segment m-padded-tb-large">
+            <div class="ui labeled button m-margin-tb-tiny" th:each="typeDto : ${typeDtoList}">
+                <a th:href="'/admin/type/'+${typeDto.id}" th:if="${typeDto.id == currentTypeId}"
+                   class="ui basic violet button" th:text="${typeDto.type_name}">思考与感悟</a>
+                <div class="ui basic violet left pointing label" th:if="${typeDto.id == currentTypeId}"
+                     th:text="${typeDto.total_num}">24</div>
+                <a th:href="'/admin/type/'+${typeDto.id}" th:unless="${typeDto.id == currentTypeId}"
+                   class="ui basic button" th:text="${typeDto.type_name}">思考与感悟</a>
+                <div class="ui basic left pointing label" th:unless="${typeDto.id == currentTypeId}"
+                     th:text="${typeDto.total_num}">24</div>
+            </div>
         </div>
         <!--文章列表-->
         <div class="ui attached violet segment">
@@ -71,7 +84,7 @@
                                 <div class="ui mini horizontal link list">
                                     <div class="item">
                                         <img src="https://picsum.photos/id/1033/100/100"
-                                             th:src="${articleDto.user_avatar}" alt="" class="ui avatar image">
+                                             th:src="'../'+${articleDto.user_avatar}" alt="" class="ui avatar image">
                                         <div class="content">
                                             <div class="header">
                                                 <a href="#" th:text="${articleDto.author_name}">李文博</a>
@@ -102,7 +115,7 @@
                             </div>
                             <div class="right aligned four wide column">
                                 <a href="#" target="_blank" class="ui violet basic label m-padded-mini"
-                                   th:text="${articleDto.type_name}" th:href="'/admin/type/'+${articleDto.type_id}">个人感悟</a>
+                                   th:text="${articleDto.type_name}">个人感悟</a>
                                 <a class="ui red button basic label m-padded-mini"
                                    th:onclick="'javascript:showDeleteModal('+${articleDto.id}+')'">删除该文</a>
                             </div>
@@ -115,39 +128,39 @@
         <div class="ui center aligned bottom attached segment">
             <div class="ui buttons">
                 <li th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/admin/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                    <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
                 </li>
                 <li th:if="!${pageInfo.hasPreviousPage}">
                     <button class="ui basic disabled violet button">上一页</button>
                 </li>
                 <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
                     th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
                     th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.hasNextPage}">
-                    <a th:href="'/admin/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                    <a th:href="'/admin/type/'+${currentTypeId}+'?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
                 </li>
                 <li th:if="!${pageInfo.hasNextPage}">
                     <button class="ui basic disabled violet button">下一页</button>

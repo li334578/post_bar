@@ -3,6 +3,7 @@ package com.zzgs.post_bar.Controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import com.zzgs.post_bar.Bean.Tag;
+import com.zzgs.post_bar.Bean.User;
 import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Dto.TagDto;
 import com.zzgs.post_bar.Dto.TypeDto;
@@ -80,6 +81,12 @@ public class TagController {
                                    @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
                                    @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
                                    @PathVariable("id")Integer tag_id){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            User user = userService.findByAccountName(subject.getPrincipal().toString());
+            user.setUser_avatar("../"+user.getUser_avatar());
+            model.addAttribute("user",user);
+        }
         //根据tag_id查询文章
         List<ArticleDto> articleDtoList = articleService.findArticleByTagId(tag_id,pageNum,pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);

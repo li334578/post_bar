@@ -21,6 +21,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -50,6 +51,12 @@ public class AdminController {
         return "/admin/adminLogin";
     }
 
+    @RequestMapping("/logout")
+    public String logOut(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        return "/admin/adminLogin";
+    }
 
     @RequestMapping("/login")
     @ResponseBody
@@ -118,6 +125,30 @@ public class AdminController {
         return "/admin/adminTypes";
     }
 
+
+    @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/type/{id}")
+    public String adminTypesIndex(Model model,
+                            @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                            @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
+                            @PathVariable("id")Integer type_id){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        //查询当前type_id下的所有文章
+        List<ArticleDto> articleDtoList = articleService.findArticleByTypeId(type_id,pageNum, pageSize);
+        PageInfo pageInfo = new PageInfo(articleDtoList);
+        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("articleDtoList",articleDtoList);
+        //查询所有的分类
+        List<TypeDto> typeDtoList = typeService.findAll();
+        model.addAttribute("typeTotalNum",typeDtoList.size());
+        model.addAttribute("typeDtoList",typeDtoList);
+        model.addAttribute("currentTypeId",type_id);
+        return "/admin/adminTypeForums";
+    }
+
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/tags")
     public String adminTags(Model model,
@@ -134,6 +165,34 @@ public class AdminController {
         model.addAttribute("tagDtoList",tagDtoList);
         model.addAttribute("pageInfo",pageInfo);
         return "/admin/adminTags";
+    }
+
+    @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/tag/{id}")
+    public String adminTagsIndex(Model model,
+                                  @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                                  @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
+                                  @PathVariable("id")Integer tag_id){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        //根据tag_id查询文章
+        List<ArticleDto> articleDtoList = articleService.findArticleByTagId(tag_id,pageNum,pageSize);
+        PageInfo pageInfo = new PageInfo(articleDtoList);
+        model.addAttribute("articleDtoList",articleDtoList);
+        model.addAttribute("pageInfo",pageInfo);
+        //查询所有的分类
+        List<TagDto> tagDtoList = tagService.findAll();
+        for (TagDto tagDto : tagDtoList) {
+            tagDto.setTotal_num(articleService.findTotalByTagId(tagDto.getId()));
+        }
+        model.addAttribute("tagTotalNum",tagDtoList.size());
+        model.addAttribute("tagDtoList",tagDtoList);
+        model.addAttribute("currentTagId",tag_id);
+        //根据标签进行查询 在model中放入标志
+        model.addAttribute("tag_id",tag_id);
+        return "/admin/adminTagForums";
     }
 
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
