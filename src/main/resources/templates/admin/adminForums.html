@@ -48,7 +48,11 @@
                 </div>
             </div>
         </div>
-
+        <!--消息提示区域-->
+        <div class="ui attached message segment hidden" id="tipMsg">
+            <i class="close icon" onclick="hideTipMsg()"></i>
+            <h3 id="tipMsgContent"></h3>
+        </div>
         <!--文章列表-->
         <div class="ui attached violet segment">
             <div class="ui padded vertical segment m-padded-tb-large m-mobile-lr-clear"
@@ -98,7 +102,8 @@
                             <div class="right aligned four wide column">
                                 <a href="#" target="_blank" class="ui violet basic label m-padded-mini"
                                    th:text="${articleDto.type_name}">个人感悟</a>
-                                <a class="ui red button basic label m-padded-mini">删除该文</a>
+                                <a class="ui red button basic label m-padded-mini"
+                                   th:onclick="'javascript:showDeleteModal('+${articleDto.id}+')'">删除该文</a>
                             </div>
                         </div>
                     </div>
@@ -109,39 +114,39 @@
         <div class="ui center aligned bottom attached segment">
             <div class="ui buttons">
                 <li th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                    <a th:href="'/admin/index?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
                 </li>
                 <li th:if="!${pageInfo.hasPreviousPage}">
                     <button class="ui basic disabled violet button">上一页</button>
                 </li>
                 <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
                     th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
                     th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/index?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.hasNextPage}">
-                    <a th:href="'/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                    <a th:href="'/admin/index?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
                 </li>
                 <li th:if="!${pageInfo.hasNextPage}">
                     <button class="ui basic disabled violet button">下一页</button>
@@ -150,7 +155,22 @@
         </div>
     </div>
 </div>
-
+<!--删除的模态框-->
+<div class="container">
+    <div class="ui delete modal card tiny">
+        <i class="close icon"></i>
+        <div class="content">
+            <h2>您确定要删除该文章吗？</h2>
+        </div>
+        <div class="extra content">
+            <input type="hidden" id="article_id" value="">
+            <div class="ui two buttons">
+                <div class="ui violet affirm button" onclick="deleteArticle()">确定</div>
+                <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>
 <!--底部-->
 <footer class="ui attached segment">
     <div class="ui center aligned container">
@@ -165,6 +185,49 @@
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
+    function showDeleteModal(article_id) {
+        $("#article_id").val(article_id);
+        $(".ui.delete.modal").modal("setting", "closable", false);
+        $(".ui.delete.modal").modal("show");
+    }
+
+    function hideDeleteModal() {
+        $(".ui.delete.modal").modal("setting", "closable", true);
+        $(".ui.delete.modal").modal("hide");
+    }
+
+    function hideTipMsg() {
+        $("#tipMsgContent").text("");
+        $("#tipMsg").addClass("hidden");
+    }
+
+    function deleteArticle() {
+        var article_id = $("#article_id").val();
+        $.ajax({
+            url: '/admin/delArticle',
+            data: {
+                article_id: article_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                hideDeleteModal();
+                $("#tipMsgContent").text("");
+                if (data.statusCode == 200) {
+                    window.alert(data.msg);
+                    window.location.reload();
+                    // $("#tipMsgContent").text(data.msg);
+                    // $("#tipMsg").removeClass("hidden");
+                    // $("#tipMsg").addClass("info");
+                } else {
+                    $("#tipMsg").addClass("warning");
+                    $("#tipMsgContent").text(data.msg);
+                    $("#tipMsg").removeClass("hidden");
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

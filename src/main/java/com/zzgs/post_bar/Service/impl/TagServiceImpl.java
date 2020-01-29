@@ -51,7 +51,7 @@ public class TagServiceImpl implements TagService {
         PageHelper.startPage(pageNum,pageSize);
         List<TagDto> tagDtoList = tagMapper.findAllTag();
         for (TagDto tagDto : tagDtoList) {
-            tagDto.setTotal_num(tagMapper.findTotalArticleNumById(tagDto.getId()));
+            tagDto.setTotal_num(tagMapper.findTotalArticleNumByTagId(tagDto.getId()));
         }
         return tagDtoList;
     }
@@ -85,5 +85,26 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findByArticleId(Integer article_id) {
         return tagMapper.findByArticleId(article_id);
+    }
+
+    /**
+     * 根据tag_id查询tag_id下的文章数量
+     *
+     * @param tag_id
+     * @return
+     */
+    @Override
+    public Integer findTotalArticleNumByTagId(Integer tag_id) {
+        return tagMapper.findTotalArticleNumByTagId(tag_id);
+    }
+
+    /**
+     * 根据tag_id删除tag
+     *
+     * @param tag_id
+     */
+    @Override
+    public void delTagByTagId(Integer tag_id) {
+        tagMapper.delTagByTagId(tag_id);
     }
 }

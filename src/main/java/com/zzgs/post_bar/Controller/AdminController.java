@@ -166,9 +166,44 @@ public class AdminController {
             jsonObject.put("msg","该分类下有"+num+"篇文章,不能删除该分类.");
         }else {
             //直接删除分类
+            typeService.delTypeById(type_id);
             jsonObject.put("statusCode",200);
             jsonObject.put("msg","删除成功");
         }
+        return jsonObject.toString();
+    }
+
+    @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/delTag")
+    @ResponseBody
+    public String delTag(@RequestParam("tag_id") Integer tag_id) {
+        JSONObject jsonObject = new JSONObject();
+        //查询该标签下的文章
+        Integer num = tagService.findTotalArticleNumByTagId(tag_id);
+        if (num>0){
+            //说明该标签下有文章
+            jsonObject.put("statusCode",500);
+            jsonObject.put("msg","该标签下有"+num+"篇文章,不能删除该标签.");
+        }else {
+            //直接删除
+            tagService.delTagByTagId(tag_id);
+            jsonObject.put("statusCode",200);
+            jsonObject.put("msg","删除成功");
+        }
+        return jsonObject.toString();
+    }
+
+    @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/delArticle")
+    @ResponseBody
+    public String delArticle(@RequestParam("article_id") Integer article_id) {
+        JSONObject jsonObject = new JSONObject();
+        //调用删除
+        articleService.deleteArticleByArticleId(article_id);
+        //删除文章和标签的对应关系
+        articleService.deleteArticleTag(article_id);
+        jsonObject.put("statusCode",200);
+        jsonObject.put("msg","删除成功");
         return jsonObject.toString();
     }
 }

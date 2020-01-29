@@ -2,10 +2,7 @@ package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.Type;
 import com.zzgs.post_bar.Dto.TypeDto;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -49,17 +46,24 @@ public interface TypeMapper {
 
     /**
      * 根据id查询type
-     * @param id
+     * @param type_id
      * @return
      */
-    @Select("select * from type where id = #{id}")
-    Type findById(Integer id);
+    @Select("select * from type where id = #{type_id}")
+    Type findById(Integer type_id);
 
     /**
      * 查询该分类下的已发布的文章的数量
-     * @param id
+     * @param type_id
      * @return
      */
-    @Select("SELECT COUNT(id) FROM article WHERE type_id = #{id} AND published = 1;")
-    Integer findTotalArticleNumByTypeId(Integer id);
+    @Select("SELECT COUNT(id) FROM article WHERE type_id = #{type_id} AND published = 1;")
+    Integer findTotalArticleNumByTypeId(Integer type_id);
+
+    /**
+     * 根据type_id删除id
+     * @param type_id
+     */
+    @Delete("delete from type where id = #{type_id}")
+    void delTypeById(Integer type_id);
 }

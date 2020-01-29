@@ -49,6 +49,12 @@
                     </div>
                 </div>
             </div>
+            <!--消息提示区域-->
+            <div class="ui attached message segment hidden" id="tipMsg">
+                <i class="close icon" onclick="hideTipMsg()"></i>
+                <h3 id="tipMsgContent"></h3>
+            </div>
+            <!--标签-->
             <div class="ui attached violet segment">
                 <div class="ui mini middle aligned three column grid">
                     <div class="center aligned column">
@@ -73,7 +79,9 @@
                              th:text="${tagDto.total_num}">15</h3>篇
                     </div>
                     <div class="center aligned column">
-                        <a class="ui negative button mini">删除标签</a>
+                        <button class="ui negative button mini"
+                                th:onclick="'javascript:showDeleteModal('+${tagDto.id}+')'">删除标签
+                        </button>
                     </div>
                 </div>
             </div>
@@ -123,6 +131,22 @@
         </div>
     </div>
 </div>
+<!--删除的模态框-->
+<div class="container">
+    <div class="ui delete modal card tiny">
+        <i class="close icon"></i>
+        <div class="content">
+            <h2>您确定要删除该标签吗？</h2>
+        </div>
+        <div class="extra content">
+            <input type="hidden" id="tag_id" value="">
+            <div class="ui two buttons">
+                <div class="ui violet affirm button" onclick="deleteTag()">确定</div>
+                <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>
 <br>
 <br>
 <br>
@@ -146,6 +170,49 @@
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
+    function showDeleteModal(tag_id) {
+        $("#tag_id").val(tag_id);
+        $(".ui.delete.modal").modal("setting", "closable", false);
+        $(".ui.delete.modal").modal("show");
+    }
+
+    function hideDeleteModal() {
+        $(".ui.delete.modal").modal("setting", "closable", true);
+        $(".ui.delete.modal").modal("hide");
+    }
+
+    function hideTipMsg() {
+        $("#tipMsgContent").text("");
+        $("#tipMsg").addClass("hidden");
+    }
+
+    function deleteTag() {
+        var tag_id = $("#tag_id").val();
+        $.ajax({
+            url: '/admin/delTag',
+            data: {
+                tag_id: tag_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                hideDeleteModal();
+                $("#tipMsgContent").text("");
+                if (data.statusCode == 200) {
+                    window.alert(data.msg);
+                    window.location.reload();
+                    // $("#tipMsgContent").text(data.msg);
+                    // $("#tipMsg").removeClass("hidden");
+                    // $("#tipMsg").addClass("info");
+                } else {
+                    $("#tipMsg").addClass("warning");
+                    $("#tipMsgContent").text(data.msg);
+                    $("#tipMsg").removeClass("hidden");
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

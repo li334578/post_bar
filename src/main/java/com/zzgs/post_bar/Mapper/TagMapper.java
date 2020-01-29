@@ -2,10 +2,7 @@ package com.zzgs.post_bar.Mapper;
 
 import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Dto.TagDto;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Date;
 import java.util.List;
@@ -68,7 +65,14 @@ public interface TagMapper {
             "(SELECT article_tag.tag_id FROM article_tag WHERE article_tag.article_id = #{article_id})")
     List<Tag> findByArticleId(Integer article_id);
 
-
+    /**
+     * 根据标签id查询到该标签下的文章数量
+     * @param tag_id
+     * @return
+     */
     @Select("SELECT COUNT(id) FROM article_tag WHERE tag_id = #{tag_id}")
-    Integer findTotalArticleNumById(Integer tag_id);
+    Integer findTotalArticleNumByTagId(Integer tag_id);
+
+    @Delete("delete from tag where id = #{tag_id}")
+    void delTagByTagId(Integer tag_id);
 }

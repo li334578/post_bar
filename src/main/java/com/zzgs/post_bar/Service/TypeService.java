@@ -45,10 +45,10 @@ public interface TypeService {
 
     /**
      * 根据id查询话题分类
-     * @param id
+     * @param type_id
      * @return
      */
-    Type findById(Integer id);
+    Type findById(Integer type_id);
 
 
     /**
@@ -57,4 +57,10 @@ public interface TypeService {
      * @return
      */
     Integer findTotalArticleNumByTypeId(Integer type_id);
+
+    /**
+     * 根据id删除分类
+     * @param type_id
+     */
+    void delTypeById(Integer type_id);
 }

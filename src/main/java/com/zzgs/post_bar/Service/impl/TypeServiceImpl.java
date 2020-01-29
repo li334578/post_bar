@@ -78,12 +78,12 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 根据id查询话题分类
      *
-     * @param id
+     * @param type_id
      * @return
      */
     @Override
-    public Type findById(Integer id) {
-        return typeMapper.findById(id);
+    public Type findById(Integer type_id) {
+        return typeMapper.findById(type_id);
     }
 
     /**
@@ -95,5 +95,15 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public Integer findTotalArticleNumByTypeId(Integer type_id) {
         return typeMapper.findTotalArticleNumByTypeId(type_id);
+    }
+
+    /**
+     * 根据id删除分类
+     *
+     * @param type_id
+     */
+    @Override
+    public void delTypeById(Integer type_id) {
+        typeMapper.delTypeById(type_id);
     }
 }
