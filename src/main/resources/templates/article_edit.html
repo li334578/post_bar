@@ -37,6 +37,8 @@
                     <button class="ui login violet button">登录</button>
                     &nbsp
                     <button class="ui register violet button">注册</button>
+                    &nbsp
+                    <a th:href="@{/user/changePwdPage}" href="change_password.html"> 忘记密码？</a>
                 </div>
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
@@ -53,6 +55,7 @@
                         <a href="/user/userSetting" class="item">个人资料</a>
                         <a href="/article/article_input" class="item">我要发帖</a>
                         <a href="/article/myArticle" class="item">我的帖子</a>
+                        <a href="/user/changePwdPage" class="item">修改密码</a>
                         <a href="/logout" class="item">注销</a>
                     </div>
                 </div>

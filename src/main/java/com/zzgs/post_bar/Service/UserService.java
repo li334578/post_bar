@@ -3,6 +3,7 @@ package com.zzgs.post_bar.Service;
 import com.zzgs.post_bar.Bean.User;
 import com.zzgs.post_bar.Dto.AuthorDto;
 import com.zzgs.post_bar.Dto.UserDto;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -48,7 +49,7 @@ public interface UserService {
      * @param user_avatar 用户头像
      * @return
      */
-    Integer insertUser(String nick_name,String account_name,String account_password,String user_avatar);
+    Integer insertUser(String nick_name,String account_name,String account_password,String user_avatar,String register_email);
 
     /**
      * 根据用户id查询用户的角色
@@ -70,6 +71,14 @@ public interface UserService {
     Integer updateUser(Integer id,String avatar,
                        String nick_name,String mailbox,
                        String phone,String intro);
+
+    /**
+     * 根据账户名来修改用户密码
+     * @param account_name
+     * @param account_password
+     * @return
+     */
+    Integer changePassword(String account_name, String account_password);
 
     /**
      * 分页查询所有的作者author (发表过文章的user)

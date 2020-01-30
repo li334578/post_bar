@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Integer insertUser(String nick_name, String account_name, String account_password, String user_avatar) {
-        return userMapper.insertUser(nick_name, account_name, account_password,user_avatar);
+    public Integer insertUser(String nick_name, String account_name, String account_password, String user_avatar,String register_email) {
+        return userMapper.insertUser(nick_name, account_name, account_password,user_avatar,register_email);
     }
 
 
@@ -110,6 +110,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer updateUser(Integer id, String avatar, String nick_name, String mailbox, String phone, String intro) {
         return userMapper.updateUser(id,avatar,nick_name,mailbox,phone,intro);
+    }
+
+    /**
+     * 根据账户名来修改用户密码
+     *
+     * @param account_name
+     * @param account_password
+     * @return
+     */
+    @Override
+    public Integer changePassword(String account_name, String account_password) {
+        return userMapper.changePassword(account_name,account_password);
     }
 
     /**

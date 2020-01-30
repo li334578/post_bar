@@ -8,16 +8,15 @@ import com.zzgs.post_bar.Bean.Type;
 import com.zzgs.post_bar.Bean.User;
 import com.zzgs.post_bar.Dto.ArticleDto;
 import com.zzgs.post_bar.Dto.UserDto;
-import com.zzgs.post_bar.Service.ArticleService;
-import com.zzgs.post_bar.Service.TagService;
-import com.zzgs.post_bar.Service.TypeService;
-import com.zzgs.post_bar.Service.UserService;
+import com.zzgs.post_bar.Service.*;
+import com.zzgs.post_bar.Utils.CodeUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Author:   Tang
@@ -49,6 +50,9 @@ public class UserController {
 
     @Autowired
     TypeService typeService;
+
+    @Autowired
+    private MailService mailService;
 
 
 
@@ -131,6 +135,96 @@ public class UserController {
         return "author";
     }
 
+    @RequestMapping("/changePwdPage")
+    public String changePwdPage(Model model){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        return "change_password";
+    }
+
+    @RequestMapping("/sendEmail")
+    @ResponseBody
+    public String sendMail(@RequestParam("account_name")String account_name,
+                           HttpServletRequest request){
+        User userChangePwd = userService.findByAccountName(account_name);
+        HttpSession session = request.getSession();
+        JSONObject jsonObject = new JSONObject();
+        String key = account_name+"Code";
+        Integer code = CodeUtil.CreateCode();
+        //将验证码存储到session中
+        session.setAttribute(key,code);
+        String title = "程序人生论坛-修改密码-验证码邮件";
+        String content = "尊敬的用户，您好！您的验证码为["+code+"]，该验证码有效期为5分钟请您尽快使用。若不是本人操作请忽略本邮件";
+        mailService.sendMimeMessge(userChangePwd.getUser_mailbox(),title,content);
+        //五分钟后清除该验证码
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    CodeUtil.ClearCode(key,session);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        },5*60*1000);
+        jsonObject.put("statusCode",200);
+        return jsonObject.toString();
+    }
+
+    @RequestMapping("/changePassword")
+    @ResponseBody
+    public String changePassword(@RequestParam("account_name")String account_name,
+                                 @RequestParam("Code")String Code,
+                                 @RequestParam("NewPwd")String NewPwd,
+                                 @RequestParam("ReNewPwd")String ReNewPwd,
+                                 HttpServletRequest request,Model model){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        JSONObject jsonObject = new JSONObject();
+        //后端校验四个字段不为空
+        if ("".equals(account_name)||account_name==null
+                ||"".equals(Code)||Code==null
+                ||"".equals(NewPwd)||NewPwd==null
+                ||"".equals(ReNewPwd)||ReNewPwd==null){
+            jsonObject.put("statusCode",505);
+            jsonObject.put("msg","信息填写不完全，请检查");
+        }else if (!NewPwd.equals(ReNewPwd)){
+            jsonObject.put("statusCode",505);
+            jsonObject.put("msg","两次密码不一致，请检查");
+        }else {
+            //校验通过
+            HttpSession session = request.getSession();
+            String key = account_name+"Code";
+            Integer SessionCode = (Integer) session.getAttribute(key);
+            if (String.valueOf(SessionCode).equals(Code)){
+                //验证码一致
+                //对密码进行加密
+                SimpleHash hash_account_password = new SimpleHash("MD5",NewPwd,account_name,10);
+                Integer integer = userService.changePassword(account_name, hash_account_password.toString());
+                if (integer==1){
+                    jsonObject.put("statusCode",200);
+                    jsonObject.put("msg","修改密码成功");
+                    //成功修改密码 清空session中的验证码
+                    session.removeAttribute(key);
+                }else {
+                    jsonObject.put("statusCode",500);
+                    jsonObject.put("msg","服务器出现异常");
+                }
+            }else if (SessionCode==null){
+                jsonObject.put("statusCode",506);
+                jsonObject.put("msg","验证码已过期，请重新获取");
+            }else {
+                jsonObject.put("statusCode",506);
+                jsonObject.put("msg","验证码不正确，请检查");
+            }
+        }
+        return jsonObject.toString();
+    }
+
     @RequestMapping("/author_details/{id}")
     public String authorDetails(Model model,
                                 @PathVariable("id") Integer author_id,
@@ -146,6 +240,7 @@ public class UserController {
         List<ArticleDto> articleDtoList = articleService.findAllArticleByUserId(author_id, pageNum, pageSize);
         for (ArticleDto articleDto : articleDtoList) {
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         }
         PageInfo pageInfo = new PageInfo(articleDtoList);

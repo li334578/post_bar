@@ -54,11 +54,12 @@ public interface UserMapper {
      * @param account_password
      * @return
      */
-    @Insert("insert into user (id,account_name,account_password,nick_name,user_avatar) VALUES (null,#{account_name},#{account_password},#{nick_name},#{user_avatar})")
+    @Insert("insert into user (id,account_name,account_password,nick_name,user_avatar,user_mailbox) VALUES (null,#{account_name},#{account_password},#{nick_name},#{user_avatar},#{register_email})")
     Integer insertUser(@Param("nick_name") String nick_name,
                        @Param("account_name") String account_name,
                        @Param("account_password") String account_password,
-                       @Param("user_avatar")String user_avatar);
+                       @Param("user_avatar")String user_avatar,
+                       @Param("register_email")String register_email);
 
     /**
      * 根据用户id查询用户角色
@@ -85,6 +86,17 @@ public interface UserMapper {
     Integer updateUser(@Param("id") Integer id,@Param("avatar")String avatar,
                        @Param("nick_name")String nick_name,@Param("mailbox")String mailbox,
                        @Param("phone")String phone,@Param("intro")String intro);
+
+    /**
+     * 根据账户名来修改用户密码
+     * @param account_name
+     * @param account_password
+     * @return
+     */
+    @Update("update user set account_password = #{account_password} where account_name = #{account_name}")
+    Integer changePassword(@Param("account_name") String account_name,
+                           @Param("account_password") String account_password);
+
 
     /**
      * 查询所有作者author (发表过文章的user)

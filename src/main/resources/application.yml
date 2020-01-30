@@ -14,6 +14,26 @@ spring:
     static-path-pattern: /static/**
   thymeleaf:
     cache: false # 关闭Thymeleaf缓存
+  mail:
+    host: smtp.qq.com
+#    port: 465
+    username: 1125324922@qq.com
+    password: jnvjhocssgxqhcjh
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+      smtp:
+      # 如果是用 SSL 方式，需要配置如下属性,使用qq邮箱的话需要开启
+      ssl:
+      enable: true
+      required: true
+      # 邮件接收时间的限制，单位毫秒
+      timeout: 10000
+      # 连接时间的限制，单位毫秒
+      connectiontimeout: 10000
+      # 邮件发送时间的限制，单位毫秒
+      writetimeout: 10000
 pagehelper:
   helper-dialect: mysql
   reasonable: true

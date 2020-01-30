@@ -28,6 +28,8 @@
                     <button class="ui login violet button">登录</button>
                     &nbsp
                     <button class="ui register violet button">注册</button>
+                    &nbsp
+                    <a th:href="@{/user/changePwdPage}" href="change_password.html"> 忘记密码？</a>
                 </div>
                 <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
                     <div class="text">
@@ -44,6 +46,7 @@
                         <a href="/user/userSetting" class="item">个人资料</a>
                         <a href="/article/article_input" class="item">我要发帖</a>
                         <a href="/article/myArticle" class="item">我的帖子</a>
+                        <a href="/user/changePwdPage" class="item">修改密码</a>
                         <a href="/logout" class="item">注销</a>
                     </div>
                 </div>
@@ -122,7 +125,7 @@
                     <button class="ui button red" id="login_reset_btn">重置</button>
                 </div>
             </div>
-            <div class="ui error message login" style="display: none;"></div>
+            <div class="ui error message login hidden"></div>
         </div>
     </div>
 </div>
@@ -139,6 +142,12 @@
                     <label>昵称：</label>
                     <div class="ui input focus">
                         <input type="text" name="register_nickname" id="register_nickname" placeholder="请输入昵称">
+                    </div>
+                </div>
+                <div class="inline field">
+                    <label>邮箱：</label>
+                    <div class="ui input focus">
+                        <input type="text" name="register_email" id="register_email" placeholder="请输入邮箱">
                     </div>
                 </div>
                 <div class="inline field">
@@ -160,7 +169,7 @@
                     <button class="ui button red" id="register_reset_btn">重置</button>
                 </div>
             </div>
-            <div class="ui error message register" style="display: none;"></div>
+            <div class="ui error message register hidden"></div>
         </div>
     </div>
 </div>
@@ -182,19 +191,22 @@
     $('#login_reset_btn').click(function () {
         $('#login_account_name').val('');
         $('#login_account_password').val('');
-        $('.ui.error.message.login').html('');
+        $('.ui.error.message.login').addClass("hidden");
     });
     $('#login_submit_btn').click(function () {
         //清空提示信息
-        $('.ui.error.message.register').html("");
+        $('.ui.error.message.login').html("");
+        $('.ui.error.message.login').addClass("hidden");
         var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
         if (account_name == ''){
+            $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
             flag = false;
         }
         if (account_password == ''){
+            $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写密码</p>");
             flag = false;
         }
@@ -212,28 +224,31 @@
                     if (data.statusCode == 200) {
                         location.reload();
                     } else {
+                        $('.ui.error.message.login').removeClass("hidden");
                         $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
                     }
                 }
             });
-        } else {
-            $('.ui.error.message.login').css('display','block');
         }
     });
     $('#register_reset_btn').click(function () {
         $('#register_nickname').val('');
+        $('#register_email').val('');
         $('#register_account_name').val('');
         $('#register_account_password').val('');
-        $('.ui.error.message.register').html('');
+        $('.ui.error.message.register').addClass("hidden");
     });
     $('#register_submit_btn').click(function () {
         //清空提示信息
         $('.ui.error.message.register').html("");
+        $('.ui.error.message.register').addClass("hidden");
         var flag = true;
         var register_nickname = $('#register_nickname').val();
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
+        var register_email = $('#register_email').val();
         if (register_nickname == ''){
+            $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
             flag = false;
         }else {
@@ -251,13 +266,30 @@
                         //昵称可用
                     }else {
                         //昵称不可用
+                        $('.ui.error.message.register').removeClass("hidden");
                         $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
                         flag = false;
                     }
                 }
             });
         }
+        if (register_email == ''){
+            $('.ui.error.message.register').removeClass("hidden");
+            $('.ui.error.message.register').append("<p>● 邮箱不能为空</p>");
+            flag = false;
+        }else {
+            var mailbox_reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+            if (mailbox_reg.test(register_email)){
+                //邮箱格式正确
+            }else {
+                //邮箱格式不正确
+                $('.ui.error.message.register').removeClass("hidden");
+                $('.ui.error.message.register').append("<p>● 邮箱格式不正确</p>");
+                flag = false;
+            }
+        }
         if (register_account_name == ''){
+            $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
             flag = false;
         }else {
@@ -275,6 +307,7 @@
                         //账户名可用
                     }else {
                         //账户名不可用
+                        $('.ui.error.message.register').removeClass("hidden");
                         $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
                         flag = false;
                     }
@@ -282,11 +315,13 @@
             });
         }
         if (register_account_password == ''){
+            $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
             flag = false;
         }else {
             //密码长度应在4-16位之间
             if (register_account_password.length<=4||register_account_password.length>=16){
+                $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
                 flag = false;
             }
@@ -297,7 +332,8 @@
                 data: {
                     register_nickname: register_nickname,
                     register_account_name: register_account_name,
-                    register_account_password: register_account_password
+                    register_account_password: register_account_password,
+                    register_email:register_email
                 },
                 type: 'post',
                 dataType: 'json',
@@ -307,12 +343,13 @@
                         window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
+                        $('.ui.error.message.register').removeClass("hidden");
                         $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
                     }
                 }
             });
         } else {
-            $('.ui.error.message.register').css('display','block');
+            $('.ui.error.message.register').removeClass("hidden");
         }
     });
     $('.wechat').popup({

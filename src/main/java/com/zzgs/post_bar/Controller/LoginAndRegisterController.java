@@ -129,7 +129,8 @@ public class LoginAndRegisterController {
     @ResponseBody
     public String register(@Param("register_nickname") String register_nickname,
                            @Param("register_account_name") String register_account_name,
-                           @Param("register_account_password") String register_account_password){
+                           @Param("register_account_password") String register_account_password,
+                           @Param("register_email") String register_email){
         JSONObject jsonObject = new JSONObject();
         if (userService.findByNickName(register_nickname) != null) {
             //判断用户昵称是否存在
@@ -145,7 +146,7 @@ public class LoginAndRegisterController {
             //对密码进行加密
             SimpleHash hash_account_password = new SimpleHash("MD5",register_account_password,register_account_name,10);
             String defaultAvatar = "../static/images/avatar/Lighthouse.jpg";
-            userService.insertUser(register_nickname,register_account_name,hash_account_password.toString(),defaultAvatar);
+            userService.insertUser(register_nickname,register_account_name,hash_account_password.toString(),defaultAvatar,register_email);
             jsonObject.put("statusCode","200");
             //注册成功为用户登录
             Subject subject = SecurityUtils.getSubject();
