@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../static/css/semantic.min.css}">
-    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{../../static/css/typo.css}">
-    <link rel="stylesheet" href="../static/tocbot/tocbot.css" th:href="@{../../static/tocbot/tocbot.css}">
-    <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
+    <link rel="stylesheet" href="../../static/css/semantic.min.css" th:href="@{../../../static/css/semantic.min.css}">
+    <link rel="stylesheet" href="../../static/css/typo.css" th:href="@{../../../static/css/typo.css}">
+    <link rel="stylesheet" href="../../static/tocbot/tocbot.css" th:href="@{../../../static/tocbot/tocbot.css}">
+    <link rel="stylesheet" href="../../static/css/my.css" th:href="@{../../../static/css/my.css}">
     <title>帖子详情</title>
 </head>
 <body onload="addArticleBrowseVolume()">
@@ -14,49 +14,27 @@
 <nav class="ui attached segment m-padded-tb-mini m-shadow-small">
     <div class="ui container">
         <div class="ui menu secondary stackable">
-            <h2 class="ui violet header item"><i class="user secret icon"></i>程序人生</h2>
-            <a href="../templates/index.html" th:href="@{/index}" class="active m-item item m-mobile-hide">
-                <i class="mini home icon"></i>首页</a>
-            <a href="../templates/types.html" th:href="@{/type/types}" class="m-item item m-mobile-hide">
-                <i class="mini microphone icon"></i>话题</a>
-            <a href="../templates/tags.html" th:href="@{/tag/tags}" class="m-item item m-mobile-hide">
-                <i class="mini tags icon"></i>标签</a>
-            <a href="../templates/author.html" th:href="@{/user/author}" class="m-item item m-mobile-hide">
-                <i class="mini user icon"></i>作者</a>
-            <a href="../templates/about.html" th:href="@{/about}" class="m-item item m-mobile-hide">
-                <i class="mini user secret icon"></i>关于我们</a>
-            <div class="right m-item m-mobile-hide menu">
-                <div class="item login_btn" th:unless="${user}">
-                    <button class="ui login violet button">登录</button>
-                    &nbsp
-                    <button class="ui register violet button">注册</button>
-                    &nbsp
-                    <a th:href="@{/user/changePwdPage}" href="change_password.html"> 忘记密码？</a>
-                </div>
-                <div class="ui dropdown item" th:style="'display:' + @{(${user} ? 'inline-block' : 'none')} + ''">
+            <h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
+            <a href="adminForums.html" th:href="@{/admin/index}" class="active m-item item m-mobile-hide"><i
+                    class="mini home icon"></i>帖子</a>
+            <a href="adminTypes.html" th:href="@{/admin/types}" class="m-item item m-mobile-hide"><i
+                    class="mini microphone icon"></i>话题</a>
+            <a href="adminTags.html" th:href="@{/admin/tags}" class="m-item item m-mobile-hide"><i
+                    class="mini tags icon"></i>标签</a>
+            <a href="adminAuthor.html" th:href="@{/admin/authors}" class="m-item item m-mobile-hide"><i
+                    class="mini user icon"></i>作者</a>
+            <div class="right m-item m-mobile-hide menu" th:if="${user}">
+                <div class="ui item">
                     <div class="text">
-                        <span th:if="${user}">
-                            <shiro:hasRole name="user">
-                                <img class="ui avatar image" th:src="${user.user_avatar}"
-                                     src="https://picsum.photos/id/1033/100/100">
-                                <span th:text="${user.nick_name}">李文博</span>
-                            </shiro:hasRole>
-                        </span>
-                    </div>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <a href="/user/userSetting" class="item">个人资料</a>
-                        <a href="/article/article_input" class="item">我要发帖</a>
-                        <a href="/article/myArticle" class="item">我的帖子</a>
-                        <a href="/user/changePwdPage" class="item">修改密码</a>
-                        <a href="/logout" class="item">注销</a>
+                        <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
+                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <span style="margin-left: 5px"><a href="/admin/logout">注销</a></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i
-            class="sidebar icon"></i></a>
+    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
 </nav>
 <!--中间内容-->
 <div id="waypoint" class="m-container-small m-padded-tb-big">
@@ -217,84 +195,26 @@
                     <button class="ui violet button m-mobile-wide" id="commitCommentBtn" onclick="commitComment(0)">
                         <i class="edit icon"></i>发布
                     </button>
+                    <button class="ui red button m-mobile-wide"
+                            th:onclick="'javascript:showDeleteModal('+${articleDto.id}+')'">删除该文章</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!--登录的模态框-->
+<!--删除的模态框-->
 <div class="container">
-    <div class="ui login modal tiny">
-        <div class="header">
-            登录
-        </div>
+    <div class="ui delete modal card tiny">
         <i class="close icon"></i>
         <div class="content">
-            <div class="ui form segment">
-                <div class="inline field">
-                    <label>账号：</label>
-                    <div class="ui input focus">
-                        <input type="text" id="login_account_name" name="account_name" placeholder="请输入账号">
-                    </div>
-                </div>
-                <div class="inline field">
-                    <label>密码：</label>
-                    <div class="ui input focus">
-                        <input type="password" id="login_account_password" name="account_password" placeholder="请输入密码">
-                    </div>
-                    <div class="ui error message"></div>
-                </div>
-                <div class="actions">
-                    <button class="ui violet button" id="login_submit_btn">登录</button>
-                    <button class="ui button red" id="login_reset_btn">重置</button>
-                </div>
-            </div>
-            <div class="ui error message login hidden"></div>
+            <h2>您确定要删除该文章吗？</h2>
         </div>
-    </div>
-</div>
-<!--注册的模态框-->
-<div class="container">
-    <div class="ui register modal tiny">
-        <div class="header">
-            注册
-        </div>
-        <i class="close icon"></i>
-        <div class="content">
-            <div class="ui form segment">
-                <div class="inline field">
-                    <label>昵称：</label>
-                    <div class="ui input focus">
-                        <input type="text" name="register_nickname" id="register_nickname" placeholder="请输入昵称">
-                    </div>
-                </div>
-                <div class="inline field">
-                    <label>邮箱：</label>
-                    <div class="ui input focus">
-                        <input type="text" name="register_email" id="register_email" placeholder="请输入邮箱">
-                    </div>
-                </div>
-                <div class="inline field">
-                    <label>账号：</label>
-                    <div class="ui input focus">
-                        <input type="text" name="register_account_name" id="register_account_name" placeholder="请输入账号">
-                    </div>
-                </div>
-                <div class="inline field">
-                    <label>密码：</label>
-                    <div class="ui input focus">
-                        <input type="password" name="register_account_password" id="register_account_password"
-                               placeholder="请输入密码">
-                    </div>
-                    <div class="ui error message"></div>
-                </div>
-                <div class="actions">
-                    <button class="ui violet button" id="register_submit_btn">注册</button>
-                    <button class="ui button red" id="register_reset_btn">重置</button>
-                </div>
+        <div class="extra content">
+            <input type="hidden" id="article_id" value="">
+            <div class="ui two buttons">
+                <div class="ui violet affirm button" onclick="deleteArticle()">确定</div>
+                <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
             </div>
-            <div class="ui error message register hidden"></div>
         </div>
     </div>
 </div>
@@ -322,16 +242,16 @@
 </footer>
 
 
-<script type="text/javascript" src="../static/js/jquery.min.js"
-        th:src="@{../../static/js/jquery.min.js}"></script>
-<script src="../static/js/semantic.min.js"
-        th:src="@{../../static/js/semantic.min.js}"></script>
-<script src="../static/waypoints/jquery.waypoints.min.js"
-        th:src="@{../../static/waypoints/jquery.waypoints.min.js}"></script>
-<script src="../static/scrollTo/jquery.scrollTo.min.js"
-        th:src="@{../../static/scrollTo/jquery.scrollTo.min.js}"></script>
-<script src="../static/tocbot/tocbot.min.js"
-        th:src="@{../../static/tocbot/tocbot.min.js}"></script>
+<script type="text/javascript" src="../../static/js/jquery.min.js"
+        th:src="@{../../../static/js/jquery.min.js}"></script>
+<script src="../../static/js/semantic.min.js"
+        th:src="@{../../../static/js/semantic.min.js}"></script>
+<script src="../../static/waypoints/jquery.waypoints.min.js"
+        th:src="@{../../../static/waypoints/jquery.waypoints.min.js}"></script>
+<script src="../../static/scrollTo/jquery.scrollTo.min.js"
+        th:src="@{../../../static/scrollTo/jquery.scrollTo.min.js}"></script>
+<script src="../../static/tocbot/tocbot.min.js"
+        th:src="@{../../../static/tocbot/tocbot.min.js}"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
@@ -341,174 +261,43 @@
         $(".ui.login.modal").modal("setting", "closable", false);
         $(".ui.login.modal").modal("show");
     });
-    $('.ui.register.violet.button').click(function () {
-        $(".ui.register.modal").modal("setting", "closable", false);
-        $(".ui.register.modal").modal("show");
-    });
-    $('#login_reset_btn').click(function () {
-        $('#login_account_name').val('');
-        $('#login_account_password').val('');
-        $('.ui.error.message.login').addClass("hidden");
-    });
-    $('#login_submit_btn').click(function () {
-        //清空提示信息
-        $('.ui.error.message.login').html("");
-        $('.ui.error.message.login').addClass("hidden");
-        var flag = true;
-        var account_name = $('#login_account_name').val();
-        var account_password = $('#login_account_password').val();
-        if (account_name == ''){
-            $('.ui.error.message.login').removeClass("hidden");
-            $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
-            flag = false;
-        }
-        if (account_password == ''){
-            $('.ui.error.message.login').removeClass("hidden");
-            $('.ui.error.message.login').append("<p>● 请填写密码</p>");
-            flag = false;
-        }
-        if (flag) {
-            $.ajax({
-                url: '/login',
-                data: {
-                    account_name: account_name,
-                    account_password: account_password
-                },
-                type: 'post',
-                dataType: 'json',
-                async: 'false',
-                success: function (data) {
-                    if (data.statusCode == 200) {
-                        location.reload();
-                    } else {
-                        $('.ui.error.message.login').removeClass("hidden");
-                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
-                    }
+    function showDeleteModal(article_id) {
+        $("#article_id").val(article_id);
+        $(".ui.delete.modal").modal("setting", "closable", false);
+        $(".ui.delete.modal").modal("show");
+    }
+
+    function hideDeleteModal() {
+        $(".ui.delete.modal").modal("setting", "closable", true);
+        $(".ui.delete.modal").modal("hide");
+    }
+    function deleteArticle() {
+        var article_id = $("#article_id").val();
+        $.ajax({
+            url: '/admin/delArticle',
+            data: {
+                article_id: article_id
+            },
+            type: 'post',
+            dataType: 'json',
+            async: 'false',
+            success: function (data) {
+                hideDeleteModal();
+                $("#tipMsgContent").text("");
+                if (data.statusCode == 200) {
+                    window.alert(data.msg);
+                    window.location.reload();
+                    // $("#tipMsgContent").text(data.msg);
+                    // $("#tipMsg").removeClass("hidden");
+                    // $("#tipMsg").addClass("info");
+                } else {
+                    $("#tipMsg").addClass("warning");
+                    $("#tipMsgContent").text(data.msg);
+                    $("#tipMsg").removeClass("hidden");
                 }
-            });
-        }
-    });
-    $('#register_reset_btn').click(function () {
-        $('#register_nickname').val('');
-        $('#register_email').val('');
-        $('#register_account_name').val('');
-        $('#register_account_password').val('');
-        $('.ui.error.message.register').addClass("hidden");
-    });
-    $('#register_submit_btn').click(function () {
-        //清空提示信息
-        $('.ui.error.message.register').html("");
-        $('.ui.error.message.register').addClass("hidden");
-        var flag = true;
-        var register_nickname = $('#register_nickname').val();
-        var register_account_name = $('#register_account_name').val();
-        var register_account_password = $('#register_account_password').val();
-        var register_email = $('#register_email').val();
-        if (register_nickname == ''){
-            $('.ui.error.message.register').removeClass("hidden");
-            $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
-            flag = false;
-        }else {
-            //查询该昵称是否存在
-            $.ajax({
-                url:'/findNickname',
-                data: {
-                    nickname: register_nickname
-                },
-                type: 'post',
-                dataType: 'json',
-                async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
-                        //昵称可用
-                    }else {
-                        //昵称不可用
-                        $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
-                        flag = false;
-                    }
-                }
-            });
-        }
-        if (register_email == ''){
-            $('.ui.error.message.register').removeClass("hidden");
-            $('.ui.error.message.register').append("<p>● 邮箱不能为空</p>");
-            flag = false;
-        }else {
-            var mailbox_reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            if (mailbox_reg.test(register_email)){
-                //邮箱格式正确
-            }else {
-                //邮箱格式不正确
-                $('.ui.error.message.register').removeClass("hidden");
-                $('.ui.error.message.register').append("<p>● 邮箱格式不正确</p>");
-                flag = false;
             }
-        }
-        if (register_account_name == ''){
-            $('.ui.error.message.register').removeClass("hidden");
-            $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
-            flag = false;
-        }else {
-            //查询账户名是否存在
-            $.ajax({
-                url:'/findAccountName',
-                data: {
-                    account_name: register_account_name
-                },
-                type: 'post',
-                dataType: 'json',
-                async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
-                        //账户名可用
-                    }else {
-                        //账户名不可用
-                        $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
-                        flag = false;
-                    }
-                }
-            });
-        }
-        if (register_account_password == ''){
-            $('.ui.error.message.register').removeClass("hidden");
-            $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
-            flag = false;
-        }else {
-            //密码长度应在4-16位之间
-            if (register_account_password.length<=4||register_account_password.length>=16){
-                $('.ui.error.message.register').removeClass("hidden");
-                $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
-                flag = false;
-            }
-        }
-        if (flag) {
-            $.ajax({
-                url: '/register',
-                data: {
-                    register_nickname: register_nickname,
-                    register_account_name: register_account_name,
-                    register_account_password: register_account_password,
-                    register_email:register_email
-                },
-                type: 'post',
-                dataType: 'json',
-                async: 'false',
-                success: function (data) {
-                    if (data.statusCode == 200) {
-                        window.location.replace('/user/userSetting');
-                        alert("注册成功,已为您自动登录");
-                    } else {
-                        $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
-                    }
-                }
-            });
-        } else {
-            $('.ui.error.message.register').removeClass("hidden");
-        }
-    });
+        });
+    }
 
     /*初始化生成目录插件*/
     tocbot.init({

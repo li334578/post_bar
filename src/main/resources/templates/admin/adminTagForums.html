@@ -13,11 +13,11 @@
     <div class="ui container">
         <div class="ui menu secondary stackable">
             <h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
-            <a href="adminForums.html" th:href="@{/admin/index}" class="active m-item item m-mobile-hide"><i
+            <a href="adminForums.html" th:href="@{/admin/index}" class="m-item item m-mobile-hide"><i
                     class="mini home icon"></i>帖子</a>
             <a href="adminTypes.html" th:href="@{/admin/types}" class="m-item item m-mobile-hide"><i
                     class="mini microphone icon"></i>话题</a>
-            <a href="adminTags.html" th:href="@{/admin/tags}" class="m-item item m-mobile-hide"><i
+            <a href="adminTags.html" th:href="@{/admin/tags}" class="active m-item item m-mobile-hide"><i
                     class="mini tags icon"></i>标签</a>
             <a href="adminAuthor.html" th:href="@{/admin/authors}" class="m-item item m-mobile-hide"><i
                     class="mini user icon"></i>作者</a>
@@ -25,14 +25,16 @@
                 <div class="ui item">
                     <div class="text">
                         <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
-                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}"
+                             src="https://picsum.photos/id/1033/100/100">
                         <span style="margin-left: 5px"><a href="/admin/logout">注销</a></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
+    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i
+            class="sidebar icon"></i></a>
 </nav>
 <!--中间内容-->
 <div class="m-container-small m-padded-tb-big">
@@ -61,11 +63,13 @@
                    th:text="${tagDto.tag_name}"
                    th:if="${tagDto.id == currentTagId}">思考与感悟</a>
                 <div class="ui basic violet left pointing label" th:text="${tagDto.total_num}"
-                     th:if="${tagDto.id == currentTagId}">24</div>
+                     th:if="${tagDto.id == currentTagId}">24
+                </div>
                 <a th:href="'/admin/tag/'+${tagDto.id}" class="ui basic button" th:text="${tagDto.tag_name}"
                    th:unless="${tagDto.id == currentTagId}">思考与感悟</a>
                 <div class="ui basic left pointing label" th:text="${tagDto.total_num}"
-                     th:unless="${tagDto.id == currentTagId}">24</div>
+                     th:unless="${tagDto.id == currentTagId}">24
+                </div>
             </div>
         </div>
         <!--文章列表-->
@@ -74,12 +78,14 @@
                  th:each="articleDto : ${articleDtoList}">
                 <div class="ui mobile reversed stackable grid">
                     <div class="sixteen wide column">
-                        <h3 class="ui header" th:text="${articleDto.title}">几米经典语录</h3>
-                        <p class="m-text" th:text="${articleDto.description}">
-                            1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
-                            2.但是冬天总是会过去，春天总是会来。
-                            3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
-                        </p>
+                        <a th:href="'/admin/adminArticleDetails/'+${articleDto.id}">
+                            <h3 class="ui header" th:text="${articleDto.title}">几米经典语录</h3>
+                            <p class="m-text" th:text="${articleDto.description}">
+                                1.在这个熟悉而陌生的城市中，无助地寻找一个陌生而熟悉的身影。
+                                2.但是冬天总是会过去，春天总是会来。
+                                3.心情无缘无故的低落，对自己的孤单，感到有些莫名的哀伤。
+                            </p>
+                        </a>
                         <div class="ui stackable grid">
                             <div class="eleven wide column">
                                 <div class="ui mini horizontal link list">
@@ -116,7 +122,8 @@
                             </div>
                             <div class="right aligned four wide column">
                                 <a href="#" target="_blank" class="ui violet basic label m-padded-mini"
-                                   th:text="${articleDto.type_name}" th:href="'/admin/type/'+${articleDto.type_id}">个人感悟</a>
+                                   th:text="${articleDto.type_name}"
+                                   th:href="'/admin/type/'+${articleDto.type_id}">个人感悟</a>
                                 <a class="ui red button basic label m-padded-mini"
                                    th:onclick="'javascript:showDeleteModal('+${articleDto.id}+')'">删除该文</a>
                             </div>
@@ -129,39 +136,47 @@
         <div class="ui center aligned bottom attached segment">
             <div class="ui buttons">
                 <li th:if="${pageInfo.hasPreviousPage}">
-                    <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                    <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${pageInfo.pageNum-1}"
+                       class="ui basic violet button">上一页</a>
                 </li>
                 <li th:if="!${pageInfo.hasPreviousPage}">
                     <button class="ui basic disabled violet button">上一页</button>
                 </li>
                 <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui violet button"
+                                   th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}"
+                                   class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
                     th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui violet button"
+                                   th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}"
+                                   class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
                     th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui violet button"
+                                   th:text="${page}">1</a>
                             </span>
                     <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${page}"
+                                   class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                 </li>
                 <li th:if="${pageInfo.hasNextPage}">
-                    <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                    <a th:href="'/admin/tag/'+${currentTagId}+'?pageNum='+${pageInfo.pageNum+1}"
+                       class="ui basic violet button">下一页</a>
                 </li>
                 <li th:if="!${pageInfo.hasNextPage}">
                     <button class="ui basic disabled violet button">下一页</button>
@@ -200,6 +215,7 @@
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
+
     function showDeleteModal(article_id) {
         $("#article_id").val(article_id);
         $(".ui.delete.modal").modal("setting", "closable", false);

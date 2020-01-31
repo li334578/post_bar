@@ -93,6 +93,32 @@ public class ArticleController {
         return jsonObject.toString();
     }
 
+
+    @RequestMapping("/editormd/upload")
+    @ResponseBody
+    public String editormdUploadImages(@RequestParam(value = "editormd-image-file",required = true) MultipartFile file)throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        String fileName = System.currentTimeMillis()+file.getOriginalFilename();
+        String url=System.getProperty("user.dir")+"\\src\\main\\resources\\static\\images\\illustration";
+        String url_target= System.getProperty("user.dir")+"\\target\\classes\\static\\images\\illustration";
+
+        try {
+            file.transferTo(new File(url,fileName));
+            File file_resources = new File(url+"\\"+fileName);
+            File file_target = new File(url_target+"\\"+fileName);
+            FileUtils.copyFile(file_resources,file_target);
+        } catch (IOException e) {
+            //文件保存出现异常
+            jsonObject.put("message","保存图片失败");
+            e.printStackTrace();
+        }
+        jsonObject.put("url","../static/images/illustration/"+fileName);
+        jsonObject.put("success","1");
+        jsonObject.put("message","文件上传成功");
+        return jsonObject.toString();
+    }
+
+
     /**
      * 查询文章详情
      * @param id 文章id

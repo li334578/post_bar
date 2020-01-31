@@ -2,15 +2,12 @@ package com.zzgs.post_bar.Controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.zzgs.post_bar.Bean.ArticleAttitude;
+import com.zzgs.post_bar.Bean.Tag;
 import com.zzgs.post_bar.Bean.User;
-import com.zzgs.post_bar.Dto.ArticleDto;
-import com.zzgs.post_bar.Dto.AuthorDto;
-import com.zzgs.post_bar.Dto.TagDto;
-import com.zzgs.post_bar.Dto.TypeDto;
-import com.zzgs.post_bar.Service.ArticleService;
-import com.zzgs.post_bar.Service.TagService;
-import com.zzgs.post_bar.Service.TypeService;
-import com.zzgs.post_bar.Service.UserService;
+import com.zzgs.post_bar.Dto.*;
+import com.zzgs.post_bar.Service.*;
+import com.zzgs.post_bar.Utils.MarkdownUtil;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -26,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,6 +43,8 @@ public class AdminController {
     TypeService typeService;
     @Autowired
     TagService tagService;
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping("/loginPage")
     public String loginPage(){
@@ -105,6 +105,51 @@ public class AdminController {
         model.addAttribute("pageInfo",pageInfo);
         model.addAttribute("articleDtoList",articleDtoList);
         return "/admin/adminForums";
+    }
+    @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/adminArticleDetails/{id}")
+    public String adminArticleDetails(@PathVariable("id")Integer id,Model model){
+        ArticleDto articleDto = articleService.findById(id);
+        //将文章的markdown内容转成html
+        articleDto.setContent(MarkdownUtil.markdownToHtmlExtensions(articleDto.getContent()));
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            String accountname = subject.getPrincipal().toString();
+            User user = userService.findByAccountName(accountname);
+            //用户登录了 查询用户是否对文章发表过态度
+            ArticleAttitude attitude = articleService.findArticleAttitudeByUserIdAndArticleId(id, user.getId());
+            model.addAttribute("user",user);
+            model.addAttribute("attitude",attitude);
+        }
+        articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+        articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+        articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+        List<Tag> tagList = tagService.findByArticleId(id);
+        //查询文章的一级评论信息 没有父级评论的
+        List<CommentDto> commentDtoList = commentService.findAllCommentByArticleIdAndParentCommentId(id);
+        for (CommentDto commentDto : commentDtoList) {
+            commentDto.setUser_name(userService.findById(commentDto.getUser_id()).getNick_name());
+            commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
+            //设置子评论
+            String son_comment_id = commentDto.getSon_comment_id();
+            if (son_comment_id != null&&!"".equals(son_comment_id)) {
+                //存在子评论信息
+                List<CommentDto> son_comment_list = new ArrayList<>();
+                String[] son_comment_id_arr = son_comment_id.split(",");
+                for (String temp_son_comment_id : son_comment_id_arr) {
+                    //根据子评论id查询评论信息
+                    CommentDto son_commentDto = commentService.findCommentDtoById(Integer.valueOf(temp_son_comment_id));
+                    son_commentDto.setUser_avatar(userService.findById(son_commentDto.getUser_id()).getUser_avatar());
+                    son_commentDto.setUser_name(userService.findById(son_commentDto.getUser_id()).getNick_name());
+                    son_comment_list.add(son_commentDto);
+                }
+                commentDto.setSon_comment(son_comment_list);
+            }
+        }
+        model.addAttribute("articleDto",articleDto);
+        model.addAttribute("tagList",tagList);
+        model.addAttribute("commentDtoList",commentDtoList);
+        return "/admin/adminArticleDetails";
     }
 
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
