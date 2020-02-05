@@ -77,8 +77,8 @@
                                 <div class="buttons">
                                     <a th:href="'/article/articleEdit/'+${articleDto.id}"
                                             class="ui positive button mini">编辑</a>
-                                    <a th:onclick="'javascript:deleteArticle('+${articleDto.id}+');'"
-                                       class="ui negative button mini">删除</a>
+                                    <a class="ui negative button mini"
+                                       th:onclick="'javascript:showDeleteModal('+${articleDto.id}+')'">删除</a>
                                 </div>
                             </div>
                             <div class="ui mini horizontal link list">
@@ -119,7 +119,8 @@
                 </div>
                 <div class="five wide column">
                     <a href="#" target="_blank">
-                        <img src="https://picsum.photos/id/1033/800/450" th:src="${articleDto.first_picture}" alt="" class="ui rounded image">
+                        <img src="https://picsum.photos/id/1033/800/450" th:src="${articleDto.first_picture}"
+                             style="width: 260px;height: 125px;" alt="" class="ui rounded image">
                     </a>
                 </div>
             </div>
@@ -134,7 +135,7 @@
             <li th:if="!${pageInfo.hasPreviousPage}">
                 <button class="ui basic disabled violet button">上一页</button>
             </li>
-            <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+            <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
                                 <a th:href="'/article/myArticle?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
@@ -170,7 +171,22 @@
     </div>
 </div>
 
-
+<!--删除的模态框-->
+<div class="container">
+    <div class="ui delete modal card tiny">
+        <i class="close icon"></i>
+        <div class="content">
+            <h2>您确定要删除该文章吗？</h2>
+        </div>
+        <div class="extra content">
+            <input type="hidden" id="article_id" value="">
+            <div class="ui two buttons">
+                <div class="ui violet affirm button" onclick="deleteArticle()">确定</div>
+                <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--底部-->
 <footer class="ui attached segment">
@@ -186,9 +202,19 @@
         $('.m-item').toggleClass('m-mobile-hide');
     });
     $('.ui.dropdown').dropdown();
+    //展示和隐藏删除二次确认的模态框
+    function showDeleteModal(article_id) {
+        $("#article_id").val(article_id);
+        $(".ui.delete.modal").modal("setting", "closable", false);
+        $(".ui.delete.modal").modal("show");
+    }
 
-    function deleteArticle(article_id) {
-        console.log(article_id);
+    function hideDeleteModal() {
+        $(".ui.delete.modal").modal("setting", "closable", true);
+        $(".ui.delete.modal").modal("hide");
+    }
+    function deleteArticle() {
+        var article_id = $('#article_id').val();
         $.ajax({
             url: '/article/deleteMyArticle/'+article_id,
             type: 'post',

@@ -310,4 +310,31 @@ public class AdminController {
         jsonObject.put("msg","删除成功");
         return jsonObject.toString();
     }
+
+    @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
+    @RequestMapping("/author_details/{id}")
+    public String authorDetails(Model model,
+                                @PathVariable("id") Integer author_id,
+                                @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
+                                @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.getPrincipal()!=null){
+            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        }
+        //根据作者id 查询出作者的信息
+        User author = userService.findById(author_id);
+        //根据作者id查询作者的文章
+        List<ArticleDto> articleDtoList = articleService.findAllArticleByUserId(author_id, pageNum, pageSize);
+        for (ArticleDto articleDto : articleDtoList) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+        }
+        PageInfo pageInfo = new PageInfo(articleDtoList);
+        model.addAttribute("articleDtoList",articleDtoList);
+        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("author",author);
+        return "/admin/adminAuthorDetails";
+    }
 }

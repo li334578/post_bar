@@ -37,7 +37,7 @@
                     <div class="text">
                         <span th:if="${user}">
                             <shiro:hasRole name="user">
-                                <img class="ui avatar image" th:src="${user.user_avatar}"
+                                <img class="ui avatar image" th:src="'../'+${user.user_avatar}"
                                      src="https://picsum.photos/id/1033/100/100">
                                 <span th:text="${user.nick_name}">李文博</span>
                             </shiro:hasRole>
@@ -173,8 +173,10 @@
                                 <input type="hidden" th:value="${commentDto.user_name}" class="comment_nickname">
                                 <input type="hidden" th:value="${commentDto.id}" class="comment_id">
                                 <a class="reply" style="color: blueviolet;" onclick="changefunction(this)">回复</a>
+                                <!--<a style="color: red;"-->
+                                   <!--th:onclick="'javascript:deleteComment('+${commentDto.id}+');'">删除</a>-->
                                 <a style="color: red;"
-                                   th:onclick="'javascript:deleteComment('+${commentDto.id}+');'">删除</a>
+                                   th:onclick="'javascript:showDeleteModal('+${commentDto.id}+');'">删除</a>
                             </div>
                         </div>
                         <span th:if="${commentDto.son_comment}">
@@ -198,8 +200,10 @@
                                             <input type="hidden" th:value="${comment_son.id}" class="comment_id">
                                             <a class="reply" style="color: blueviolet;"
                                                onclick="changefunction(this)">回复</a>
+                                            <!--<a style="color: red;"-->
+                                               <!--th:onclick="'javascript:deleteComment('+${comment_son.id}+');'">删除</a>-->
                                             <a style="color: red;"
-                                               th:onclick="'javascript:deleteComment('+${comment_son.id}+');'">删除</a>
+                                               th:onclick="'javascript:showDeleteModal('+${comment_son.id}+');'">删除</a>
                                         </div>
                                     </div>
                                 </div>
@@ -299,12 +303,29 @@
     </div>
 </div>
 
+<!--删除的模态框-->
+<div class="container">
+    <div class="ui delete modal card tiny">
+        <i class="close icon"></i>
+        <div class="content">
+            <h2>您确定要删除该评论及其子评论吗？</h2>
+        </div>
+        <div class="extra content">
+            <input type="hidden" id="comment_id" value="">
+            <div class="ui two buttons">
+                <div class="ui violet affirm button" onclick="deleteComment()">确定</div>
+                <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--右下角工具组-->
 <div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none">
     <div class="ui vertical icon buttons ">
         <button type="button" class="ui toc violet button" >目录</button>
         <a href="#comment-container" class="ui violet button" >评论</a>
-        <button class="ui wechat icon button"><i class="weixin icon"></i></button>
+        <!--<button class="ui wechat icon button"><i class="weixin icon"></i></button>-->
         <div id="toTop-button" class="ui icon button" ><i class="chevron up icon"></i></div>
     </div>
 </div>
@@ -522,6 +543,17 @@
         on: 'click',
         position: 'left center'
     });
+    //删除评论的模态框
+    function showDeleteModal(comment_id) {
+        $("#comment_id").val(comment_id);
+        $(".ui.delete.modal").modal("setting", "closable", false);
+        $(".ui.delete.modal").modal("show");
+    }
+
+    function hideDeleteModal() {
+        $(".ui.delete.modal").modal("setting", "closable", true);
+        $(".ui.delete.modal").modal("hide");
+    }
 
     function addArticleBrowseVolume() {
         //浏览量更新函数
@@ -655,7 +687,9 @@
         $(window).scrollTo(0,500);
     });
 
-    function deleteComment(comment_id) {
+    function deleteComment() {
+        //获取评论id
+        var comment_id = $('#comment_id').val();
         //获取当前文章的id
         var article_id = [[${articleDto.id}]];
         $.ajax({

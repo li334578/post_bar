@@ -157,7 +157,7 @@
                         <li th:if="!${pageInfo.hasPreviousPage}">
                             <button class="ui basic disabled violet button">上一页</button>
                         </li>
-                        <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                        <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
                                 <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>

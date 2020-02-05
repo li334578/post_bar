@@ -75,7 +75,7 @@
                 <div class="ui mini middle aligned five column grid" th:each="authorDto : ${authorDtoList}">
                     <div class="center aligned column">
                         <img class="ui avatar image" th:src="${authorDto.user_avatar}" src="https://picsum.photos/id/1033/100/100">
-                        <a href="#" th:text="${authorDto.nick_name}">李文博</a>
+                        <a href="#" th:href="'/admin/author_details/'+${authorDto.id}" th:text="${authorDto.nick_name}">李文博</a>
                     </div>
                     <div class="center aligned column">
                         共发布<h3 class="ui orange header m-inline-block m-text-thin"
@@ -104,7 +104,7 @@
                     <li th:if="!${pageInfo.hasPreviousPage}">
                         <button class="ui basic disabled violet button">上一页</button>
                     </li>
-                    <li th:if="${pageInfo.pageNum<=3}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                    <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
                                 <a th:href="'/admin/authors?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>

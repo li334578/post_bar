@@ -39,6 +39,7 @@ pagehelper:
   reasonable: true
   support-methods-arguments: true
   params: count=countSql
+  page-size-zero: true
 logging:
   level:
     com.zzgs.post_bar: debug

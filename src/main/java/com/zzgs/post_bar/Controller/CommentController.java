@@ -115,7 +115,9 @@ public class CommentController {
             ArticleDto articleDto = articleService.findById(article_id);
             Comment comment = commentService.findById(comment_id);
 
-            if (user.getId()==articleDto.getUser_id()||user.getId()==comment.getUser_id()){
+            if (user.getId()==articleDto.getUser_id()
+                    ||user.getId()==comment.getUser_id()
+                    ||subject.hasRole("admin")){
                 //删除评论及其父级评论和子级评论
 //            CommentUtil commentUtil = new CommentUtil();
                 CommentUtil.delSonComment(commentService,comment);
