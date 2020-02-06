@@ -16,7 +16,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+/**
+ * Author:   Tang
+ * Date:     2020/01/06 12:35
+ * Description: 评论控制器
+ */
 @Controller
 public class CommentController {
 
@@ -29,6 +33,13 @@ public class CommentController {
     @Autowired
     private ArticleService articleService;
 
+    /**
+     * 新增评论
+     * @param article_id 文章id
+     * @param content 评论内容
+     * @param parent_comment_id 父级评论id
+     * @return
+     */
     @RequestMapping("/addComment")
     @ResponseBody
     public String addComment(@Param("article_id") Integer article_id,
@@ -97,6 +108,12 @@ public class CommentController {
         return jsonObject.toString();
     }
 
+    /**
+     * 删除评论
+     * @param comment_id 评论id
+     * @param article_id 文章id
+     * @return
+     */
     @RequestMapping("/delComment")
     @ResponseBody
     public String delComment(@Param("comment_id") Integer comment_id,
@@ -119,7 +136,6 @@ public class CommentController {
                     ||user.getId()==comment.getUser_id()
                     ||subject.hasRole("admin")){
                 //删除评论及其父级评论和子级评论
-//            CommentUtil commentUtil = new CommentUtil();
                 CommentUtil.delSonComment(commentService,comment);
                 jsonObject.put("statusCode", 200);
                 jsonObject.put("msg", "删除评论及其子评论成功");

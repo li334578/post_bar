@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * Author:   Tang
  * Date:     2020/1/27 15:30
- * Description:
+ * Description: 作者dto
  */
 @Data
 public class AuthorDto extends User {

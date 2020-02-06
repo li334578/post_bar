@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Author:   Tang
  * Date:     2020/01/06 12:56:20
- * Description:
+ * Description: 文章mapper
  */
 @Mapper
 public interface ArticleMapper {
@@ -24,7 +24,7 @@ public interface ArticleMapper {
 
     /**
      * 根据关键字查询所有的文字
-     * @param keyword
+     * @param keyword 关键字
      * @return
      */
     @Select("select * from article where published = 1 and content like #{keyword}")
@@ -38,25 +38,25 @@ public interface ArticleMapper {
 
     /**
      * 根据id查询article
-     * @param id
+     * @param id 文章id
      * @return
      */
     @Select("select * from article where id = #{id}")
     ArticleDto findById(Integer id);
     /**
      * 新增一篇帖子
-     * @param title
-     * @param content
-     * @param create_time
-     * @param update_time
-     * @param first_picture
-     * @param published
-     * @param description
-     * @param type_id
-     * @param user_id
-     * @param approval_num
-     * @param trample_num
-     * @param browse_volume
+     * @param title 文章标题
+     * @param content 文章内容
+     * @param create_time 创建时间
+     * @param update_time 更新时间
+     * @param first_picture 封面地址
+     * @param published 是否发布
+     * @param description 文章描述
+     * @param type_id 分类id
+     * @param user_id 作者id
+     * @param approval_num 点赞数
+     * @param trample_num 点踩数
+     * @param browse_volume 浏览数
      * @return
      */
     @Insert("insert into article VALUE (null,#{title},#{content},#{create_time}," +
@@ -96,8 +96,8 @@ public interface ArticleMapper {
                                       @Param("create_time")String create_time);
 
     /**
-     * 根据博客id更新浏览量数据
-     * @param article_id
+     * 根据文章id更新浏览量数据
+     * @param article_id 文章id
      * @return
      */
     @Update("update article set browse_volume = browse_volume+1 where id = #{article_id}")
@@ -115,9 +115,9 @@ public interface ArticleMapper {
 
     /**
      * 新增用户对文章的态度
-     * @param article_id
-     * @param user_id
-     * @param attitude
+     * @param article_id 文章id
+     * @param user_id 用户id
+     * @param attitude 用户态度
      * @return
      */
     @Insert("insert into article_attitude VALUES(null,#{user_id},#{article_id},#{attitude})")
@@ -127,7 +127,7 @@ public interface ArticleMapper {
 
     /**
      * 根据文章id更新文章点赞数
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Update("update article set approval_num = approval_num + 1 where id = #{article_id}")
@@ -135,7 +135,7 @@ public interface ArticleMapper {
 
     /**
      * 根据文章id更新文章点踩数
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Update("update article set trample_num = trample_num + 1 where id = #{article_id}")
@@ -143,7 +143,7 @@ public interface ArticleMapper {
 
     /**
      * 根据用户id查询该用户的所有已发布的文章 create_time降序排列
-      * @param user_id
+      * @param user_id 用户id
      * @return
      */
     @Select("select * from article where user_id = #{user_id} and published = 1 ORDER BY create_time DESC")
@@ -151,12 +151,23 @@ public interface ArticleMapper {
 
     /**
      * 查询用户的所有文章 包括未发布
-     * @param user_id
+     * @param user_id 用户id
      * @return
      */
     @Select("select * from article where user_id = #{user_id} ORDER BY create_time DESC")
     List<ArticleDto> findMyArticleByUserId(Integer user_id);
 
+    /**
+     * 更新文章内容
+     * @param id 文章id
+     * @param title 文章标题
+     * @param content 文章内容
+     * @param first_picture 封面地址
+     * @param published 是否发布
+     * @param description 文章描述
+     * @param update_time 文章更新时间
+     * @return
+     */
     @Update("update article set title = #{title},content = #{content},first_picture = #{first_picture}," +
             "published = #{published},description = #{description},update_time = #{update_time} where id = #{article_id}")
     Integer updateArticleByArticleId(@Param("article_id")Integer id,@Param("title")String title,
@@ -166,7 +177,7 @@ public interface ArticleMapper {
 
     /**
      * 根据文章id删除文章
-     * @param id
+     * @param id 文章id
      * @return
      */
     @Delete("delete from article where id = #{id}")
@@ -174,7 +185,7 @@ public interface ArticleMapper {
 
     /**
      * 根据文章id删除用户对文章的点赞和点踩
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Delete("delete from article_attitude where article_id = #{article_id}")
@@ -182,7 +193,7 @@ public interface ArticleMapper {
 
     /**
      * 根据文章id删除文章的标签
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Delete("delete from article_tag where article_id = #{article_id}")
@@ -190,7 +201,7 @@ public interface ArticleMapper {
 
     /**
      * 根据文章id删除文章下的所有评论
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Delete("delete from comment where article_id = #{article_id}")
@@ -198,7 +209,7 @@ public interface ArticleMapper {
 
     /**
      * 根据type_id查询该分类下的文章数量
-     * @param type_id
+     * @param type_id 分类id
      * @return
      */
     @Select("select count(id) from article where type_id = #{type_id} and published = 1")
@@ -206,7 +217,7 @@ public interface ArticleMapper {
 
     /**
      * 根据type_id查询该分类下的所有文章
-     * @param type_id
+     * @param type_id 分类id
      * @return
      */
     @Select("select * from article where type_id = #{type_id} and published = 1")
@@ -214,7 +225,7 @@ public interface ArticleMapper {
 
     /**
      * 根据tag_id查询该标签下的所有文章
-     * @param tag_id
+     * @param tag_id 标签id
      * @return
      */
     @Select("SELECT * FROM article WHERE article.id IN " +
@@ -226,7 +237,7 @@ public interface ArticleMapper {
      * SELECT COUNT(article_tag.id) from article_tag RIGHT JOIN article
      * ON article.id = article_tag.article_id and published = 1 and article_tag.tag_id = 2;
      * select count(id) from article_tag where tag_id = #{tag_id}
-     * @param tag_id
+     * @param tag_id 标签id
      * @return
      */
     @Select("SELECT COUNT(article_tag.id) from article_tag RIGHT JOIN article" +
@@ -235,7 +246,7 @@ public interface ArticleMapper {
 
     /**
      * 根据用户id查询该用户发表的文章数
-     * @param user_id
+     * @param user_id 用户id
      * @return
      */
     @Select("SELECT COUNT(id) FROM article WHERE user_id = #{user_id} AND published = 1")

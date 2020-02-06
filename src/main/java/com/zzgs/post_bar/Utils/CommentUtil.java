@@ -6,7 +6,7 @@ import com.zzgs.post_bar.Service.CommentService;
 /**
  * Author:   Tang
  * Date:     2020/1/25 14:38
- * Description:
+ * Description: 评论工具类
  */
 
 public class CommentUtil {

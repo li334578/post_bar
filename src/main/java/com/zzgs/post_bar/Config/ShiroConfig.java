@@ -20,7 +20,7 @@ import java.util.Map;
 /**
  * Author:   Tang
  * Date:     2019/12/30 11:25
- * Description:
+ * Description: Shiro配置类
  */
 @Configuration
 public class ShiroConfig {
@@ -28,6 +28,11 @@ public class ShiroConfig {
     @Autowired
     JurisdictionService jurisdictionService;
 
+    /**
+     * 配置资源的访问权限
+     * @param securityManager
+     * @return
+     */
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
@@ -57,6 +62,10 @@ public class ShiroConfig {
 
     }
 
+    /**
+     * 将Realm设置到SecurityManager中
+     * @return
+     */
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager defaultSecurityManager = new DefaultWebSecurityManager();
@@ -64,6 +73,10 @@ public class ShiroConfig {
         return defaultSecurityManager;
     }
 
+    /**
+     * 创建ShiroRealm
+     * @return
+     */
     @Bean
     public ShiroRealm shiroRealm() {
         ShiroRealm shiroRealm = new ShiroRealm();
@@ -71,6 +84,10 @@ public class ShiroConfig {
         return shiroRealm;
     }
 
+    /**
+     * 设置加密规则
+     * @return
+     */
     @Bean
     public HashedCredentialsMatcher hashedCredentialsMatcher() {
         HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
@@ -81,7 +98,11 @@ public class ShiroConfig {
     }
 
 
-    //加入注解的使用，不加入这个注解不生效
+    /**
+     * 加入注解的使用，不加入这个注解不生效
+     * @param securityManager
+     * @return
+     */
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();

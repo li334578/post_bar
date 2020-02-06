@@ -6,7 +6,11 @@ import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
-
+/**
+ * Author:   Tang
+ * Date:     2020/01/06 12:56:20
+ * Description: 分类mapper
+ */
 @Mapper
 public interface TypeMapper {
     /**
@@ -46,7 +50,7 @@ public interface TypeMapper {
 
     /**
      * 根据id查询type
-     * @param type_id
+     * @param type_id 分类id
      * @return
      */
     @Select("select * from type where id = #{type_id}")
@@ -54,7 +58,7 @@ public interface TypeMapper {
 
     /**
      * 查询该分类下的已发布的文章的数量
-     * @param type_id
+     * @param type_id 分类id
      * @return
      */
     @Select("SELECT COUNT(id) FROM article WHERE type_id = #{type_id} AND published = 1;")
@@ -62,7 +66,7 @@ public interface TypeMapper {
 
     /**
      * 根据type_id删除id
-     * @param type_id
+     * @param type_id 分类id
      */
     @Delete("delete from type where id = #{type_id}")
     void delTypeById(Integer type_id);

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Author:   Tang
  * Date:     2019/12/31 13:41
- * Description:
+ * Description: 资源mapper
  */
 @Mapper
 public interface JurisdictionMapper {

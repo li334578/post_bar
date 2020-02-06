@@ -5,12 +5,16 @@ import com.zzgs.post_bar.Dto.CommentDto;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
-
+/**
+ * Author:   Tang
+ * Date:     2020/01/06 12:56:20
+ * Description: 评论mapper
+ */
 @Mapper
 public interface CommentMapper {
     /**
      * 根据文章id查询所有的评论
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Select("select * from comment where article_id = #{article_id}")
@@ -18,7 +22,7 @@ public interface CommentMapper {
 
     /**
      * 根据文章id查询所有的一级评论 没有父级评论
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Select("select * from comment where article_id = #{article_id} and parent_comment_id = 0")
@@ -26,7 +30,7 @@ public interface CommentMapper {
 
     /**
      * 根据文章id查询该文章的评论数
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Select("select count(id) from comment where article_id = #{article_id}")
@@ -34,7 +38,7 @@ public interface CommentMapper {
 
     /**
      * 根据评论id查询评论
-     * @param comment_id
+     * @param comment_id 评论id
      * @return
      */
     @Select("select * from comment where id = #{comment_id}")
@@ -42,7 +46,7 @@ public interface CommentMapper {
 
     /**
      * 根据评论id查询评论的Dto
-     * @param comment_id
+     * @param comment_id 评论id
      * @return
      */
     @Select("select * from comment where id = #{comment_id}")
@@ -50,8 +54,8 @@ public interface CommentMapper {
 
     /**
      * 根据用户id和评论时间查询评论
-     * @param user_id
-     * @param create_time
+     * @param user_id 用户id
+     * @param create_time 评论创建时间
      * @return
      */
     @Select("select * from comment where user_id = #{user_id} and create_time = #{create_time}")
@@ -60,8 +64,8 @@ public interface CommentMapper {
 
     /**
      * 根据id修改son_comment_id字段的值
-     * @param id
-     * @param son_comment_id
+     * @param id 评论id
+     * @param son_comment_id 子评论id
      * @return
      */
     @Update("update comment set son_comment_id = #{son_comment_id} where id = #{id}")
@@ -70,7 +74,7 @@ public interface CommentMapper {
 
     /**
      * 根据评论id删除评论
-     * @param comment_id
+     * @param comment_id 评论id
      * @return
      */
     @Delete("delete from comment where id = #{comment_id}")
@@ -78,11 +82,11 @@ public interface CommentMapper {
 
     /**
      * 新增一条评论
-     * @param user_id
-     * @param article_id
-     * @param create_time
-     * @param content
-     * @param parent_comment_id
+     * @param user_id 用户id
+     * @param article_id 文章id
+     * @param create_time 评论创建时间
+     * @param content 文章内容
+     * @param parent_comment_id 父评论id
      * @return
      */
     @Insert("insert into comment VALUES(null,#{user_id},#{article_id}," +

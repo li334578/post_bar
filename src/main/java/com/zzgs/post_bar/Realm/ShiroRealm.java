@@ -17,13 +17,18 @@ import java.util.Set;
 /**
  * Author:   Tang
  * Date:     2019/12/30 11:27
- * Description:
+ * Description: ShiroRealm
  */
 public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     UserService userService;
 
+    /**
+     * 设置用户角色
+     * @param principalCollection 身份集合
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String username = (String) SecurityUtils.getSubject().getPrincipal();
@@ -34,6 +39,12 @@ public class ShiroRealm extends AuthorizingRealm {
         return info;
     }
 
+    /**
+     * 用户认证
+     * @param authenticationToken 用于手机用户的用户名和密码
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String accountName = (String) authenticationToken.getPrincipal();

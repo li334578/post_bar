@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Author:   Tang
  * Date:     2019/12/30 14:48
- * Description:
+ * Description: 登录页和注册页的控制类
  */
 @Controller
 public class LoginAndRegisterController {
@@ -45,7 +45,14 @@ public class LoginAndRegisterController {
     TagService tagService;
 
 
-
+    /**
+     * 跳转首页
+     * @param model 页面模型
+     * @param pageNum 当前页
+     * @param pageSize 每页显示条数
+     * @param keyword 查询关键字
+     * @return
+     */
     @RequestMapping("/index")
     public String index(Model model,
                         @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
@@ -88,6 +95,11 @@ public class LoginAndRegisterController {
         return "index";
     }
 
+    /**
+     * 转发到关于我们页面
+     * @param model 页面模型
+     * @return
+     */
     @RequestMapping("/about")
     public String aboutUs(Model model){
         Subject subject = SecurityUtils.getSubject();
@@ -97,6 +109,12 @@ public class LoginAndRegisterController {
         return "about";
     }
 
+    /**
+     * 登录请求
+     * @param account_name 账户名
+     * @param account_password 账户密码
+     * @return
+     */
     @RequestMapping("/login")
     @ResponseBody
     public String login(@Param("account_name") String account_name,
@@ -125,6 +143,14 @@ public class LoginAndRegisterController {
         return jsonObject.toString();
     }
 
+    /**
+     * 注册请求
+     * @param register_nickname 昵称
+     * @param register_account_name 账户名
+     * @param register_account_password 账户密码
+     * @param register_email 账户email
+     * @return
+     */
     @RequestMapping("/register")
     @ResponseBody
     public String register(@Param("register_nickname") String register_nickname,
@@ -161,6 +187,11 @@ public class LoginAndRegisterController {
         return jsonObject.toString();
     }
 
+    /**
+     * 查询账户名是否存在 注册时防止用户名重复
+     * @param account_name 账户名
+     * @return
+     */
     @RequestMapping("/findAccountName")
     @ResponseBody
     public String findAccountName(@Param("account_name")String account_name){
@@ -178,6 +209,11 @@ public class LoginAndRegisterController {
         return jsonObject.toString();
     }
 
+    /**
+     * 查询昵称是否存在 注册时防止昵称重复
+     * @param nickname 昵称
+     * @return
+     */
     @RequestMapping("/findNickname")
     @ResponseBody
     public String findNickname(@Param("nickname")String nickname){
@@ -195,6 +231,11 @@ public class LoginAndRegisterController {
         return jsonObject.toString();
     }
 
+    /**
+     * 用户登出
+     * @param model
+     * @return
+     */
     @RequestMapping("/logout")
     public String logout(Model model){
         Subject subject = SecurityUtils.getSubject();

@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Author:   Tang
  * Date:     2019/12/29 12:33
- * Description:
+ * Description: 用户mapper
  */
 @Mapper
 public interface UserMapper {
@@ -25,7 +25,7 @@ public interface UserMapper {
 
     /**
      * 根据用户id查询用户
-     * @param id
+     * @param id 用户id
      * @return
      */
     @Select("select * from user where id = #{id}")
@@ -33,7 +33,7 @@ public interface UserMapper {
 
     /**
      * 根据用户名查询用户
-     * @param account_name
+     * @param account_name 账户名
      * @return
      */
     @Select("select * from user where account_name = #{account_name}")
@@ -41,7 +41,7 @@ public interface UserMapper {
 
     /**
      * 根据用户昵称查询用户
-     * @param nick_name
+     * @param nick_name 昵称
      * @return
      */
     @Select("select * from user where nick_name = #{nick_name}")
@@ -49,9 +49,9 @@ public interface UserMapper {
 
     /**
      * 添加用户
-     * @param nick_name
-     * @param account_name
-     * @param account_password
+     * @param nick_name 昵称名
+     * @param account_name 账户名
+     * @param account_password 账户密码
      * @return
      */
     @Insert("insert into user (id,account_name,account_password,nick_name,user_avatar,user_mailbox) VALUES (null,#{account_name},#{account_password},#{nick_name},#{user_avatar},#{register_email})")
@@ -63,7 +63,7 @@ public interface UserMapper {
 
     /**
      * 根据用户id查询用户角色
-     * @param id
+     * @param id 用户id
      * @return
      */
     @Select("SELECT role_name FROM role WHERE role.id = " +
@@ -73,12 +73,12 @@ public interface UserMapper {
 
     /**
      * 根据用户id修改用户信息
-     * @param id
-     * @param avatar
-     * @param nick_name
-     * @param mailbox
-     * @param phone
-     * @param intro
+     * @param id 用户id
+     * @param avatar 头像
+     * @param nick_name 昵称
+     * @param mailbox 邮箱
+     * @param phone 手机号
+     * @param intro 用户描述
      * @return
      */
     @Update("update user set user_avatar = #{avatar},nick_name = #{nick_name},user_mailbox = #{mailbox}," +
@@ -89,8 +89,8 @@ public interface UserMapper {
 
     /**
      * 根据账户名来修改用户密码
-     * @param account_name
-     * @param account_password
+     * @param account_name 账户名
+     * @param account_password 账户密码
      * @return
      */
     @Update("update user set account_password = #{account_password} where account_name = #{account_name}")
@@ -107,7 +107,7 @@ public interface UserMapper {
 
     /**
      * 为用户添加用户角色
-     * @param user_id
+     * @param user_id 用户id
      */
     @Insert("insert into user_role (id ,user_id ,role_id ) values (null,#{user_id},1)")
     void addUserRole(Integer user_id);
@@ -121,7 +121,7 @@ public interface UserMapper {
 
     /**
      * 根据用户id查询用户发布的文章数
-     * @param user_id
+     * @param user_id 用户id
      * @return
      */
     @Select("SELECT COUNT(id) FROM article WHERE user_id = #{user_id} AND published = 1")
@@ -129,7 +129,7 @@ public interface UserMapper {
 
     /**
      * 根据用户id查询用户发布的评论数
-     * @param user_id
+     * @param user_id 用户id
      * @return
      */
     @Select("SELECT COUNT(id) FROM COMMENT WHERE user_id = #{user_id}")
@@ -137,7 +137,7 @@ public interface UserMapper {
 
     /**
      * 根据用户id发布用户的点赞数
-     * @param user_id
+     * @param user_id 用户id
      * @return
      */
     @Select("SELECT COUNT(id) FROM article_attitude WHERE user_id = #{user_id} AND attitude = 1")
@@ -145,7 +145,7 @@ public interface UserMapper {
 
     /**
      * 根据用户id查询用户的点踩数
-     * @param user_id
+     * @param user_id 用户id
      * @return
      */
     @Select("SELECT COUNT(id) FROM article_attitude WHERE user_id = #{user_id} AND attitude = 0")

@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Author:   Tang
  * Date:     2020/01/06 12:35
- * Description:
+ * Description: 文章控制器
  */
 @Controller
 @RequestMapping("/article")
@@ -70,6 +70,12 @@ public class ArticleController {
         return "article_input";
     }
 
+    /**
+     * 封面图片上传
+     * @param file 文件
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/upload")
     @ResponseBody
     public String uploadImages(@RequestParam("file") MultipartFile file)throws IOException {
@@ -93,7 +99,12 @@ public class ArticleController {
         return jsonObject.toString();
     }
 
-
+    /**
+     * editormd图片文件上传
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/editormd/upload")
     @ResponseBody
     public String editormdUploadImages(@RequestParam(value = "editormd-image-file",required = true) MultipartFile file)throws IOException {
@@ -328,6 +339,16 @@ public class ArticleController {
         return "article_edit";
     }
 
+    /**
+     * 根据文章更新文章内容
+     * @param article_id 文章id
+     * @param title 文章标题
+     * @param content 文章内容
+     * @param first_picture 封面地址
+     * @param published 是否发布
+     * @param description 文章描述
+     * @return
+     */
     @RequestMapping("/updateArticle")
     @ResponseBody
     public String updateArticle(@Param("article_id")Integer article_id,@Param("title")String title,
@@ -350,9 +371,9 @@ public class ArticleController {
 
     /**
      * 分页查询我的文章
-     * @param model
-     * @param pageNum
-     * @param pageSize
+     * @param model 文章模型
+     * @param pageNum 当前页
+     * @param pageSize 每页显示条数
      * @return
      */
     @RequestMapping("/myArticle")
@@ -378,7 +399,7 @@ public class ArticleController {
 
     /**
      * 根据id删除文章
-     * @param id
+     * @param id 文章id
      * @return
      */
     @RequestMapping("/deleteMyArticle/{id}")

@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Author:   Tang
  * Date:     2020/1/26 15:19
- * Description:
+ * Description: 管理员控制器
  */
 @Controller
 @RequestMapping("/admin")
@@ -46,11 +46,19 @@ public class AdminController {
     @Autowired
     CommentService commentService;
 
+    /**
+     * 跳转管理员登录页
+     * @return
+     */
     @RequestMapping("/loginPage")
     public String loginPage(){
         return "/admin/adminLogin";
     }
 
+    /**
+     * 管理员登出
+     * @return
+     */
     @RequestMapping("/logout")
     public String logOut(){
         Subject subject = SecurityUtils.getSubject();
@@ -58,6 +66,12 @@ public class AdminController {
         return "/admin/adminLogin";
     }
 
+    /**
+     * 管理员登录请求
+     * @param adminName 管理员账户
+     * @param adminPassword 管理员密码
+     * @return
+     */
     @RequestMapping("/login")
     @ResponseBody
     public String login(@Param("adminName")String adminName,
@@ -90,6 +104,13 @@ public class AdminController {
         return jsonObject.toString();
     }
 
+    /**
+     * 后台管理页
+     * @param model 页面模型
+     * @param pageNum 当前页码
+     * @param pageSize 每页显示条数
+     * @return
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/index")
     public String adminIndex(Model model,
@@ -106,6 +127,13 @@ public class AdminController {
         model.addAttribute("articleDtoList",articleDtoList);
         return "/admin/adminForums";
     }
+
+    /**
+     * 根据id查询文章详情
+     * @param id 文章id
+     * @param model 页面模型
+     * @return
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/adminArticleDetails/{id}")
     public String adminArticleDetails(@PathVariable("id")Integer id,Model model){
@@ -152,6 +180,13 @@ public class AdminController {
         return "/admin/adminArticleDetails";
     }
 
+    /**
+     * 文章分类页
+     * @param model 页面模型
+     * @param pageNum 当前页码
+     * @param pageSize 当前页显示条数
+     * @return
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/types")
     public String adminType(Model model,
@@ -170,7 +205,14 @@ public class AdminController {
         return "/admin/adminTypes";
     }
 
-
+    /**
+     * 根据type_id查询分类下的文章
+     * @param model 页面模型
+     * @param pageNum 当前页码
+     * @param pageSize 每页显示条数
+     * @param type_id 分类id
+     * @return
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/type/{id}")
     public String adminTypesIndex(Model model,
@@ -212,6 +254,14 @@ public class AdminController {
         return "/admin/adminTags";
     }
 
+    /**
+     * 根据tag_id查询标签下的文章
+     * @param model 页面模型
+     * @param pageNum 当前页码
+     * @param pageSize 每页显示条数
+     * @param tag_id 标签id
+     * @return
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/tag/{id}")
     public String adminTagsIndex(Model model,
@@ -240,6 +290,13 @@ public class AdminController {
         return "/admin/adminTagForums";
     }
 
+    /**
+     * 作者页
+     * @param model 页面模型
+     * @param pageNum 当前页码
+     * @param pageSize 每页显示条数
+     * @return
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/authors")
     public String adminAuthor(Model model,
@@ -257,6 +314,11 @@ public class AdminController {
         return "/admin/adminAuthor";
     }
 
+    /**
+     * 根据id删除分类
+     * @param type_id 分类id
+     * @return
+     */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delType")
     @ResponseBody
@@ -272,11 +334,16 @@ public class AdminController {
             //直接删除分类
             typeService.delTypeById(type_id);
             jsonObject.put("statusCode",200);
-            jsonObject.put("msg","删除成功");
+            jsonObject.put("msg","删除分类成功");
         }
         return jsonObject.toString();
     }
 
+    /**
+     * 根据标签id删除标签
+     * @param tag_id 标签id
+     * @return
+     */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delTag")
     @ResponseBody
@@ -292,25 +359,44 @@ public class AdminController {
             //直接删除
             tagService.delTagByTagId(tag_id);
             jsonObject.put("statusCode",200);
-            jsonObject.put("msg","删除成功");
+            jsonObject.put("msg","删除标签成功");
         }
         return jsonObject.toString();
     }
 
+    /**
+     * 根据文章id删除文章
+     * @param article_id 文章id
+     * @return
+     */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delArticle")
     @ResponseBody
     public String delArticle(@RequestParam("article_id") Integer article_id) {
-        JSONObject jsonObject = new JSONObject();
-        //调用删除
+        //删除文章并删除其他用户对文章的态度以及评论
+        //1.删除文章
         articleService.deleteArticleByArticleId(article_id);
-        //删除文章和标签的对应关系
+        //2.删除文章和文章标签的对应关系 article_tag
         articleService.deleteArticleTag(article_id);
-        jsonObject.put("statusCode",200);
-        jsonObject.put("msg","删除成功");
+        //3.删除文章其用户对文章的点赞/点踩态度
+        articleService.deleteArticleAttitudeByArticleId(article_id);
+        //4.删除文章及文章下的所有评论信息
+        articleService.deleteArticleComment(article_id);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("msg","删除文章成功");
+        jsonObject.put("statusCode","200");
+
         return jsonObject.toString();
     }
 
+    /**
+     * 根据作者id查询作者信息
+     * @param model 页面模型
+     * @param author_id 用户id
+     * @param pageNum 当前页码
+     * @param pageSize 每页显示条数
+     * @return
+     */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/author_details/{id}")
     public String authorDetails(Model model,

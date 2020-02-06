@@ -24,7 +24,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-
+/**
+ * Author:   Tang
+ * Date:     2019/12/30 14:48
+ * Description: 标签控制类
+ */
 @Controller
 @RequestMapping("/tag")
 public class TagController {
@@ -38,6 +42,11 @@ public class TagController {
     @Autowired
     private UserService userService;
 
+    /**
+     * 新增标签
+     * @param tag_name 标签名
+     * @return
+     */
     @RequestMapping("/addTag")
     @ResponseBody
     public String addTag(@Param("tag_name")String tag_name){
@@ -57,6 +66,13 @@ public class TagController {
         return jsonObject.toString();
     }
 
+    /**
+     * 分页查询所有标签
+     * @param model 页面模型
+     * @param pageNum 当前页
+     * @param pageSize 每页显示条数
+     * @return
+     */
     @RequestMapping("/tags")
     public String tags(Model model,
                        @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
@@ -76,6 +92,14 @@ public class TagController {
         return "tags";
     }
 
+    /**
+     * 根据标签id查询标签下的文章
+     * @param model 页面模型
+     * @param pageNum 当前页
+     * @param pageSize 每页显示条数
+     * @param tag_id 分类id
+     * @return
+     */
     @RequestMapping("/findArticleByTagId/{id}")
     public String findTypeByTypeId(Model model,
                                    @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,

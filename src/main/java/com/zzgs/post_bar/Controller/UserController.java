@@ -36,7 +36,7 @@ import java.util.TimerTask;
 /**
  * Author:   Tang
  * Date:     2019/12/29 12:33
- * Description:
+ * Description: 用户控制器
  */
 @Controller
 @RequestMapping("/user")
@@ -55,7 +55,10 @@ public class UserController {
     private MailService mailService;
 
 
-
+    /**
+     * 查询所有用户
+     * @return
+     */
     @GetMapping("/findAll")
     public String findAll(){
         List<User> userList = userService.findAll();
@@ -65,6 +68,11 @@ public class UserController {
         return "index";
     }
 
+    /**
+     * 用户资料设置页
+     * @param model 页面模型
+     * @return
+     */
     @RequestMapping("/userSetting")
     public String userSetting(Model model){
         Subject subject = SecurityUtils.getSubject();
@@ -74,6 +82,15 @@ public class UserController {
         return "userSetting";
     }
 
+    /**
+     * 更新用户资料
+     * @param avatar 头像
+     * @param nick_name 昵称
+     * @param mailbox 邮箱
+     * @param phone 手机号
+     * @param intro 描述
+     * @return
+     */
     @RequestMapping("/updateUser")
     @ResponseBody
     public String updateUser(@Param("avatar")String avatar,@Param("nick_name")String nick_name,
@@ -97,6 +114,12 @@ public class UserController {
         return jsonObject.toString();
     }
 
+    /**
+     * 上传头像文件
+     * @param file 文件
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("/upload")
     @ResponseBody
     public String uploadImages(@RequestParam("file") MultipartFile file)throws IOException{
@@ -120,6 +143,13 @@ public class UserController {
         return jsonObject.toString();
     }
 
+    /**
+     * 作者页面
+     * @param model 页面模型
+     * @param pageNum 当前页
+     * @param pageSize 每页显示数据
+     * @return
+     */
     @RequestMapping("/author")
     public String author(Model model,
                          @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
@@ -135,6 +165,11 @@ public class UserController {
         return "author";
     }
 
+    /**
+     * 跳转修改密码页
+     * @param model
+     * @return
+     */
     @RequestMapping("/changePwdPage")
     public String changePwdPage(Model model){
         Subject subject = SecurityUtils.getSubject();
@@ -144,6 +179,12 @@ public class UserController {
         return "change_password";
     }
 
+    /**
+     * 发送验证码邮件
+     * @param account_name 账户名
+     * @param request request对象
+     * @return
+     */
     @RequestMapping("/sendEmail")
     @ResponseBody
     public String sendMail(@RequestParam("account_name")String account_name,
@@ -173,6 +214,16 @@ public class UserController {
         return jsonObject.toString();
     }
 
+    /**
+     * 修改用户密码
+     * @param account_name 账户名
+     * @param Code 验证码
+     * @param NewPwd 新密码
+     * @param ReNewPwd 再次确认密码
+     * @param request request对象
+     * @param model 页面模型
+     * @return
+     */
     @RequestMapping("/changePassword")
     @ResponseBody
     public String changePassword(@RequestParam("account_name")String account_name,
@@ -225,6 +276,14 @@ public class UserController {
         return jsonObject.toString();
     }
 
+    /**
+     * 查询作者详情
+     * @param model 页面模型
+     * @param author_id 作者id
+     * @param pageNum 当前页
+     * @param pageSize 每页数据条数
+     * @return
+     */
     @RequestMapping("/author_details/{id}")
     public String authorDetails(Model model,
                                 @PathVariable("id") Integer author_id,

@@ -22,7 +22,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-
+/**
+ * Author:   Tang
+ * Date:     2019/12/30 14:48
+ * Description: 话题控制类
+ */
 @Controller
 @RequestMapping("/type")
 public class TypeController {
@@ -34,6 +38,11 @@ public class TypeController {
     @Autowired
     private TypeService typeService;
 
+    /**
+     * 新增话题
+     * @param type_name 话题名
+     * @return
+     */
     @RequestMapping("/addType")
     @ResponseBody
     public String addType(@Param("type_name")String type_name){
@@ -53,6 +62,13 @@ public class TypeController {
         return jsonObject.toString();
     }
 
+    /**
+     * 分页查询所有分类及文章
+     * @param model 页面模型
+     * @param pageNum 当前页
+     * @param pageSize 每页显示条数
+     * @return
+     */
     @RequestMapping("/types")
     public String types(Model model,
                         @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
@@ -73,6 +89,14 @@ public class TypeController {
         return "types";
     }
 
+    /**
+     * 根据分类id查询文章
+     * @param model 页面模型
+     * @param pageNum 当前页
+     * @param pageSize 每页条数
+     * @param type_id 分类id
+     * @return
+     */
     @RequestMapping("/findArticleByTypeId/{id}")
     public String findTypeByTypeId(Model model,
                                    @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,

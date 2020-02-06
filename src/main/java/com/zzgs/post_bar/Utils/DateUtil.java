@@ -3,6 +3,11 @@ package com.zzgs.post_bar.Utils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+/**
+ * Author:   Tang
+ * Date:     2020/1/25 14:38
+ * Description: 日期工具类
+ */
 
 public class DateUtil {
     /**

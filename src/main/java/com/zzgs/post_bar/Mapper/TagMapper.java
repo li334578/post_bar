@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Author:   Tang
  * Date:     2020/1/4 13:21:55
- * Description:
+ * Description: 标签mapper
  */
 @Mapper
 public interface TagMapper {
@@ -58,7 +58,7 @@ public interface TagMapper {
 
     /**
      * 根据article_id查询这个文章的所有标签
-     * @param article_id
+     * @param article_id 文章id
      * @return
      */
     @Select("SELECT * FROM tag WHERE tag.id IN " +
@@ -67,12 +67,16 @@ public interface TagMapper {
 
     /**
      * 根据标签id查询到该标签下的文章数量
-     * @param tag_id
+     * @param tag_id 标签id
      * @return
      */
     @Select("SELECT COUNT(id) FROM article_tag WHERE tag_id = #{tag_id}")
     Integer findTotalArticleNumByTagId(Integer tag_id);
 
+    /**
+     * 根据id删除标签
+     * @param tag_id 标签id
+     */
     @Delete("delete from tag where id = #{tag_id}")
     void delTagByTagId(Integer tag_id);
 }

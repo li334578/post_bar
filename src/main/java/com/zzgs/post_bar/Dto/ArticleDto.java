@@ -2,7 +2,11 @@ package com.zzgs.post_bar.Dto;
 
 import com.zzgs.post_bar.Bean.Article;
 import lombok.Data;
-
+/**
+ * Author:   Tang
+ * Date:     2020/1/27 15:30
+ * Description: 文章dto
+ */
 @Data
 public class ArticleDto extends Article {
     private Integer comment;

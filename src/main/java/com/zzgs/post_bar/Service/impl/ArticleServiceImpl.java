@@ -39,9 +39,9 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(pageNum,pageSize);
         List<ArticleDto> list = articleMapper.findAll();
         for (ArticleDto articleDto : list) {
-            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
         }
         return list;
@@ -60,10 +60,10 @@ public class ArticleServiceImpl implements ArticleService {
         PageHelper.startPage(pageNum,pageSize);
         List<ArticleDto> list = articleMapper.findAllByKeyword(keyword);
         for (ArticleDto articleDto : list) {
-            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
-            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getId()));
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
         }
         return list;
     }
@@ -273,8 +273,8 @@ public class ArticleServiceImpl implements ArticleService {
         for (ArticleDto articleDto : list) {
             articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
-            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
         }
         return list;
     }
@@ -293,9 +293,9 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleDto> list = articleMapper.findArticleByTagId(tag_id);
         for (ArticleDto articleDto : list) {
             articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
             articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
-            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
         }
         return list;
     }
