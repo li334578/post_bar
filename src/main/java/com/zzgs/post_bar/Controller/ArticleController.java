@@ -284,14 +284,6 @@ public class ArticleController {
                              @Param("description") String description,
                              @Param("content") String content,
                              @Param("published") Integer published){
-        //数据校验....
-        System.out.println("title = " + title);
-        System.out.println("type_id = " + type_id);
-        System.out.println("tag_arr = " + tag_arr.toString());
-        System.out.println("firstPicture = " + firstPicture);
-        System.out.println("description = " + description);
-        System.out.println("content = " + content);
-        System.out.println("published = " + published);
         //获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
         String accountname = subject.getPrincipal().toString();

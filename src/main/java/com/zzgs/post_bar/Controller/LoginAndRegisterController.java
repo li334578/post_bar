@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Author:   Tang
@@ -188,7 +189,7 @@ public class LoginAndRegisterController {
     }
 
     /**
-     * 查询账户名是否存在 注册时防止用户名重复
+     * 查询账户名是否存在 校验账户名格式 注册时防止用户名重复
      * @param account_name 账户名
      * @return
      */
@@ -196,15 +197,23 @@ public class LoginAndRegisterController {
     @ResponseBody
     public String findAccountName(@Param("account_name")String account_name){
         JSONObject jsonObject = new JSONObject();
-        //查询用户名是否存在
-        User user = userService.findByAccountName(account_name);
-        if (user == null) {
-            //用户不存在
-            jsonObject.put("statusCode",200);
+        //5-20位字符 帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：^[a-zA-Z][a-zA-Z0-9_]{4,15}$
+        boolean flag = Pattern.matches("^[a-zA-Z][a-zA-Z0-9_]{4,15}$", account_name);
+        if (flag){
+            //格式校验成功
+            //查询用户名是否存在
+            User user = userService.findByAccountName(account_name);
+            if (user == null) {
+                //用户不存在
+                jsonObject.put("statusCode",200);
+            }else {
+                //用户名存在
+                jsonObject.put("statusCode",500);
+                jsonObject.put("msg","账户名已存在");
+            }
         }else {
-            //用户名存在
-            jsonObject.put("statusCode",500);
-            jsonObject.put("msg","账户名已存在");
+            jsonObject.put("statusCode",501);
+            jsonObject.put("msg","账户格式不正确，需字母开头，允许长度5-16字符，允许字母数字下划线");
         }
         return jsonObject.toString();
     }
@@ -233,7 +242,7 @@ public class LoginAndRegisterController {
 
     /**
      * 用户登出
-     * @param model
+     * @param model 页面模型
      * @return
      */
     @RequestMapping("/logout")
