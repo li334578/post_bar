@@ -396,6 +396,10 @@
             errmsg.append("<p>● 文章内容不能为空</p>");
             flag = false;
         }
+        if (taglist.length==0){
+            errmsg.append("<p>● 文章的标签不能为空</p>");
+            flag = false;
+        }
         if (taglist.length>3){
             errmsg.append("<p>● 文章的标签不能超过三个请检查</p>");
             flag = false;
