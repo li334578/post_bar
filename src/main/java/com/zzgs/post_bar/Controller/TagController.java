@@ -53,15 +53,22 @@ public class TagController {
         JSONObject jsonObject = new JSONObject();
         DateUtil dateUtil = new DateUtil();
         String date = dateUtil.getNowDate();
-        Integer flag = tagService.addTag(tag_name, date);
-        if (flag==1){
-            //成功添加标签
-            Tag tag = tagService.findByTagName(tag_name);
-            jsonObject.put("tag_name",tag.getTag_name());
-            jsonObject.put("tag_id",tag.getId());
-            jsonObject.put("statusCode",200);
+        //查询标签是否已存在
+        Tag dbtag = tagService.findByTagName(tag_name);
+        if (dbtag == null) {
+            Integer flag = tagService.addTag(tag_name, date);
+            if (flag==1){
+                //成功添加标签
+                Tag tag = tagService.findByTagName(tag_name);
+                jsonObject.put("tag_name",tag.getTag_name());
+                jsonObject.put("tag_id",tag.getId());
+                jsonObject.put("statusCode",200);
+            }else {
+                jsonObject.put("statusCode",500);
+            }
         }else {
-            jsonObject.put("statusCode",500);
+            //标签已存在
+            jsonObject.put("statusCode",501);
         }
         return jsonObject.toString();
     }

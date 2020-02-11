@@ -283,8 +283,10 @@
                         $(".ui.add_type.modal").modal("hide");
                         //清空内容
                         $('#add_type_name').val("");
-                        alert("添加话题成功");
-                    } else {
+                        alert("添加分类成功");
+                    } if (data.statusCode==501){
+                        alert("分类已存在");
+                    }else {
                         alert("添加失败请重试");
                     }
                 }
@@ -319,7 +321,9 @@
                         //清空内容
                         $('#add_tag_name').val("");
                         alert("添加标签成功");
-                    } else {
+                    } else if (data.statusCode==501){
+                        alert("标签已存在");
+                    }else {
                         alert("添加失败请重试");
                     }
                 }

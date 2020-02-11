@@ -47,17 +47,23 @@ public class TypeController {
     @ResponseBody
     public String addType(@Param("type_name")String type_name){
         JSONObject jsonObject = new JSONObject();
-        DateUtil dateUtil = new DateUtil();
-        String date = dateUtil.getNowDate();
-        Integer flag = typeService.addTag(type_name, date);
-        if (flag==1){
-            //成功添加话题
-            Type type = typeService.findByTypeName(type_name);
-            jsonObject.put("type_name",type.getType_name());
-            jsonObject.put("type_id",type.getId());
-            jsonObject.put("statusCode",200);
+        //查询标签是否存在
+        Type dbtype = typeService.findByTypeName(type_name);
+        if (dbtype == null) {
+            DateUtil dateUtil = new DateUtil();
+            String date = dateUtil.getNowDate();
+            Integer flag = typeService.addTag(type_name, date);
+            if (flag==1){
+                //成功添加话题
+                Type type = typeService.findByTypeName(type_name);
+                jsonObject.put("type_name",type.getType_name());
+                jsonObject.put("type_id",type.getId());
+                jsonObject.put("statusCode",200);
+            }else {
+                jsonObject.put("statusCode",500);
+            }
         }else {
-            jsonObject.put("statusCode",500);
+            jsonObject.put("statusCode",501);
         }
         return jsonObject.toString();
     }
