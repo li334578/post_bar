@@ -123,7 +123,7 @@ public class ArticleController {
             jsonObject.put("message","保存图片失败");
             e.printStackTrace();
         }
-        jsonObject.put("url","../static/images/illustration/"+fileName);
+        jsonObject.put("url","../../static/images/illustration/"+fileName);
         jsonObject.put("success","1");
         jsonObject.put("message","文件上传成功");
         return jsonObject.toString();
