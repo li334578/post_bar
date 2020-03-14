@@ -39,7 +39,7 @@
                     <div class="text">
                         <span th:if="${user}">
                             <shiro:hasRole name="user">
-                                <img class="ui avatar image" th:src="editormd-image-file${user.user_avatar}"
+                                <img class="ui avatar image" th:src="${user.user_avatar}"
                                      src="https://picsum.photos/id/1033/100/100">
                                 <span th:text="${user.nick_name}">李文博</span>
                             </shiro:hasRole>
