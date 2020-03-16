@@ -21,7 +21,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
 
     /**
      * 查询所有资源的访问权限设置
-     * @return
+     * @return 资源列表
      */
     @Override
     public List<Jurisdiction> findAll() {

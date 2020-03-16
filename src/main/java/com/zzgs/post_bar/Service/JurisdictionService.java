@@ -12,7 +12,7 @@ import java.util.List;
 public interface JurisdictionService {
     /**
      * 查询所有资源的访问权限设置
-     * @return
+     * @return 资源列表
      */
     List<Jurisdiction> findAll();
 }

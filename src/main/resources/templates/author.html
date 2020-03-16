@@ -223,10 +223,16 @@
     });
     $('.ui.dropdown').dropdown();
     $('.ui.login.violet.button').click(function () {
+        //显示模态框前清空提示信息
+        $('.ui.error.message.login').html("");
+        $('.ui.error.message.login').addClass("hidden");
         $(".ui.login.modal").modal("setting", "closable", false);
         $(".ui.login.modal").modal("show");
     });
     $('.ui.register.violet.button').click(function () {
+        //显示模态框前清空提示信息
+        $('.ui.error.message.register').html("");
+        $('.ui.error.message.register').addClass("hidden");
         $(".ui.register.modal").modal("setting", "closable", false);
         $(".ui.register.modal").modal("show");
     });

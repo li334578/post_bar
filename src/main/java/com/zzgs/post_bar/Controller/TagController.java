@@ -45,7 +45,7 @@ public class TagController {
     /**
      * 新增标签
      * @param tag_name 标签名
-     * @return
+     * @return 新增标签的结果数据
      */
     @RequestMapping("/addTag")
     @ResponseBody
@@ -78,7 +78,7 @@ public class TagController {
      * @param model 页面模型
      * @param pageNum 当前页
      * @param pageSize 每页显示条数
-     * @return
+     * @return 标签列表页
      */
     @RequestMapping("/tags")
     public String tags(Model model,
@@ -105,7 +105,7 @@ public class TagController {
      * @param pageNum 当前页
      * @param pageSize 每页显示条数
      * @param tag_id 分类id
-     * @return
+     * @return 标签下的文章列表页
      */
     @RequestMapping("/findArticleByTagId/{id}")
     public String findTypeByTypeId(Model model,

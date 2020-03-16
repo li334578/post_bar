@@ -11,7 +11,11 @@ import java.util.List;
  */
 @Data
 public class CommentDto extends Comment {
-
+    /**
+     * @user_name 用户名
+     * @user_avatar 用户头像
+     * @son_comment 子评论列表
+     */
     private String user_name;
     private String user_avatar;
     private List<CommentDto> son_comment;

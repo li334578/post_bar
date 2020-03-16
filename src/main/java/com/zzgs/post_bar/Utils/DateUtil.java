@@ -12,7 +12,7 @@ import java.util.Date;
 public class DateUtil {
     /**
      * 获取当前系统时间
-     * @return
+     * @return 系统时间
      */
     public String getNowDate(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");

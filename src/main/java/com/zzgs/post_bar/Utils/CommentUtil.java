@@ -14,7 +14,11 @@ public class CommentUtil {
 //    @Autowired
 //    private CommentService commentService;
 
-
+    /**
+     *  更新父评论的子评论
+     * @param commentService 评论的services
+     * @param comment 评论信息
+     */
     public static void updateFatherComment(CommentService commentService, Comment comment) {
         Integer parent_comment_id = comment.getParent_comment_id();
         if (parent_comment_id == 0) {
@@ -28,6 +32,11 @@ public class CommentUtil {
         }
     }
 
+    /**
+     * 删除子评论
+     * @param commentService 评论的services
+     * @param comment 评论信息
+     */
     public static void delSonComment(CommentService commentService, Comment comment) {
         String son_comment_id = comment.getSon_comment_id();
         if (son_comment_id != null) {
@@ -54,6 +63,12 @@ public class CommentUtil {
         }
     }
 
+    /**
+     * TODO
+     * @param fatherCommentSonCommentId
+     * @param commentId
+     * @return
+     */
     public static String structureSonCommentId(String fatherCommentSonCommentId, Integer commentId) {
         if (fatherCommentSonCommentId != null && !"".equals(fatherCommentSonCommentId)) {
             if (fatherCommentSonCommentId.length() > 1 && fatherCommentSonCommentId.split(",").length > 1) {

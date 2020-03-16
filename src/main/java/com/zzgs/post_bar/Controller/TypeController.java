@@ -41,7 +41,7 @@ public class TypeController {
     /**
      * 新增话题
      * @param type_name 话题名
-     * @return
+     * @return 新增话题的结果数据
      */
     @RequestMapping("/addType")
     @ResponseBody
@@ -73,7 +73,7 @@ public class TypeController {
      * @param model 页面模型
      * @param pageNum 当前页
      * @param pageSize 每页显示条数
-     * @return
+     * @return 分类列表页
      */
     @RequestMapping("/types")
     public String types(Model model,
@@ -101,7 +101,7 @@ public class TypeController {
      * @param pageNum 当前页
      * @param pageSize 每页条数
      * @param type_id 分类id
-     * @return
+     * @return 分类下的文章列表页
      */
     @RequestMapping("/findArticleByTypeId/{id}")
     public String findTypeByTypeId(Model model,

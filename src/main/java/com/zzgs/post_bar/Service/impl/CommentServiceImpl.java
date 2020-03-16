@@ -18,8 +18,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据评论id查询评论
      *
-     * @param comment_id
-     * @return
+     * @param comment_id 评论id
+     * @return 评论信息
      */
     @Override
     public Comment findById(Integer comment_id) {
@@ -29,9 +29,9 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据用户id和创建时间来查询评论
      *
-     * @param user_id
-     * @param create_time
-     * @return
+     * @param user_id 用户id
+     * @param create_time 创建时间
+     * @return 评论信息
      */
     @Override
     public Comment findByUserIdAndCommentTime(Integer user_id, String create_time) {
@@ -41,9 +41,9 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据id修改评论的son_comment_id字段
      *
-     * @param id
-     * @param son_comment_id
-     * @return
+     * @param id 评论id
+     * @param son_comment_id 子评论id
+     * @return 修改的行数
      */
     @Override
     public Integer updateSon_comment_idById(Integer id, String son_comment_id) {
@@ -53,12 +53,12 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 新增一条评论
      *
-     * @param user_id
-     * @param article_id
-     * @param create_time
-     * @param content
-     * @param parent_comment_id
-     * @return
+     * @param user_id 用户id
+     * @param article_id 文章id
+     * @param create_time 创建时间
+     * @param content 评论内容
+     * @param parent_comment_id 父评论id
+     * @return 新增的行数
      */
     @Override
     public Integer insertArticleComment(Integer user_id, Integer article_id,
@@ -70,8 +70,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据文章id 查询该文章的评论数
      *
-     * @param article_id
-     * @return
+     * @param article_id 文章id
+     * @return 文章的评论数
      */
     @Override
     public Integer findCommentTotalByArticleId(Integer article_id) {
@@ -81,8 +81,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据文章id查询文章的评论
      *
-     * @param article_id
-     * @return
+     * @param article_id 文章id
+     * @return 文章的评论列表
      */
     @Override
     public List<CommentDto> findAllCommentByArticleId(Integer article_id) {
@@ -92,8 +92,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据文章id查询文章的一级评论 没有父级评论的
      *
-     * @param article_id
-     * @return
+     * @param article_id 文章id
+     * @return 文章的评论列表
      */
     @Override
     public List<CommentDto> findAllCommentByArticleIdAndParentCommentId(Integer article_id) {
@@ -103,8 +103,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据id查询评论的Dto
      *
-     * @param comment_id
-     * @return
+     * @param comment_id 评论id
+     * @return 评论信息
      */
     @Override
     public CommentDto findCommentDtoById(Integer comment_id) {
@@ -114,8 +114,8 @@ public class CommentServiceImpl implements CommentService {
     /**
      * 根据评论id删除评论
      *
-     * @param comment_id
-     * @return
+     * @param comment_id 评论id
+     * @return 删除的行数
      */
     @Override
     public Integer deleteByCommentId(Integer comment_id) {

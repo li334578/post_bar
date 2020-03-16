@@ -30,8 +30,8 @@ public class ShiroConfig {
 
     /**
      * 配置资源的访问权限
-     * @param securityManager
-     * @return
+     * @param securityManager 管理器
+     * @return ShiroFilterFactoryBean
      */
     @Bean(name = "shiroFilter")
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {

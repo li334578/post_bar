@@ -24,7 +24,7 @@ public class TagServiceImpl implements TagService {
      * 新增一个标签
      * @param tag_name 标签名
      * @param create_time 创建时间
-     * @return
+     * @return 新增的行数
      */
     @Override
     public Integer addTag(String tag_name, String create_time) {
@@ -32,7 +32,7 @@ public class TagServiceImpl implements TagService {
     }
     /**
      * 查询所有标签并按照标签下的文章数量降序排列
-     * @return
+     * @return 标签列表
      */
     @Override
     public List<TagDto> findAll() {
@@ -42,9 +42,9 @@ public class TagServiceImpl implements TagService {
     /**
      * 分页查询所有标签
      *
-     * @param pageNum
-     * @param pageSize
-     * @return
+     * @param pageNum 当前页码
+     * @param pageSize 当前页的数据条数
+     * @return 标签列表
      */
     @Override
     public List<TagDto> findAllTagPaging(Integer pageNum, Integer pageSize) {
@@ -59,7 +59,7 @@ public class TagServiceImpl implements TagService {
     /**
      * 查询所有标签
      *
-     * @return
+     * @return 标签列表
      */
     @Override
     public List<TagDto> findAllTag() {
@@ -69,7 +69,7 @@ public class TagServiceImpl implements TagService {
     /**
      * 根据标签名查询标签
      * @param tag_name 标签名
-     * @return
+     * @return 标签信息
      */
     @Override
     public Tag findByTagName(String tag_name) {
@@ -79,8 +79,8 @@ public class TagServiceImpl implements TagService {
     /**
      * 根据article_id查询这个文章的所有标签
      *
-     * @param article_id
-     * @return
+     * @param article_id 文章id
+     * @return 标签列表
      */
     @Override
     public List<Tag> findByArticleId(Integer article_id) {
@@ -90,8 +90,8 @@ public class TagServiceImpl implements TagService {
     /**
      * 根据tag_id查询tag_id下的文章数量
      *
-     * @param tag_id
-     * @return
+     * @param tag_id 标签id
+     * @return 当前标签下的文章数
      */
     @Override
     public Integer findTotalArticleNumByTagId(Integer tag_id) {
@@ -101,7 +101,7 @@ public class TagServiceImpl implements TagService {
     /**
      * 根据tag_id删除tag
      *
-     * @param tag_id
+     * @param tag_id 标签id
      */
     @Override
     public void delTagByTagId(Integer tag_id) {

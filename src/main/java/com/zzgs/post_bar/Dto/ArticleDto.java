@@ -9,6 +9,12 @@ import lombok.Data;
  */
 @Data
 public class ArticleDto extends Article {
+    /**
+     * @comment TODO
+     * @type_name 分类名
+     * @author_name 作者名
+     * @user_avatar 作者头像
+     */
     private Integer comment;
     private String type_name;
     private String author_name;

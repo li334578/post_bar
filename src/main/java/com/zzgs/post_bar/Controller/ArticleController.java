@@ -55,7 +55,7 @@ public class ArticleController {
     /**
      * 跳转到article_input页面
      * @param model 页面模型
-     * @return
+     * @return 跳转article_input页面
      */
     @RequestMapping("/article_input")
     public String article_input(Model model){
@@ -73,8 +73,8 @@ public class ArticleController {
     /**
      * 封面图片上传
      * @param file 文件
-     * @return
-     * @throws IOException
+     * @return 上传文件的结果
+     * @throws IOException IO异常
      */
     @RequestMapping("/upload")
     @ResponseBody
@@ -101,9 +101,9 @@ public class ArticleController {
 
     /**
      * editormd图片文件上传
-     * @param file
-     * @return
-     * @throws IOException
+     * @param file 图片文件
+     * @return 保存文件的结果数据
+     * @throws IOException IO异常
      */
     @RequestMapping("/editormd/upload")
     @ResponseBody
@@ -134,7 +134,7 @@ public class ArticleController {
      * 查询文章详情
      * @param id 文章id
      * @param model 页面模型
-     * @return
+     * @return 文章详情页
      */
     @RequestMapping("/article_details/{id}")
     public String article(@PathVariable("id")Integer id,Model model){
@@ -184,7 +184,7 @@ public class ArticleController {
     /**
      * 文章浏览数量
      * @param article_id 文章id
-     * @return
+     * @return 文章浏览量更新结果
      */
     @RequestMapping("/addArticleBrowseVolume")
     @ResponseBody
@@ -203,8 +203,8 @@ public class ArticleController {
 
     /**
      * 查询当前用户对文章的态度
-     * @param article_id
-     * @return
+     * @param article_id 文章id
+     * @return 用户对文章的态度的结果
      */
     @RequestMapping("/findArticleAttitude")
     @ResponseBody
@@ -235,9 +235,9 @@ public class ArticleController {
 
     /**
      * 添加用户对文章的态度
-     * @param flag
-     * @param article_id
-     * @return
+     * @param flag 1：点赞 2：点踩
+     * @param article_id 文章id
+     * @return 发表态度的结果
      */
     @RequestMapping("/addArticleAttitude")
     @ResponseBody
@@ -273,7 +273,7 @@ public class ArticleController {
      * @param description 文章描述信息
      * @param content 文章内容
      * @param published 是否发布 0为保存草稿 1为发布
-     * @return
+     * @return 添加文章的结果数据
      */
     @RequestMapping("/addArticle")
     @ResponseBody
@@ -310,9 +310,9 @@ public class ArticleController {
 
     /**
      * 编辑文章内容
-     * @param id
-     * @param model
-     * @return
+     * @param id 文章id
+     * @param model 页面模型
+     * @return 文章编辑页
      */
     @RequestMapping("/articleEdit/{id}")
     public String articleEdit(@PathVariable("id")Integer id,Model model){
@@ -339,7 +339,7 @@ public class ArticleController {
      * @param first_picture 封面地址
      * @param published 是否发布
      * @param description 文章描述
-     * @return
+     * @return 更新文章内容的结果
      */
     @RequestMapping("/updateArticle")
     @ResponseBody
@@ -366,7 +366,7 @@ public class ArticleController {
      * @param model 文章模型
      * @param pageNum 当前页
      * @param pageSize 每页显示条数
-     * @return
+     * @return 我的文章列表页
      */
     @RequestMapping("/myArticle")
     public String myArticle(Model model,
@@ -392,7 +392,7 @@ public class ArticleController {
     /**
      * 根据id删除文章
      * @param id 文章id
-     * @return
+     * @return 删除文章的结果数据
      */
     @RequestMapping("/deleteMyArticle/{id}")
     @ResponseBody

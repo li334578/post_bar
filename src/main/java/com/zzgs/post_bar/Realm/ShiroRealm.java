@@ -27,7 +27,7 @@ public class ShiroRealm extends AuthorizingRealm {
     /**
      * 设置用户角色
      * @param principalCollection 身份集合
-     * @return
+     * @return AuthorizationInfo
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -42,8 +42,8 @@ public class ShiroRealm extends AuthorizingRealm {
     /**
      * 用户认证
      * @param authenticationToken 用于手机用户的用户名和密码
-     * @return
-     * @throws AuthenticationException
+     * @return AuthenticationInfo
+     * @throws AuthenticationException 未认证异常
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {

@@ -9,10 +9,19 @@ import javax.servlet.http.HttpSession;
  */
 public class CodeUtil {
 
+    /**
+     * 清除验证码
+     * @param key 验证码的key
+     * @param session session
+     */
     public static void ClearCode(String key,HttpSession session ){
         session.removeAttribute(key);
     }
 
+    /**
+     * 创建验证码
+     * @return 返回验证码
+     */
     public static Integer CreateCode(){
         Integer code = new Double((Math.random()*9+1)*100000).intValue();
         return code;

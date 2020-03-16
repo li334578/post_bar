@@ -17,7 +17,7 @@ public class DruidConfig {
 
     /**
      * 配置druid
-     * @return
+     * @return druid连接池
      */
     @ConfigurationProperties(prefix = "spring.datasource")
     @Bean

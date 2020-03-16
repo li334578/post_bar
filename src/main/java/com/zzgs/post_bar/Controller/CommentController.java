@@ -38,7 +38,7 @@ public class CommentController {
      * @param article_id 文章id
      * @param content 评论内容
      * @param parent_comment_id 父级评论id
-     * @return
+     * @return 新增评论的结果数据
      */
     @RequestMapping("/addComment")
     @ResponseBody
@@ -112,7 +112,7 @@ public class CommentController {
      * 删除评论
      * @param comment_id 评论id
      * @param article_id 文章id
-     * @return
+     * @return 删除评论的结果数据
      */
     @RequestMapping("/delComment")
     @ResponseBody

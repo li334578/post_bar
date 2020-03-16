@@ -48,7 +48,7 @@ public class AdminController {
 
     /**
      * 跳转管理员登录页
-     * @return
+     * @return 登录页
      */
     @RequestMapping("/loginPage")
     public String loginPage(){
@@ -57,7 +57,7 @@ public class AdminController {
 
     /**
      * 管理员登出
-     * @return
+     * @return 登录页
      */
     @RequestMapping("/logout")
     public String logOut(){
@@ -70,7 +70,7 @@ public class AdminController {
      * 管理员登录请求
      * @param adminName 管理员账户
      * @param adminPassword 管理员密码
-     * @return
+     * @return 登录请求结果
      */
     @RequestMapping("/login")
     @ResponseBody
@@ -109,7 +109,7 @@ public class AdminController {
      * @param model 页面模型
      * @param pageNum 当前页码
      * @param pageSize 每页显示条数
-     * @return
+     * @return 后台管理首页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/index")
@@ -132,7 +132,7 @@ public class AdminController {
      * 根据id查询文章详情
      * @param id 文章id
      * @param model 页面模型
-     * @return
+     * @return 文章详情页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/adminArticleDetails/{id}")
@@ -185,7 +185,7 @@ public class AdminController {
      * @param model 页面模型
      * @param pageNum 当前页码
      * @param pageSize 当前页显示条数
-     * @return
+     * @return 文章分类页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/types")
@@ -211,7 +211,7 @@ public class AdminController {
      * @param pageNum 当前页码
      * @param pageSize 每页显示条数
      * @param type_id 分类id
-     * @return
+     * @return 分类下的文章
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/type/{id}")
@@ -236,6 +236,13 @@ public class AdminController {
         return "/admin/adminTypeForums";
     }
 
+    /**
+     * 标签管理页
+     * @param model 页面模型
+     * @param pageNum 当前页码
+     * @param pageSize 当前页显示数据条数
+     * @return 标签管理页
+     */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/tags")
     public String adminTags(Model model,
@@ -260,7 +267,7 @@ public class AdminController {
      * @param pageNum 当前页码
      * @param pageSize 每页显示条数
      * @param tag_id 标签id
-     * @return
+     * @return 标签下的文章列表页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/tag/{id}")
@@ -295,7 +302,7 @@ public class AdminController {
      * @param model 页面模型
      * @param pageNum 当前页码
      * @param pageSize 每页显示条数
-     * @return
+     * @return 作者列表页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/authors")
@@ -317,7 +324,7 @@ public class AdminController {
     /**
      * 根据id删除分类
      * @param type_id 分类id
-     * @return
+     * @return 删除分类的结果数据
      */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delType")
@@ -342,7 +349,7 @@ public class AdminController {
     /**
      * 根据标签id删除标签
      * @param tag_id 标签id
-     * @return
+     * @return 删除标签的结果数据
      */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delTag")
@@ -367,7 +374,7 @@ public class AdminController {
     /**
      * 根据文章id删除文章
      * @param article_id 文章id
-     * @return
+     * @return 删除文章的结果数据
      */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delArticle")
@@ -395,7 +402,7 @@ public class AdminController {
      * @param author_id 用户id
      * @param pageNum 当前页码
      * @param pageSize 每页显示条数
-     * @return
+     * @return 作者详细信息
      */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/author_details/{id}")

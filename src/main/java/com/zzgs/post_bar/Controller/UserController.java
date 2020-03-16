@@ -57,7 +57,7 @@ public class UserController {
 
     /**
      * 查询所有用户
-     * @return
+     * @return 首页
      */
     @GetMapping("/findAll")
     public String findAll(){
@@ -71,7 +71,7 @@ public class UserController {
     /**
      * 用户资料设置页
      * @param model 页面模型
-     * @return
+     * @return 用户设置页
      */
     @RequestMapping("/userSetting")
     public String userSetting(Model model){
@@ -89,7 +89,7 @@ public class UserController {
      * @param mailbox 邮箱
      * @param phone 手机号
      * @param intro 描述
-     * @return
+     * @return 更新用户资料的结果数据
      */
     @RequestMapping("/updateUser")
     @ResponseBody
@@ -116,9 +116,9 @@ public class UserController {
 
     /**
      * 上传头像文件
-     * @param file 文件
-     * @return
-     * @throws IOException
+     * @param file 头像文件
+     * @return 上传文件的结果数据
+     * @throws IOException IO异常
      */
     @RequestMapping("/upload")
     @ResponseBody
@@ -148,7 +148,7 @@ public class UserController {
      * @param model 页面模型
      * @param pageNum 当前页
      * @param pageSize 每页显示数据
-     * @return
+     * @return 作者页
      */
     @RequestMapping("/author")
     public String author(Model model,
@@ -167,8 +167,8 @@ public class UserController {
 
     /**
      * 跳转修改密码页
-     * @param model
-     * @return
+     * @param model 页面模型
+     * @return 修改密码页
      */
     @RequestMapping("/changePwdPage")
     public String changePwdPage(Model model){
@@ -183,7 +183,7 @@ public class UserController {
      * 发送验证码邮件
      * @param account_name 账户名
      * @param request request对象
-     * @return
+     * @return 发送邮件的结果数据
      */
     @RequestMapping("/sendEmail")
     @ResponseBody
@@ -222,7 +222,7 @@ public class UserController {
      * @param ReNewPwd 再次确认密码
      * @param request request对象
      * @param model 页面模型
-     * @return
+     * @return 修改密码的结果数据
      */
     @RequestMapping("/changePassword")
     @ResponseBody
@@ -282,7 +282,7 @@ public class UserController {
      * @param author_id 作者id
      * @param pageNum 当前页
      * @param pageSize 每页数据条数
-     * @return
+     * @return 作者详情页
      */
     @RequestMapping("/author_details/{id}")
     public String authorDetails(Model model,

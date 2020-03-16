@@ -23,8 +23,8 @@ public class MarkdownUtil {
 
     /**
      * markdown格式转换成HTML格式
-     * @param markdown
-     * @return
+     * @param markdown Markdown文档
+     * @return html文档
      */
     public static String markdownToHtml(String markdown) {
         Parser parser = Parser.builder().build();
@@ -36,8 +36,8 @@ public class MarkdownUtil {
     /**
      * 增加扩展[标题锚点，表格生成]
      * Markdown转换成HTML
-     * @param markdown
-     * @return
+     * @param markdown Markdown文档
+     * @return HTML文档
      */
     public static String markdownToHtmlExtensions(String markdown) {
         //h标题生成id

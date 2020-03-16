@@ -9,6 +9,8 @@ import lombok.Data;
  */
 @Data
 public class TagDto extends Tag {
-
+    /**
+     * @total_num 标签下的文章数
+     */
     private Integer total_num;
 }

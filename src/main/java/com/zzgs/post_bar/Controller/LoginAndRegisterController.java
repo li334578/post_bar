@@ -52,7 +52,7 @@ public class LoginAndRegisterController {
      * @param pageNum 当前页
      * @param pageSize 每页显示条数
      * @param keyword 查询关键字
-     * @return
+     * @return 首页
      */
     @RequestMapping("/index")
     public String index(Model model,
@@ -66,10 +66,10 @@ public class LoginAndRegisterController {
         //查询帖子
         List<ArticleDto> articleDtoList;
         if ("".equals(keyword)){
-            articleDtoList = articleService.findAll(pageNum, pageSize);
+            articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
         }else {
             keyword = "%"+keyword+"%";
-            articleDtoList = articleService.findAllByKeyword(pageNum, pageSize,keyword);
+            articleDtoList = articleService.findAllByKeywordOrderByApprovalNum(pageNum, pageSize,keyword);
         }
         //查询所有的分类的前五个
         List<TypeDto> typeDtoList = typeService.findAll();
@@ -99,7 +99,7 @@ public class LoginAndRegisterController {
     /**
      * 转发到关于我们页面
      * @param model 页面模型
-     * @return
+     * @return 关于我们页面、
      */
     @RequestMapping("/about")
     public String aboutUs(Model model){
@@ -114,7 +114,7 @@ public class LoginAndRegisterController {
      * 登录请求
      * @param account_name 账户名
      * @param account_password 账户密码
-     * @return
+     * @return 登录请求的结果数据
      */
     @RequestMapping("/login")
     @ResponseBody
@@ -150,7 +150,7 @@ public class LoginAndRegisterController {
      * @param register_account_name 账户名
      * @param register_account_password 账户密码
      * @param register_email 账户email
-     * @return
+     * @return 注册请求的结果数据
      */
     @RequestMapping("/register")
     @ResponseBody
@@ -191,7 +191,7 @@ public class LoginAndRegisterController {
     /**
      * 查询账户名是否存在 校验账户名格式 注册时防止用户名重复
      * @param account_name 账户名
-     * @return
+     * @return 查询账户名是否存在的结果数据
      */
     @RequestMapping("/findAccountName")
     @ResponseBody
@@ -221,7 +221,7 @@ public class LoginAndRegisterController {
     /**
      * 查询昵称是否存在 注册时防止昵称重复
      * @param nickname 昵称
-     * @return
+     * @return 查询昵称是否存在的结果数据
      */
     @RequestMapping("/findNickname")
     @ResponseBody
@@ -243,7 +243,7 @@ public class LoginAndRegisterController {
     /**
      * 用户登出
      * @param model 页面模型
-     * @return
+     * @return 重定向到首页
      */
     @RequestMapping("/logout")
     public String logout(Model model){

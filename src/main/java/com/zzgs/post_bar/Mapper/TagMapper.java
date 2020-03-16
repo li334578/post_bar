@@ -19,7 +19,7 @@ public interface TagMapper {
      * 新增一个标签
      * @param tag_name 标签名
      * @param create_time 创建时间
-     * @return
+     * @return 新增的行数
      */
     @Insert("insert into tag VALUES(null,#{tag_name},#{create_time})")
     Integer addTag(@Param("tag_name") String tag_name,
@@ -31,7 +31,7 @@ public interface TagMapper {
      LEFT JOIN article ON article_tag.article_id = article.id)
      LEFT JOIN tag ON article_tag.tag_id = tag.id) middle_table
      where middle_table.published = 1 GROUP BY middle_table.id ORDER BY COUNT(middle_table.id) DESC;
-     * @return
+     * @return 标签的列表
      */
     @Select("SELECT id,tag_name,create_time,COUNT(id) AS total_num from " +
             "(SELECT tag.id,tag.tag_name,tag.create_time,article.published from " +
@@ -44,14 +44,14 @@ public interface TagMapper {
 
     /**
      * 查询所有标签
-     * @return
+     * @return 标签的列表
      */
     @Select("select * from tag")
     List<TagDto> findAllTag();
     /**
      * 根据标签名查询标签
      * @param tag_name 标签名
-     * @return
+     * @return 标签信息
      */
     @Select("select * from tag where tag_name = #{tag_name}")
     Tag findByTagName(String tag_name);
@@ -59,7 +59,7 @@ public interface TagMapper {
     /**
      * 根据article_id查询这个文章的所有标签
      * @param article_id 文章id
-     * @return
+     * @return 标签列表
      */
     @Select("SELECT * FROM tag WHERE tag.id IN " +
             "(SELECT article_tag.tag_id FROM article_tag WHERE article_tag.article_id = #{article_id})")
@@ -68,7 +68,7 @@ public interface TagMapper {
     /**
      * 根据标签id查询到该标签下的文章数量
      * @param tag_id 标签id
-     * @return
+     * @return 标签下的文章数量
      */
     @Select("SELECT COUNT(id) FROM article_tag WHERE tag_id = #{tag_id}")
     Integer findTotalArticleNumByTagId(Integer tag_id);

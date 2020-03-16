@@ -9,6 +9,8 @@ import lombok.Data;
  */
 @Data
 public class TypeDto extends Type {
-
+    /**
+     * @total_num 分类下的文章数
+     */
     private Integer total_num;
 }

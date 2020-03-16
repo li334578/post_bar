@@ -24,7 +24,7 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 分页查询所有话题并按照话题下的文章数量统计降序排列
      *
-     * @return
+     * @return 分类列表
      */
     @Override
     public List<TypeDto> findAllPaging(Integer pageNum, Integer pageSize) {
@@ -40,7 +40,7 @@ public class TypeServiceImpl implements TypeService {
      * 新增一个话题
      * @param type_name 话题名
      * @param create_time 创建时间
-     * @return
+     * @return 新增的行数
      */
     @Override
     public Integer addTag(String type_name, String create_time) {
@@ -48,7 +48,7 @@ public class TypeServiceImpl implements TypeService {
     }
     /**
      * 查询所有话题并按照话题下的文章数量统计降序排列
-     * @return
+     * @return 标签列表
      */
     @Override
     public List<TypeDto> findAll() {
@@ -58,7 +58,7 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 查询所有分类
      *
-     * @return
+     * @return 分类列表
      */
     @Override
     public List<TypeDto> findAllType() {
@@ -68,7 +68,7 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 根据话题名查询话题
      * @param type_name 话题名
-     * @return
+     * @return 分类信息
      */
     @Override
     public Type findByTypeName(String type_name) {
@@ -78,8 +78,8 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 根据id查询话题分类
      *
-     * @param type_id
-     * @return
+     * @param type_id 分类id
+     * @return 分类信息
      */
     @Override
     public Type findById(Integer type_id) {
@@ -89,8 +89,8 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 查询该分类下的文章数量
      *
-     * @param type_id
-     * @return
+     * @param type_id 分类id
+     * @return 分类下的文章数量
      */
     @Override
     public Integer findTotalArticleNumByTypeId(Integer type_id) {
@@ -100,7 +100,7 @@ public class TypeServiceImpl implements TypeService {
     /**
      * 根据id删除分类
      *
-     * @param type_id
+     * @param type_id 分类id
      */
     @Override
     public void delTypeById(Integer type_id) {
