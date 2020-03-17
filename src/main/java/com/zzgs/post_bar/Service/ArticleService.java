@@ -181,6 +181,16 @@ public interface ArticleService {
      */
     List<ArticleDto> findArticleByTypeId(Integer type_id,Integer pageNum, Integer pageSize);
 
+
+    /**
+     * 根据type_id 查询该分类下的文章 根据点赞数排序
+     * @param type_id 分类id
+     * @param pageNum 当前页页码
+     * @param pageSize 当前页数据条数
+     * @return 文章列表
+     */
+    List<ArticleDto> findArticleByTypeIdOrderByApprovalNum(Integer type_id,Integer pageNum, Integer pageSize);
+
     /**
      * 根据tag_id 查询该分类下的文章
      *
@@ -190,6 +200,16 @@ public interface ArticleService {
      * @return 文章列表
      */
     List<ArticleDto> findArticleByTagId(Integer tag_id,Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据tag_id 查询该分类下的文章
+     *
+     * @param tag_id 标签id
+     * @param pageNum 当前页码
+     * @param pageSize 当前页数据条数
+     * @return 文章列表
+     */
+    List<ArticleDto> findArticleByTagIdOrderByApprovalNum(Integer tag_id,Integer pageNum, Integer pageSize);
 
     /**
      * 根据tag_id查询当前标签下的文章数

@@ -321,6 +321,27 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     /**
+     * 根据type_id 查询该分类下的文章根据点赞数排序
+     *
+     * @param type_id  分类id
+     * @param pageNum  当前页页码
+     * @param pageSize 当前页数据条数
+     * @return 文章列表
+     */
+    @Override
+    public List<ArticleDto> findArticleByTypeIdOrderByApprovalNum(Integer type_id, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<ArticleDto> list = articleMapper.findArticleByTypeIdOrderByApprovalNum(type_id);
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+        }
+        return list;
+    }
+
+    /**
      * 根据tag_id 查询该分类下的文章
      *
      * @param tag_id 标签id
@@ -332,6 +353,27 @@ public class ArticleServiceImpl implements ArticleService {
     public List<ArticleDto> findArticleByTagId(Integer tag_id, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         List<ArticleDto> list = articleMapper.findArticleByTagId(tag_id);
+        for (ArticleDto articleDto : list) {
+            articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
+            articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
+            articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
+            articleDto.setAuthor_name(userService.findById(articleDto.getUser_id()).getNick_name());
+        }
+        return list;
+    }
+
+    /**
+     * 根据tag_id 查询该分类下的文章
+     *
+     * @param tag_id   标签id
+     * @param pageNum  当前页码
+     * @param pageSize 当前页数据条数
+     * @return 文章列表
+     */
+    @Override
+    public List<ArticleDto> findArticleByTagIdOrderByApprovalNum(Integer tag_id, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<ArticleDto> list = articleMapper.findArticleByTagIdOrderByApprovalNum(tag_id);
         for (ArticleDto articleDto : list) {
             articleDto.setComment(commentService.findCommentTotalByArticleId(articleDto.getType_id()));
             articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());

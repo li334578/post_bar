@@ -64,10 +64,9 @@ public class CommentUtil {
     }
 
     /**
-     * TODO
-     * @param fatherCommentSonCommentId
-     * @param commentId
-     * @return
+     * @param fatherCommentSonCommentId 父级评论的子级评论id
+     * @param commentId 当前评论id
+     * @return 父级评论的子级评论id
      */
     public static String structureSonCommentId(String fatherCommentSonCommentId, Integer commentId) {
         if (fatherCommentSonCommentId != null && !"".equals(fatherCommentSonCommentId)) {

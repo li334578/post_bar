@@ -158,7 +158,7 @@ public interface ArticleMapper {
     List<ArticleDto> findAllArticleByUserId(Integer user_id);
 
     /**
-     * 查询用户的所有文章 包括未发布
+     * 查询用户的所有文章 包括未发布 根据创建时间排序
      * @param user_id 用户id
      * @return 文章列表
      */
@@ -232,6 +232,14 @@ public interface ArticleMapper {
     List<ArticleDto> findArticleByTypeId(Integer type_id);
 
     /**
+     * 根据type_id查询该分类下的所有文章
+     * @param type_id 分类id
+     * @return 文章列表
+     */
+    @Select("select * from article where type_id = #{type_id} and published = 1 order by approval_num DESC")
+    List<ArticleDto> findArticleByTypeIdOrderByApprovalNum(Integer type_id);
+
+    /**
      * 根据tag_id查询该标签下的所有文章
      * @param tag_id 标签id
      * @return 文章列表
@@ -239,6 +247,16 @@ public interface ArticleMapper {
     @Select("SELECT * FROM article WHERE article.id IN " +
             "(SELECT article_tag.article_id FROM article_tag WHERE article_tag.tag_id = #{tag_id}) and published = 1")
     List<ArticleDto> findArticleByTagId(Integer tag_id);
+
+    /**
+     * 根据tag_id查询该标签下的所有文章
+     * @param tag_id 标签id
+     * @return 文章列表
+     */
+    @Select("SELECT * FROM article WHERE article.id IN " +
+            "(SELECT article_tag.article_id FROM article_tag WHERE article_tag.tag_id = #{tag_id})" +
+            " and published = 1 order by article.approval_num DESC")
+    List<ArticleDto> findArticleByTagIdOrderByApprovalNum(Integer tag_id);
 
     /**
      * 根据tag_id查询该标签下的文章数量

@@ -308,8 +308,4 @@ public class UserController {
         model.addAttribute("author",author);
         return "author_details";
     }
-
-
-
-
 }

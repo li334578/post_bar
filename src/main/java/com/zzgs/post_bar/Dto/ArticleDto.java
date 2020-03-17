@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class ArticleDto extends Article {
     /**
-     * @comment TODO
+     * @comment 评论id
      * @type_name 分类名
      * @author_name 作者名
      * @user_avatar 作者头像

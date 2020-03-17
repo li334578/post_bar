@@ -88,7 +88,8 @@ public class TagController {
         if (subject.getPrincipal()!=null){
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
-        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+//        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);
@@ -118,8 +119,9 @@ public class TagController {
             user.setUser_avatar("../"+user.getUser_avatar());
             model.addAttribute("user",user);
         }
-        //根据tag_id查询文章
-        List<ArticleDto> articleDtoList = articleService.findArticleByTagId(tag_id,pageNum,pageSize);
+        //根据tag_id查询文章 根据点赞数排序
+//        List<ArticleDto> articleDtoList = articleService.findArticleByTagId(tag_id,pageNum,pageSize);
+        List<ArticleDto> articleDtoList = articleService.findArticleByTagIdOrderByApprovalNum(tag_id,pageNum,pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);
