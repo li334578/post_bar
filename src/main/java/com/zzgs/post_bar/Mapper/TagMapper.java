@@ -48,6 +48,7 @@ public interface TagMapper {
      */
     @Select("select * from tag")
     List<TagDto> findAllTag();
+
     /**
      * 根据标签名查询标签
      * @param tag_name 标签名

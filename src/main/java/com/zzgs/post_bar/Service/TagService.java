@@ -39,6 +39,14 @@ public interface TagService {
     List<TagDto> findAllTagPaging(Integer pageNum, Integer pageSize);
 
     /**
+     * 分页查询所有标签根据标签下文章数排序
+     * @param pageNum 当前页码
+     * @param pageSize 当前页的数据条数
+     * @return 标签列表
+     */
+    List<TagDto> findAllTagOrderByArticleNumPaging(Integer pageNum, Integer pageSize);
+
+    /**
      * 根据标签名查询标签
      * @param tag_name 标签名
      * @return 标签信息

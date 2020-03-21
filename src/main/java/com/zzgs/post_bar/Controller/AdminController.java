@@ -199,6 +199,7 @@ public class AdminController {
         }
         //查询所有的分类
         List<TypeDto> typeDtoList = typeService.findAllPaging(pageNum,pageSize);
+//        List<TypeDto> typeDtoList = typeService.findAllPagingOrderByArticleNum(pageNum,pageSize);
         PageInfo pageInfo = new PageInfo(typeDtoList);
         model.addAttribute("typeTotalNum",typeDtoList.size());
         model.addAttribute("typeDtoList",typeDtoList);
@@ -255,7 +256,8 @@ public class AdminController {
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有的标签
-        List<TagDto> tagDtoList = tagService.findAllTagPaging(pageNum, pageSize);
+//        List<TagDto> tagDtoList = tagService.findAllTagPaging(pageNum, pageSize);
+        List<TagDto> tagDtoList = tagService.findAllTagOrderByArticleNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(tagDtoList);
         model.addAttribute("tagTotalNum",tagDtoList.size());
         model.addAttribute("tagDtoList",tagDtoList);

@@ -57,6 +57,24 @@ public class TagServiceImpl implements TagService {
     }
 
     /**
+     * 分页查询所有标签根据标签下文章数排序
+     *
+     * @param pageNum  当前页码
+     * @param pageSize 当前页的数据条数
+     * @return 标签列表
+     */
+    @Override
+    public List<TagDto> findAllTagOrderByArticleNumPaging(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<TagDto> tagDtoList = tagMapper.findAll();
+        for (TagDto tagDto : tagDtoList) {
+            tagDto.setTotal_num(tagMapper.findTotalArticleNumByTagId(tagDto.getId()));
+        }
+        return tagDtoList;
+    }
+
+
+    /**
      * 查询所有标签
      *
      * @return 标签列表

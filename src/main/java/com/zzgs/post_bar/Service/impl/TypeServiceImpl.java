@@ -37,6 +37,21 @@ public class TypeServiceImpl implements TypeService {
     }
 
     /**
+     * 分页查询所有话题并按照话题下的文章数量统计降序排列
+     *
+     * @return 分类列表
+     */
+    @Override
+    public List<TypeDto> findAllPagingOrderByArticleNum(Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        List<TypeDto> typeDtoList = typeMapper.findAll();
+        for (TypeDto typeDto : typeDtoList) {
+            typeDto.setTotal_num(typeMapper.findTotalArticleNumByTypeId(typeDto.getId()));
+        }
+        return typeDtoList;
+    }
+
+    /**
      * 新增一个话题
      * @param type_name 话题名
      * @param create_time 创建时间
@@ -54,6 +69,8 @@ public class TypeServiceImpl implements TypeService {
     public List<TypeDto> findAll() {
         return typeMapper.findAll();
     }
+
+
 
     /**
      * 查询所有分类
