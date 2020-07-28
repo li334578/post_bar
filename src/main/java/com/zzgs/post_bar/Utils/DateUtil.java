@@ -15,7 +15,7 @@ public class DateUtil {
      * @return 系统时间
      */
     public String getNowDate(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.now();
         return formatter.format(localDateTime);
     }

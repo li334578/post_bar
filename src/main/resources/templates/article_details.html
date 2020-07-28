@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"  xmlns:shiro="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -159,7 +159,8 @@
                                  src="https://picsum.photos/id/1033/100/100">
                         </a>
                         <div class="content">
-                            <a class="author" style="color: deepskyblue" th:href="'/user/author_details/'+${commentDto.user_id}"
+                            <a class="author" style="color: deepskyblue"
+                               th:href="'/user/author_details/'+${commentDto.user_id}"
                                th:text="${commentDto.user_name}">Elliot Fu</a>
                             <div class="metadata">
                                 <span class="date" th:text="${commentDto.create_time}">Yesterday at 12:30AM</span>
@@ -174,7 +175,7 @@
                                 <input type="hidden" th:value="${commentDto.id}" class="comment_id">
                                 <a class="reply" style="color: blueviolet;" onclick="changefunction(this)">回复</a>
                                 <!--<a style="color: red;"-->
-                                   <!--th:onclick="'javascript:deleteComment('+${commentDto.id}+');'">删除</a>-->
+                                <!--th:onclick="'javascript:deleteComment('+${commentDto.id}+');'">删除</a>-->
                                 <a style="color: red;"
                                    th:onclick="'javascript:showDeleteModal('+${commentDto.id}+');'">删除</a>
                             </div>
@@ -187,7 +188,8 @@
                                              th:src="'../'+${comment_son.user_avatar}">
                                     </a>
                                     <div class="content">
-                                        <a class="author" style="color: deepskyblue" th:href="'/user/author_details/'+${comment_son.user_id}"
+                                        <a class="author" style="color: deepskyblue"
+                                           th:href="'/user/author_details/'+${comment_son.user_id}"
                                            th:text="${comment_son.user_name}">Jenny Hess</a>
                                         <div class="metadata">
                                             <span class="date" th:text="${comment_son.create_time}">Just now</span>
@@ -196,12 +198,13 @@
                                             Elliot you are always so right :)
                                         </div>
                                         <div class="actions">
-                                            <input type="hidden" th:value="${comment_son.user_name}" class="comment_nickname">
+                                            <input type="hidden" th:value="${comment_son.user_name}"
+                                                   class="comment_nickname">
                                             <input type="hidden" th:value="${comment_son.id}" class="comment_id">
                                             <a class="reply" style="color: blueviolet;"
                                                onclick="changefunction(this)">回复</a>
                                             <!--<a style="color: red;"-->
-                                               <!--th:onclick="'javascript:deleteComment('+${comment_son.id}+');'">删除</a>-->
+                                            <!--th:onclick="'javascript:deleteComment('+${comment_son.id}+');'">删除</a>-->
                                             <a style="color: red;"
                                                th:onclick="'javascript:showDeleteModal('+${comment_son.id}+');'">删除</a>
                                         </div>
@@ -323,10 +326,10 @@
 <!--右下角工具组-->
 <div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none">
     <div class="ui vertical icon buttons ">
-        <button type="button" class="ui toc violet button" >目录</button>
-        <a href="#comment-container" class="ui violet button" >评论</a>
+        <button type="button" class="ui toc violet button">目录</button>
+        <a href="#comment-container" class="ui violet button">评论</a>
         <!--<button class="ui wechat icon button"><i class="weixin icon"></i></button>-->
-        <div id="toTop-button" class="ui icon button" ><i class="chevron up icon"></i></div>
+        <div id="toTop-button" class="ui icon button"><i class="chevron up icon"></i></div>
     </div>
 </div>
 <!--生成的目录-->
@@ -384,12 +387,12 @@
         var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
-        if (account_name == ''){
+        if (account_name == '') {
             $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
             flag = false;
         }
-        if (account_password == ''){
+        if (account_password == '') {
             $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写密码</p>");
             flag = false;
@@ -403,13 +406,13 @@
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
+                async: false,
                 success: function (data) {
                     if (data.statusCode == 200) {
                         location.reload();
                     } else {
                         $('.ui.error.message.login').removeClass("hidden");
-                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.login').append("<p>● " + data.msg + "</p>");
                     }
                 }
             });
@@ -431,80 +434,80 @@
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
         var register_email = $('#register_email').val();
-        if (register_nickname == ''){
+        if (register_nickname == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询该昵称是否存在
             $.ajax({
-                url:'/findNickname',
+                url: '/findNickname',
                 data: {
                     nickname: register_nickname
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
+                async: false,
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //昵称可用
-                    }else {
+                    } else {
                         //昵称不可用
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_email == ''){
+        if (register_email == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 邮箱不能为空</p>");
             flag = false;
-        }else {
+        } else {
             var mailbox_reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            if (mailbox_reg.test(register_email)){
+            if (mailbox_reg.test(register_email)) {
                 //邮箱格式正确
-            }else {
+            } else {
                 //邮箱格式不正确
                 $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 邮箱格式不正确</p>");
                 flag = false;
             }
         }
-        if (register_account_name == ''){
+        if (register_account_name == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询账户名是否存在
             $.ajax({
-                url:'/findAccountName',
+                url: '/findAccountName',
                 data: {
                     account_name: register_account_name
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
+                async: false,
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //账户名可用
-                    }else {
+                    } else {
                         //账户名不可用
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_account_password == ''){
+        if (register_account_password == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //密码长度应在4-16位之间
-            if (register_account_password.length<=4||register_account_password.length>=16){
+            if (register_account_password.length <= 4 || register_account_password.length >= 16) {
                 $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
                 flag = false;
@@ -517,18 +520,18 @@
                     register_nickname: register_nickname,
                     register_account_name: register_account_name,
                     register_account_password: register_account_password,
-                    register_email:register_email
+                    register_email: register_email
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
+                async: false,
                 success: function (data) {
                     if (data.statusCode == 200) {
                         window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>●" + data.msg + "</p>");
                     }
                 }
             });
@@ -549,6 +552,7 @@
         on: 'click',
         position: 'left center'
     });
+
     //删除评论的模态框
     function showDeleteModal(comment_id) {
         $("#comment_id").val(comment_id);
@@ -572,7 +576,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     $('#browse_volume').html(Number(browse_volume) + 1);
@@ -590,7 +594,7 @@
         $.ajax({
             url: '/article/findArticleAttitude',
             type: 'post',
-            async: 'false',
+            async: false,
             data: {
                 article_id: article_id
             },
@@ -623,7 +627,7 @@
                         },
                         type: 'post',
                         dataType: 'json',
-                        async: 'false',
+                        async: false,
                         success: function (data) {
                             if (data.statusCode == 200) {
                                 console.log("发表态度成功");
@@ -652,7 +656,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     //评论成功
@@ -679,7 +683,7 @@
     var waypoint = new Waypoint({
         //控制右下角工具组的显示与隐藏
         element: document.getElementById('waypoint'),
-        handler: function(direction) {
+        handler: function (direction) {
             if (direction == 'down') {
                 $('#toolbar').show(100);
             } else {
@@ -690,7 +694,7 @@
     });
     <!--滚动到顶部的按钮-->
     $('#toTop-button').click(function () {
-        $(window).scrollTo(0,500);
+        $(window).scrollTo(0, 500);
     });
 
     function deleteComment() {
@@ -699,14 +703,14 @@
         //获取当前文章的id
         var article_id = [[${articleDto.id}]];
         $.ajax({
-            url:'/delComment',
+            url: '/delComment',
             data: {
                 comment_id: comment_id,
                 article_id: article_id
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     //删除评论成功

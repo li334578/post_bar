@@ -62,7 +62,7 @@
         <div class="ui padded vertical segment m-padded-tb-mini m-mobile-lr-clear" th:each="articleDto : ${articleDtoList}">
             <div class="ui mobile reversed stackable grid">
                 <div class="eleven wide column">
-                    <a href="article_details.html" th:href="'/article/articleEdit/'+${articleDto.id}">
+                    <a href="article_details.html" th:href="'/article/article_details/'+${articleDto.id}">
                         <h3 class="ui header" th:text="${articleDto.title}">
                         几米经典语录</h3>
                         <p class="m-text" th:text="${articleDto.description}">
@@ -219,7 +219,7 @@
             url: '/article/deleteMyArticle/'+article_id,
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     location.reload();

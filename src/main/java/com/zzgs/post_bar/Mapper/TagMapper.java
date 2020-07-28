@@ -27,7 +27,8 @@ public interface TagMapper {
 
     /**
      * 查询所有标签并按照标签下的文章数量降序排列
-     * SELECT middle_table.id,middle_table.tag_name,middle_table.create_time,COUNT(middle_table.id) AS total_num from (SELECT tag.id,tag.tag_name,tag.create_time,article.published from (article_tag
+     * SELECT middle_table.id,middle_table.tag_name,middle_table.create_time,COUNT(middle_table.id)
+     * AS total_num from (SELECT tag.id,tag.tag_name,tag.create_time,article.published from (article_tag
      LEFT JOIN article ON article_tag.article_id = article.id)
      LEFT JOIN tag ON article_tag.tag_id = tag.id) middle_table
      where middle_table.published = 1 GROUP BY middle_table.id ORDER BY COUNT(middle_table.id) DESC;

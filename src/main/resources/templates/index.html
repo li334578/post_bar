@@ -157,7 +157,8 @@
                         <li th:if="!${pageInfo.hasPreviousPage}">
                             <button class="ui basic disabled violet button">上一页</button>
                         </li>
-                        <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
+                        <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}"
+                            th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
                                 <a th:href="'/index?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
@@ -372,12 +373,12 @@
         var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
-        if (account_name == ''){
+        if (account_name == '') {
             $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
             flag = false;
         }
-        if (account_password == ''){
+        if (account_password == '') {
             $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写密码</p>");
             flag = false;
@@ -391,13 +392,13 @@
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
+                async: false,
                 success: function (data) {
                     if (data.statusCode == 200) {
                         location.reload();
                     } else {
                         $('.ui.error.message.login').removeClass("hidden");
-                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.login').append("<p>● " + data.msg + "</p>");
                     }
                 }
             });
@@ -419,80 +420,80 @@
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
         var register_email = $('#register_email').val();
-        if (register_nickname == ''){
+        if (register_nickname == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询该昵称是否存在
             $.ajax({
-                url:'/findNickname',
+                url: '/findNickname',
                 data: {
                     nickname: register_nickname
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
+                async: false,
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //昵称可用
-                    }else {
+                    } else {
                         //昵称不可用
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_email == ''){
+        if (register_email == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 邮箱不能为空</p>");
             flag = false;
-        }else {
+        } else {
             var mailbox_reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            if (mailbox_reg.test(register_email)){
+            if (mailbox_reg.test(register_email)) {
                 //邮箱格式正确
-            }else {
+            } else {
                 //邮箱格式不正确
                 $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 邮箱格式不正确</p>");
                 flag = false;
             }
         }
-        if (register_account_name == ''){
+        if (register_account_name == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询账户名是否存在
             $.ajax({
-                url:'/findAccountName',
+                url: '/findAccountName',
                 data: {
                     account_name: register_account_name
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
-                success:function (data) {
-                    if (data.statusCode==200){
+                async: false,
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //账户名可用
-                    }else {
+                    } else {
                         //账户名不可用
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_account_password == ''){
+        if (register_account_password == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //密码长度应在4-16位之间
-            if (register_account_password.length<=4||register_account_password.length>=16){
+            if (register_account_password.length <= 4 || register_account_password.length >= 16) {
                 $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
                 flag = false;
@@ -505,18 +506,18 @@
                     register_nickname: register_nickname,
                     register_account_name: register_account_name,
                     register_account_password: register_account_password,
-                    register_email:register_email
+                    register_email: register_email
                 },
                 type: 'post',
                 dataType: 'json',
-                async: 'false',
+                async: false,
                 success: function (data) {
                     if (data.statusCode == 200) {
                         window.location.replace('/user/userSetting');
                         alert("注册成功,已为您自动登录");
                     } else {
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>●" + data.msg + "</p>");
                     }
                 }
             });
@@ -524,10 +525,11 @@
             $('.ui.error.message.register').removeClass("hidden");
         }
     });
+
     function search() {
         var keyword = $('#search_text').val();
 
-        location.replace('/index?keyword='+keyword);
+        location.replace('/index?keyword=' + keyword);
 
 
     }

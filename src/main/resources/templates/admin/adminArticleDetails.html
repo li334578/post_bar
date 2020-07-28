@@ -302,7 +302,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 hideDeleteModal();
                 $("#tipMsgContent").text("");
@@ -345,7 +345,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     $('#browse_volume').html(Number(browse_volume) + 1);
@@ -363,7 +363,7 @@
         $.ajax({
             url: '/article/findArticleAttitude',
             type: 'post',
-            async: 'false',
+            async: false,
             data: {
                 article_id: article_id
             },
@@ -396,7 +396,7 @@
                         },
                         type: 'post',
                         dataType: 'json',
-                        async: 'false',
+                        async: false,
                         success: function (data) {
                             if (data.statusCode == 200) {
                                 console.log("发表态度成功");
@@ -425,7 +425,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     //评论成功
@@ -491,7 +491,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 if (data.statusCode == 200) {
                     //删除评论成功

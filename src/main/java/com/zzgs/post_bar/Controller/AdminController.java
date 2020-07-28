@@ -256,8 +256,8 @@ public class AdminController {
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有的标签
-//        List<TagDto> tagDtoList = tagService.findAllTagPaging(pageNum, pageSize);
-        List<TagDto> tagDtoList = tagService.findAllTagOrderByArticleNumPaging(pageNum, pageSize);
+        List<TagDto> tagDtoList = tagService.findAllTagPaging(pageNum, pageSize);
+//        List<TagDto> tagDtoList = tagService.findAllTagOrderByArticleNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(tagDtoList);
         model.addAttribute("tagTotalNum",tagDtoList.size());
         model.addAttribute("tagDtoList",tagDtoList);

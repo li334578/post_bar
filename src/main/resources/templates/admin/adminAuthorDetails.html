@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:javascript="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:javascript="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -249,7 +249,7 @@
             },
             type: 'post',
             dataType: 'json',
-            async: 'false',
+            async: false,
             success: function (data) {
                 hideDeleteModal();
                 if (data.statusCode == 200) {
