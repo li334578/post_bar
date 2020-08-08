@@ -19,7 +19,7 @@ import java.io.IOException;
 public class QiNiuFileUtil {
 
     //设置好账号的ACCESS_KEY和SECRET_KEY
-    private static final String ACCESS_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-"; //这两个登录七牛 账号里面可以找到
+    private static final String ACCESS_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; //这两个登录七牛 账号里面可以找到
     private static final String SECRET_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     //要上传的空间
     private static final String bucketname = "xxxxxxxxxx"; //对应要上传到七牛上 你的那个路径（自己建文件夹 注意设置公开）
