@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"  xmlns:shiro="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/semantic.min.css">
     <link rel="stylesheet" href="../static/css/my.css">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
     <title>关于我们</title>
 </head>
 <body>
@@ -62,7 +64,8 @@
         <div class="ui stackable grid">
             <div class="eleven wide column">
                 <div class="ui segment">
-                    <img src="../static/images/aboutImg.jpg" style="width: 800px;height: 500px;" alt="" class="ui rounded image">
+                    <img src="../static/images/aboutImg.jpg" style="width: 800px;height: 500px;" alt=""
+                         class="ui rounded image">
                 </div>
             </div>
             <div class="five wide column">
@@ -74,12 +77,17 @@
                 <div class="ui attached segment">
                     <p class="m-text-thin">本项目采用SpringBoot+Mybatis搭建后端逻辑</p>
                     <p class="m-text-thin">使用semantic UI+Jquery实现前端页面展示和前端逻辑处理</p>
+                    <p class="m-text-thin">七牛云做于文件存储 Redis做缓存</p>
                 </div>
                 <div class="ui bottom attached segment">
-                    <a href="https://github.com/li334578/post_bar" target="_blank" class="ui circular icon button"><i class="github icon"></i></a>
+                    <a href="https://github.com/li334578/post_bar" target="_blank" class="ui circular icon button"><i
+                            class="github icon"></i></a>
                     <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
                     <a href="#" class="ui qq circular icon button" data-content="1125324922"
                        data-position="bottom center"><i class="qq icon"></i></a>
+                    <a href="mailto:liwenbo4922@163.com" data-content="liwenbo4922@163.com"
+                       class="ui mailbox circular icon button" one-link-mark="yes"><i
+                            class="envelope outline icon"></i></a>
                 </div>
                 <div class="ui wechat-qr flowing popup transition hidden m-padded-mini">
                     <img src="../static/images/wechat.png" alt="" class="ui rounded image" style="width: 120px">
@@ -206,12 +214,12 @@
         var flag = true;
         var account_name = $('#login_account_name').val();
         var account_password = $('#login_account_password').val();
-        if (account_name == ''){
+        if (account_name == '') {
             $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写账户名</p>");
             flag = false;
         }
-        if (account_password == ''){
+        if (account_password == '') {
             $('.ui.error.message.login').removeClass("hidden");
             $('.ui.error.message.login').append("<p>● 请填写密码</p>");
             flag = false;
@@ -231,7 +239,7 @@
                         location.reload();
                     } else {
                         $('.ui.error.message.login').removeClass("hidden");
-                        $('.ui.error.message.login').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.login').append("<p>● " + data.msg + "</p>");
                     }
                 }
             });
@@ -253,80 +261,80 @@
         var register_account_name = $('#register_account_name').val();
         var register_account_password = $('#register_account_password').val();
         var register_email = $('#register_email').val();
-        if (register_nickname == ''){
+        if (register_nickname == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户昵称不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询该昵称是否存在
             $.ajax({
-                url:'/findNickname',
+                url: '/findNickname',
                 data: {
                     nickname: register_nickname
                 },
                 type: 'post',
                 dataType: 'json',
                 async: false,
-                success:function (data) {
-                    if (data.statusCode==200){
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //昵称可用
-                    }else {
+                    } else {
                         //昵称不可用
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_email == ''){
+        if (register_email == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 邮箱不能为空</p>");
             flag = false;
-        }else {
+        } else {
             var mailbox_reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            if (mailbox_reg.test(register_email)){
+            if (mailbox_reg.test(register_email)) {
                 //邮箱格式正确
-            }else {
+            } else {
                 //邮箱格式不正确
                 $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 邮箱格式不正确</p>");
                 flag = false;
             }
         }
-        if (register_account_name == ''){
+        if (register_account_name == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户名不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //查询账户名是否存在
             $.ajax({
-                url:'/findAccountName',
+                url: '/findAccountName',
                 data: {
                     account_name: register_account_name
                 },
                 type: 'post',
                 dataType: 'json',
                 async: false,
-                success:function (data) {
-                    if (data.statusCode==200){
+                success: function (data) {
+                    if (data.statusCode == 200) {
                         //账户名可用
-                    }else {
+                    } else {
                         //账户名不可用
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>● "+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>● " + data.msg + "</p>");
                         flag = false;
                     }
                 }
             });
         }
-        if (register_account_password == ''){
+        if (register_account_password == '') {
             $('.ui.error.message.register').removeClass("hidden");
             $('.ui.error.message.register').append("<p>● 账户密码不能为空</p>");
             flag = false;
-        }else {
+        } else {
             //密码长度应在4-16位之间
-            if (register_account_password.length<=4||register_account_password.length>=16){
+            if (register_account_password.length <= 4 || register_account_password.length >= 16) {
                 $('.ui.error.message.register').removeClass("hidden");
                 $('.ui.error.message.register').append("<p>● 账户密码长度在4-16位之间</p>");
                 flag = false;
@@ -339,7 +347,7 @@
                     register_nickname: register_nickname,
                     register_account_name: register_account_name,
                     register_account_password: register_account_password,
-                    register_email:register_email
+                    register_email: register_email
                 },
                 type: 'post',
                 dataType: 'json',
@@ -350,7 +358,7 @@
                         alert("注册成功,已为您自动登录");
                     } else {
                         $('.ui.error.message.register').removeClass("hidden");
-                        $('.ui.error.message.register').append("<p>●"+data.msg+"</p>");
+                        $('.ui.error.message.register').append("<p>●" + data.msg + "</p>");
                     }
                 }
             });
@@ -360,11 +368,12 @@
     });
     $('.wechat').popup({
         popup: $('.wechat-qr'),
-        on:'hover',
+        on: 'hover',
         position: 'bottom center'
     });
 
     $('.qq').popup();
+    $('.mailbox').popup();
 </script>
 </body>
 </html>

@@ -13,6 +13,8 @@
           th:href="@{../../static/fileUpload/css/iconfont.css}">
     <link rel="stylesheet" href="../static/fileUpload/css/fileUpload.css"
           th:href="@{../../static/fileUpload/css/fileUpload.css}">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
     <title>发布新贴</title>
 </head>
 <body>
@@ -44,7 +46,7 @@
                     <div class="text">
                         <span th:if="${user}">
                             <shiro:hasRole name="user">
-                                <img class="ui avatar image" th:src="'../'+${user.user_avatar}"
+                                <img class="ui avatar image" th:src="${user.user_avatar}"
                                      src="https://picsum.photos/id/1033/100/100">
                                 <span th:text="${user.nick_name}">李文博</span>
                             </shiro:hasRole>
@@ -93,7 +95,7 @@
             <div class="ui segment large attached">
                 <div class="ui big label">封面:</div>
                 <div class="ui small image">
-                    <img src="../static/images/cover/city.jpg" th:src="'../'+${articleDto.first_picture}"
+                    <img src="../static/images/cover/city.jpg" th:src="${articleDto.first_picture}"
                          width="150px" height="120px" id="cover">
                 </div>
                 <div id="fileUploadContent" class="fileUploadContent m-margin-top"></div>

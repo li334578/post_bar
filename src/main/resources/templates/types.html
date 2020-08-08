@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../static/css/semantic.min.css}">
     <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../static/css/my.css}">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
     <title>分类</title>
 </head>
 <body>
@@ -103,7 +105,7 @@
                                 <div class="ui mini horizontal link list">
                                     <div class="item">
                                         <img src="https://picsum.photos/id/1033/100/100" alt=""
-                                             class="ui avatar image" th:src="'../'+${articleDto.user_avatar}">
+                                             class="ui avatar image" th:src="${articleDto.user_avatar}">
                                         <div class="content">
                                             <div class="header">
                                                 <a href="#"
@@ -145,7 +147,7 @@
                     </div>
                     <div class="five wide column">
                         <a href="#" target="_blank">
-                            <img th:src="'../'+${articleDto.first_picture}" width="235px" height="130px"
+                            <img th:src="${articleDto.first_picture}" width="235px" height="130px"
                                  src="https://picsum.photos/id/1033/800/450" alt=""
                                  class="ui rounded image">
                         </a>

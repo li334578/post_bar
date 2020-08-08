@@ -28,7 +28,7 @@ public interface TypeMapper {
      * @return 分类下的文章列表
      */
     @Select("SELECT type.id,type.type_name,type.create_time,COUNT(type.id) AS total_num" +
-            " FROM TYPE RIGHT JOIN article ON type.id = article.type_id" +
+            " FROM type RIGHT JOIN article ON type.id = article.type_id" +
             " where article.published = 1 " +
             " GROUP BY type.id ORDER BY COUNT(type.id) DESC")
     List<TypeDto> findAll();

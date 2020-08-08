@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../../static/css/my.css">
-    <title>话题管理</title>
+    <link rel="stylesheet" href="../static/css/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/my.css">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
+    <title>标签</title>
 </head>
 <body>
 <!--导航-->
@@ -15,9 +17,9 @@
             <h2 class="ui violet header item"><i class="user secret icon"></i>管理后台</h2>
             <a href="adminForums.html" th:href="@{/admin/index}" class="m-item item m-mobile-hide"><i
                     class="mini home icon"></i>帖子</a>
-            <a href="adminTypes.html" th:href="@{/admin/types}" class="active m-item item m-mobile-hide"><i
+            <a href="adminTypes.html" th:href="@{/admin/types}" class="m-item item m-mobile-hide"><i
                     class="mini microphone icon"></i>话题</a>
-            <a href="adminTags.html" th:href="@{/admin/tags}" class="m-item item m-mobile-hide"><i
+            <a href="adminTags.html" th:href="@{/admin/tags}" class="active m-item item m-mobile-hide"><i
                     class="mini tags icon"></i>标签</a>
             <a href="adminAuthor.html" th:href="@{/admin/authors}" class="m-item item m-mobile-hide"><i
                     class="mini user icon"></i>作者</a>
@@ -25,18 +27,15 @@
                 <div class="ui item">
                     <div class="text">
                         <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
-                        <img class="ui avatar image" th:src="${user.user_avatar}"
-                             src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
                         <span style="margin-left: 5px"><a href="/admin/logout">注销</a></span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i
-            class="sidebar icon"></i></a>
+    <a href="#" class="ui menu toggle icon violet basic button m-right-top m-mobile-show"><i class="sidebar icon"></i></a>
 </nav>
-
 <!--中间内容-->
 <div class="m-container-small m-padded-tb-big">
     <div class="ui container">
@@ -45,11 +44,11 @@
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
                     <div class="column">
-                        <h3 class="ui violet header">分类列表</h3>
+                        <h3 class="ui violet header">标签列表</h3>
                     </div>
                     <div class="right aligned column">
                         当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
-                        15</h3>个分类
+                        15</h3>个标签
                     </div>
                 </div>
             </div>
@@ -58,33 +57,34 @@
                 <i class="close icon" onclick="hideTipMsg()"></i>
                 <h3 id="tipMsgContent"></h3>
             </div>
-            <!--分类列表-->
+            <!--标签-->
             <div class="ui attached violet segment">
                 <div class="ui mini middle aligned three column grid">
                     <div class="center aligned column">
-                        <h5 class="ui violet header">分类名</h5>
+                        <h5 class="ui violet header">标签名</h5>
                     </div>
                     <div class="center aligned column">
-                        <h5 class="ui violet header">分类下的文章数</h5>
+                        <h5 class="ui violet header">标签下的文章数</h5>
                     </div>
                     <div class="center aligned column">
                         <h5 class="ui violet header">操作</h5>
                     </div>
                 </div>
             </div>
+            <!--标签列表-->
             <div class="ui attached violet segment">
-                <div class="ui mini middle aligned three column grid" th:each="typeDto : ${typeDtoList}">
+                <div class="ui mini middle aligned three column grid" th:each="tagDto : ${tagDtoList}">
                     <div class="center aligned column">
-                        <a href="#" class="ui basic violet button"
-                           th:text="${typeDto.type_name}" th:href="'/admin/type/'+${typeDto.id}">思考与感悟</a>
+                        <a href="#" class="ui tag label violet"
+                           th:text="${tagDto.tag_name}" th:href="'/admin/tag/'+${tagDto.id}">思考与感悟</a>
                     </div>
                     <div class="center aligned column">
                         共<h3 class="ui orange header m-inline-block m-text-thin"
-                             th:text="${typeDto.total_num}">15</h3>篇
+                             th:text="${tagDto.total_num}">15</h3>篇
                     </div>
                     <div class="center aligned column">
                         <button class="ui negative button mini"
-                                th:onclick="'javascript:showDeleteModal('+${typeDto.id}+')'">删除分类
+                                th:onclick="'javascript:showDeleteModal('+${tagDto.id}+')'">删除标签
                         </button>
                     </div>
                 </div>
@@ -93,44 +93,39 @@
             <div class="ui center aligned bottom attached segment">
                 <div class="ui buttons">
                     <li th:if="${pageInfo.hasPreviousPage}">
-                        <a th:href="'/admin/types?pageNum='+${pageInfo.pageNum-1}"
-                           class="ui basic violet button">上一页</a>
+                        <a th:href="'/admin/tags?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
                     </li>
                     <li th:if="!${pageInfo.hasPreviousPage}">
                         <button class="ui basic disabled violet button">上一页</button>
                     </li>
                     <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/types?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                         <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/types?pageNum='+${page}" class="ui basic violet button"
-                                   th:text="${page}">1</a>
+                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                     </li>
                     <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
                         th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/types?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                         <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/types?pageNum='+${page}" class="ui basic violet button"
-                                   th:text="${page}">1</a>
+                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                     </li>
                     <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
                         th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/types?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                         <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/types?pageNum='+${page}" class="ui basic violet button"
-                                   th:text="${page}">1</a>
+                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                     </li>
                     <li th:if="${pageInfo.hasNextPage}">
-                        <a th:href="'/admin/types?pageNum='+${pageInfo.pageNum+1}"
-                           class="ui basic violet button">下一页</a>
+                        <a th:href="'/admin/tags?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
                     </li>
                     <li th:if="!${pageInfo.hasNextPage}">
                         <button class="ui basic disabled violet button">下一页</button>
@@ -145,19 +140,19 @@
     <div class="ui delete modal card tiny">
         <i class="close icon"></i>
         <div class="content">
-            <h2>您确定要删除该分类吗？</h2>
+            <h2>您确定要删除该标签吗？</h2>
         </div>
         <div class="extra content">
-            <input type="hidden" id="type_id" value="">
+            <input type="hidden" id="tag_id" value="">
             <div class="ui two buttons">
-                <div class="ui violet affirm button" onclick="deleteType()">确定</div>
+                <div class="ui violet affirm button" onclick="deleteTag()">确定</div>
                 <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
             </div>
         </div>
     </div>
 </div>
-
-
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -173,15 +168,14 @@
 </footer>
 
 
-<script src="../../static/js/jquery.min.js"></script>
-<script src="../../static/js/semantic.min.js"></script>
+<script src="../static/js/jquery.min.js"></script>
+<script src="../static/js/semantic.min.js"></script>
 <script>
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
     });
-
-    function showDeleteModal(type_id) {
-        $("#type_id").val(type_id);
+    function showDeleteModal(tag_id) {
+        $("#tag_id").val(tag_id);
         $(".ui.delete.modal").modal("setting", "closable", false);
         $(".ui.delete.modal").modal("show");
     }
@@ -196,12 +190,12 @@
         $("#tipMsg").addClass("hidden");
     }
 
-    function deleteType() {
-        var type_id = $("#type_id").val();
+    function deleteTag() {
+        var tag_id = $("#tag_id").val();
         $.ajax({
-            url: '/admin/delType',
+            url: '/admin/delTag',
             data: {
-                type_id: type_id
+                tag_id: tag_id
             },
             type: 'post',
             dataType: 'json',
