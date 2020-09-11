@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../static/css/my.css">
+    <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../../static/css/my.css}">
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../../static/css/semantic.min.css}">
     <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
     <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
     <title>帖子管理</title>
+    <style>
+        body{
+            background: url("../static/images/bgimg.png");
+        }
+    </style>
 </head>
 <body>
 <!--导航-->

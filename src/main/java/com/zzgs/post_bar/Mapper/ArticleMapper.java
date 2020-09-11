@@ -19,7 +19,7 @@ public interface ArticleMapper {
      * 查询所有文章
      * @return 文章列表
      */
-    @Select("select * from article where published = 1")
+    @Select("select * from article where published = 1 order by id DESC")
     List<ArticleDto> findAll();
 
     /**
@@ -44,6 +44,12 @@ public interface ArticleMapper {
     @Select("select * from article where published = 1 order by approval_num DESC")
     List<ArticleDto> findAllOrderByApprovalNum();
 
+    /**
+     * 默认排序
+     * @return 文章列表
+     */
+    @Select("select * from article where published = 1")
+    List<ArticleDto> findAllOrderByTime();
     /**
      * 根据id查询article
      * @param id 文章id
@@ -228,7 +234,7 @@ public interface ArticleMapper {
      * @param type_id 分类id
      * @return 文章列表
      */
-    @Select("select * from article where type_id = #{type_id} and published = 1")
+    @Select("select * from article where type_id = #{type_id} and published = 1 order by id DESC")
     List<ArticleDto> findArticleByTypeId(Integer type_id);
 
     /**
@@ -245,7 +251,8 @@ public interface ArticleMapper {
      * @return 文章列表
      */
     @Select("select * from article where article.id in " +
-            "(select article_tag.article_id from article_tag WHERE article_tag.tag_id = #{tag_id}) and published = 1")
+            "(select article_tag.article_id from article_tag WHERE article_tag.tag_id = #{tag_id})" +
+            " and published = 1 order by id desc")
     List<ArticleDto> findArticleByTagId(Integer tag_id);
 
     /**

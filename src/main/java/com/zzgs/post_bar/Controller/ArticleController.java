@@ -11,7 +11,6 @@ import com.zzgs.post_bar.Service.*;
 import com.zzgs.post_bar.Utils.DateUtil;
 import com.zzgs.post_bar.Utils.MarkdownUtil;
 import com.zzgs.post_bar.Utils.QiNiuFileUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

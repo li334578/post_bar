@@ -125,8 +125,8 @@ public class AdminController {
             model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有文章
-//        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
-        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
+        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+//        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("pageInfo", pageInfo);
         model.addAttribute("articleDtoList", articleDtoList);
