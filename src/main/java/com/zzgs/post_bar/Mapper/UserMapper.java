@@ -67,7 +67,7 @@ public interface UserMapper {
      * @return 角色列表
      */
     @Select("SELECT role_name FROM role WHERE role.id = " +
-            "(SELECT user_role.role_id FROM user_role,USER WHERE user.id = #{id}" +
+            "(SELECT user_role.role_id FROM user_role,user WHERE user.id = #{id}" +
             " AND user.id = user_role.user_id)")
     Set<String> findRolesById(Integer id);
 
@@ -102,9 +102,9 @@ public interface UserMapper {
      * 查询所有作者author (发表过文章的user)
      * @return 作者列表
      */
-//    @Select("SELECT * FROM USER WHERE id IN (SELECT user_id FROM article GROUP BY user_id)")
-    @Select("SELECT * FROM USER WHERE USER.id IN ( SELECT user_id FROM article GROUP BY user_id ) " +
-            "ORDER BY (SELECT COUNT( user_id ) FROM article WHERE USER.id = article.user_id) DESC")
+//    @Select("SELECT * FROM user WHERE id IN (SELECT user_id FROM article GROUP BY user_id)")
+    @Select("SELECT * FROM user WHERE user.id IN ( SELECT user_id FROM article GROUP BY user_id ) " +
+            "ORDER BY (SELECT COUNT( user_id ) FROM article WHERE user.id = article.user_id) DESC")
     List<UserDto> findAllAuthor();
 
     /**
@@ -118,7 +118,7 @@ public interface UserMapper {
      * 查询所有用户
      * @return 用户列表
      */
-    @Select("SELECT * FROM USER WHERE user.id IN  (SELECT user_role.user_id FROM user_role WHERE user_role.role_id = 1)")
+    @Select("SELECT * FROM user WHERE user.id IN  (SELECT user_role.user_id FROM user_role WHERE user_role.role_id = 1)")
     List<AuthorDto> findAllAuthorDto();
 
     /**
