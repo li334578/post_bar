@@ -84,8 +84,8 @@ public class TypeController {
             model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询帖子
-//        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
-        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
+        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+//        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);
@@ -116,8 +116,8 @@ public class TypeController {
             model.addAttribute("user",user);
         }
         //根据type_id查询文章
-//        List<ArticleDto> articleDtoList = articleService.findArticleByTypeId(type_id,pageNum,pageSize);
-        List<ArticleDto> articleDtoList = articleService.findArticleByTypeIdOrderByApprovalNum(type_id,pageNum,pageSize);
+        List<ArticleDto> articleDtoList = articleService.findArticleByTypeId(type_id,pageNum,pageSize);
+//        List<ArticleDto> articleDtoList = articleService.findArticleByTypeIdOrderByApprovalNum(type_id,pageNum,pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
         model.addAttribute("articleDtoList",articleDtoList);
         model.addAttribute("pageInfo",pageInfo);

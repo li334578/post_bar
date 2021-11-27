@@ -19,7 +19,7 @@ public interface ArticleMapper {
      * 查询所有文章
      * @return 文章列表
      */
-    @Select("select * from article where published = 1")
+    @Select("select * from article where published = 1 order by id DESC")
     List<ArticleDto> findAll();
 
     /**
@@ -45,6 +45,12 @@ public interface ArticleMapper {
     List<ArticleDto> findAllOrderByApprovalNum();
 
     /**
+     * 默认排序
+     * @return 文章列表
+     */
+    @Select("select * from article where published = 1")
+    List<ArticleDto> findAllOrderByTime();
+    /**
      * 根据id查询article
      * @param id 文章id
      * @return 文章
@@ -67,7 +73,7 @@ public interface ArticleMapper {
      * @param browse_volume 浏览数
      * @return 更新的行数
      */
-    @Insert("insert into article VALUE (null,#{title},#{content},#{create_time}," +
+    @Insert("insert into article value (null,#{title},#{content},#{create_time}," +
             "#{update_time},#{first_picture},#{published},#{description},#{type_id}," +
             "#{user_id},#{approval_num},#{trample_num},#{browse_volume})")
     Integer addArticle(@Param("title")String title,
@@ -228,7 +234,7 @@ public interface ArticleMapper {
      * @param type_id 分类id
      * @return 文章列表
      */
-    @Select("select * from article where type_id = #{type_id} and published = 1")
+    @Select("select * from article where type_id = #{type_id} and published = 1 order by id DESC")
     List<ArticleDto> findArticleByTypeId(Integer type_id);
 
     /**
@@ -244,8 +250,9 @@ public interface ArticleMapper {
      * @param tag_id 标签id
      * @return 文章列表
      */
-    @Select("SELECT * FROM article WHERE article.id IN " +
-            "(SELECT article_tag.article_id FROM article_tag WHERE article_tag.tag_id = #{tag_id}) and published = 1")
+    @Select("select * from article where article.id in " +
+            "(select article_tag.article_id from article_tag WHERE article_tag.tag_id = #{tag_id})" +
+            " and published = 1 order by id desc")
     List<ArticleDto> findArticleByTagId(Integer tag_id);
 
     /**
@@ -253,9 +260,9 @@ public interface ArticleMapper {
      * @param tag_id 标签id
      * @return 文章列表
      */
-    @Select("SELECT * FROM article WHERE article.id IN " +
-            "(SELECT article_tag.article_id FROM article_tag WHERE article_tag.tag_id = #{tag_id})" +
-            " and published = 1 order by article.approval_num DESC")
+    @Select("select * from article where article.id in " +
+            "(select article_tag.article_id from article_tag where article_tag.tag_id = #{tag_id})" +
+            " and published = 1 order by article.approval_num desc")
     List<ArticleDto> findArticleByTagIdOrderByApprovalNum(Integer tag_id);
 
     /**
@@ -266,8 +273,8 @@ public interface ArticleMapper {
      * @param tag_id 标签id
      * @return 标签下的文章数量
      */
-    @Select("SELECT COUNT(article_tag.id) from article_tag RIGHT JOIN article" +
-            " ON article.id = article_tag.article_id and published = 1 and article_tag.tag_id = #{tag_id}")
+    @Select("select count(article_tag.id) from article_tag right join article" +
+            " on article.id = article_tag.article_id and published = 1 and article_tag.tag_id = #{tag_id}")
     Integer findTotalByTagId(Integer tag_id);
 
     /**
@@ -275,6 +282,6 @@ public interface ArticleMapper {
      * @param user_id 用户id
      * @return 用户发布的文章数
      */
-    @Select("SELECT COUNT(id) FROM article WHERE user_id = #{user_id} AND published = 1")
+    @Select("select count(id) from article where user_id = #{user_id} and published = 1")
     Integer findAuthorArticleTotalNum(Integer user_id);
 }

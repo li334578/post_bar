@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"  xmlns:shiro="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/css/semantic.min.css" th:href="@{../../../static/css/semantic.min.css}">
-    <link rel="stylesheet" href="../../static/css/typo.css" th:href="@{../../../static/css/typo.css}">
-    <link rel="stylesheet" href="../../static/tocbot/tocbot.css" th:href="@{../../../static/tocbot/tocbot.css}">
-    <link rel="stylesheet" href="../../static/css/my.css" th:href="@{../../../static/css/my.css}">
+    <link rel="stylesheet" href="../static/css/semantic.min.css" th:href="@{../../../static/css/semantic.min.css}">
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{../../../static/css/typo.css}">
+    <link rel="stylesheet" href="../static/tocbot/tocbot.css" th:href="@{../../../static/tocbot/tocbot.css}">
+    <link rel="stylesheet" href="../static/css/my.css" th:href="@{../../../static/css/my.css}">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
     <title>帖子详情</title>
 </head>
 <body onload="addArticleBrowseVolume()">
@@ -27,7 +29,7 @@
                 <div class="ui item">
                     <div class="text">
                         <span style="color: blueviolet">管理员：<span th:text="${user.nick_name}">李文博</span></span>
-                        <img class="ui avatar image" th:src="'../'+${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <img class="ui avatar image" th:src="${user.user_avatar}" src="https://picsum.photos/id/1033/100/100">
                         <span style="margin-left: 5px"><a href="/admin/logout">注销</a></span>
                     </div>
                 </div>
@@ -43,7 +45,7 @@
             <!--头部-->
             <div class="ui horizontal link list">
                 <div class="item">
-                    <img src="https://picsum.photos/id/1033/100/100" alt="" th:src="'../'+${articleDto.user_avatar}"
+                    <img src="https://picsum.photos/id/1033/100/100" alt="" th:src="${articleDto.user_avatar}"
                          class="ui avatar image">
                     <div class="content">
                         <div class="header">
@@ -71,7 +73,7 @@
         <div class="ui attached segment">
             <!--图片区域-->
             <img src="https://picsum.photos/id/1033/800/450" width="800px" height="450px"
-                 th:src="'../'+${articleDto.first_picture}" alt=""
+                 th:src="${articleDto.first_picture}" alt=""
                  class="ui rounded fluid image">
         </div>
         <div class="ui attached padded segment">
@@ -133,7 +135,7 @@
                 <div class="ui threaded comments" th:each="commentDto : ${commentDtoList}">
                     <div class="comment">
                         <a class="avatar">
-                            <img th:src="'../'+${commentDto.user_avatar}"
+                            <img th:src="${commentDto.user_avatar}"
                                  src="https://picsum.photos/id/1033/100/100">
                         </a>
                         <div class="content">
@@ -162,7 +164,7 @@
                                 <div class="comment" th:each="comment_son : ${commentDto.son_comment}">
                                     <a class="avatar">
                                         <img src="https://picsum.photos/id/1033/100/100"
-                                             th:src="'../'+${comment_son.user_avatar}">
+                                             th:src="${comment_son.user_avatar}">
                                     </a>
                                     <div class="content">
                                         <a class="author" style="color: deepskyblue" th:href="'/user/author_details/'+${comment_son.user_id}"
@@ -264,15 +266,15 @@
 </footer>
 
 
-<script type="text/javascript" src="../../static/js/jquery.min.js"
+<script type="text/javascript" src="../static/js/jquery.min.js"
         th:src="@{../../../static/js/jquery.min.js}"></script>
-<script src="../../static/js/semantic.min.js"
+<script src="../static/js/semantic.min.js"
         th:src="@{../../../static/js/semantic.min.js}"></script>
-<script src="../../static/waypoints/jquery.waypoints.min.js"
+<script src="../static/waypoints/jquery.waypoints.min.js"
         th:src="@{../../../static/waypoints/jquery.waypoints.min.js}"></script>
-<script src="../../static/scrollTo/jquery.scrollTo.min.js"
+<script src="../static/scrollTo/jquery.scrollTo.min.js"
         th:src="@{../../../static/scrollTo/jquery.scrollTo.min.js}"></script>
-<script src="../../static/tocbot/tocbot.min.js"
+<script src="../static/tocbot/tocbot.min.js"
         th:src="@{../../../static/tocbot/tocbot.min.js}"></script>
 <script>
     $('.menu.toggle').click(function () {

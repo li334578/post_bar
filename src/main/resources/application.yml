@@ -14,6 +14,9 @@ spring:
     static-path-pattern: /static/**
   thymeleaf:
     cache: false # 关闭Thymeleaf缓存
+#    prefix: classpath:/templates/
+    mode: HTML
+    suffix: .html
   mail:
     host: smtp.qq.com
 #    port: 465
@@ -42,4 +45,6 @@ pagehelper:
   page-size-zero: true
 logging:
   level:
-    com.zzgs.post_bar: debug
+    com.zzgs.post_bar: info
+server:
+  port: 80

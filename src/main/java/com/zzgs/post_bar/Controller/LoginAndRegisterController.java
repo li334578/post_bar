@@ -66,7 +66,8 @@ public class LoginAndRegisterController {
         //查询帖子
         List<ArticleDto> articleDtoList;
         if ("".equals(keyword)){
-            articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
+            articleDtoList = articleService.findAll(pageNum, pageSize);
+//            articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
         }else {
             keyword = "%"+keyword+"%";
             articleDtoList = articleService.findAllByKeywordOrderByApprovalNum(pageNum, pageSize,keyword);

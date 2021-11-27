@@ -48,57 +48,60 @@ public class AdminController {
 
     /**
      * 跳转管理员登录页
+     *
      * @return 登录页
      */
     @RequestMapping("/loginPage")
-    public String loginPage(){
-        return "/admin/adminLogin";
+    public String loginPage() {
+        return "adminLoginPage";
     }
 
     /**
      * 管理员登出
+     *
      * @return 登录页
      */
     @RequestMapping("/logout")
-    public String logOut(){
+    public String logOut() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return "/admin/adminLogin";
+        return "adminLoginPage";
     }
 
     /**
      * 管理员登录请求
-     * @param adminName 管理员账户
+     *
+     * @param adminName     管理员账户
      * @param adminPassword 管理员密码
      * @return 登录请求结果
      */
     @RequestMapping("/login")
     @ResponseBody
-    public String login(@Param("adminName")String adminName,
-                        @Param("adminPassword")String adminPassword){
+    public String login(@Param("adminName") String adminName,
+                        @Param("adminPassword") String adminPassword) {
         Subject subject = SecurityUtils.getSubject();
         JSONObject jsonObject = new JSONObject();
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(adminName,adminPassword);
-        try{
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(adminName, adminPassword);
+        try {
             subject.login(usernamePasswordToken);
-        }catch (UnknownAccountException uae){
+        } catch (UnknownAccountException uae) {
             //账户不存在 未知账户
-            jsonObject.put("msg","账户不存在");
-            jsonObject.put("statusCode","401");
-        }catch (IncorrectCredentialsException ice){
+            jsonObject.put("msg", "账户不存在");
+            jsonObject.put("statusCode", "401");
+        } catch (IncorrectCredentialsException ice) {
             //密码错误
-            jsonObject.put("msg","密码错误");
-            jsonObject.put("statusCode","402");
+            jsonObject.put("msg", "密码错误");
+            jsonObject.put("statusCode", "402");
         }
-        if (subject.isAuthenticated()){
-            if (subject.hasRole("admin")){
+        if (subject.isAuthenticated()) {
+            if (subject.hasRole("admin")) {
                 //用户拥有权限
-                jsonObject.put("msg","请求成功");
-                jsonObject.put("statusCode","200");
-            }else {
+                jsonObject.put("msg", "请求成功");
+                jsonObject.put("statusCode", "200");
+            } else {
                 //用户没有管理员权限
-                jsonObject.put("msg","当前用户没有管理员权限");
-                jsonObject.put("statusCode","403");
+                jsonObject.put("msg", "当前用户没有管理员权限");
+                jsonObject.put("statusCode", "403");
             }
         }
         return jsonObject.toString();
@@ -106,49 +109,51 @@ public class AdminController {
 
     /**
      * 后台管理页
-     * @param model 页面模型
-     * @param pageNum 当前页码
+     *
+     * @param model    页面模型
+     * @param pageNum  当前页码
      * @param pageSize 每页显示条数
      * @return 后台管理首页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/index")
     public String adminIndex(Model model,
-                             @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                             @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
+                             @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                             @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有文章
-//        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
-        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
+        List<ArticleDto> articleDtoList = articleService.findAll(pageNum, pageSize);
+//        List<ArticleDto> articleDtoList = articleService.findAllOrderByApprovalNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
-        model.addAttribute("pageInfo",pageInfo);
-        model.addAttribute("articleDtoList",articleDtoList);
-        return "/admin/adminForums";
+        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("articleDtoList", articleDtoList);
+        return "adminForums";
     }
 
     /**
      * 根据id查询文章详情
-     * @param id 文章id
+     *
+     * @param id    文章id
      * @param model 页面模型
      * @return 文章详情页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/adminArticleDetails/{id}")
-    public String adminArticleDetails(@PathVariable("id")Integer id,Model model){
+    public String adminArticleDetails(@PathVariable("id") Integer id, Model model) {
         ArticleDto articleDto = articleService.findById(id);
         //将文章的markdown内容转成html
         articleDto.setContent(MarkdownUtil.markdownToHtmlExtensions(articleDto.getContent()));
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
+        if (subject.getPrincipal() != null) {
             String accountname = subject.getPrincipal().toString();
             User user = userService.findByAccountName(accountname);
             //用户登录了 查询用户是否对文章发表过态度
             ArticleAttitude attitude = articleService.findArticleAttitudeByUserIdAndArticleId(id, user.getId());
-            model.addAttribute("user",user);
-            model.addAttribute("attitude",attitude);
+            model.addAttribute("user", user);
+            model.addAttribute("attitude", attitude);
         }
         articleDto.setUser_avatar(userService.findById(articleDto.getUser_id()).getUser_avatar());
         articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
@@ -161,7 +166,7 @@ public class AdminController {
             commentDto.setUser_avatar(userService.findById(commentDto.getUser_id()).getUser_avatar());
             //设置子评论
             String son_comment_id = commentDto.getSon_comment_id();
-            if (son_comment_id != null&&!"".equals(son_comment_id)) {
+            if (son_comment_id != null && !"".equals(son_comment_id)) {
                 //存在子评论信息
                 List<CommentDto> son_comment_list = new ArrayList<>();
                 String[] son_comment_id_arr = son_comment_id.split(",");
@@ -175,184 +180,191 @@ public class AdminController {
                 commentDto.setSon_comment(son_comment_list);
             }
         }
-        model.addAttribute("articleDto",articleDto);
-        model.addAttribute("tagList",tagList);
-        model.addAttribute("commentDtoList",commentDtoList);
-        return "/admin/adminArticleDetails";
+        model.addAttribute("articleDto", articleDto);
+        model.addAttribute("tagList", tagList);
+        model.addAttribute("commentDtoList", commentDtoList);
+        return "adminArticleDetails";
     }
 
     /**
      * 文章分类页
-     * @param model 页面模型
-     * @param pageNum 当前页码
+     *
+     * @param model    页面模型
+     * @param pageNum  当前页码
      * @param pageSize 当前页显示条数
      * @return 文章分类页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/types")
     public String adminType(Model model,
-                            @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                            @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
+                            @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                            @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有的分类
-        List<TypeDto> typeDtoList = typeService.findAllPaging(pageNum,pageSize);
+        List<TypeDto> typeDtoList = typeService.findAllPaging(pageNum, pageSize);
 //        List<TypeDto> typeDtoList = typeService.findAllPagingOrderByArticleNum(pageNum,pageSize);
         PageInfo pageInfo = new PageInfo(typeDtoList);
-        model.addAttribute("typeTotalNum",typeDtoList.size());
-        model.addAttribute("typeDtoList",typeDtoList);
-        model.addAttribute("pageInfo",pageInfo);
-        return "/admin/adminTypes";
+        model.addAttribute("typeTotalNum", typeDtoList.size());
+        model.addAttribute("typeDtoList", typeDtoList);
+        model.addAttribute("pageInfo", pageInfo);
+        return "adminTypes";
     }
 
     /**
      * 根据type_id查询分类下的文章
-     * @param model 页面模型
-     * @param pageNum 当前页码
+     *
+     * @param model    页面模型
+     * @param pageNum  当前页码
      * @param pageSize 每页显示条数
-     * @param type_id 分类id
+     * @param type_id  分类id
      * @return 分类下的文章
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/type/{id}")
     public String adminTypesIndex(Model model,
-                            @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                            @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
-                            @PathVariable("id")Integer type_id){
+                                  @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                                  @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize,
+                                  @PathVariable("id") Integer type_id) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询当前type_id下的所有文章 根据点赞数排序
 //        List<ArticleDto> articleDtoList = articleService.findArticleByTypeId(type_id,pageNum, pageSize);
-        List<ArticleDto> articleDtoList = articleService.findArticleByTypeIdOrderByApprovalNum(type_id,pageNum, pageSize);
+        List<ArticleDto> articleDtoList = articleService.findArticleByTypeIdOrderByApprovalNum(type_id, pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
-        model.addAttribute("pageInfo",pageInfo);
-        model.addAttribute("articleDtoList",articleDtoList);
+        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("articleDtoList", articleDtoList);
         //查询所有的分类
         List<TypeDto> typeDtoList = typeService.findAll();
-        model.addAttribute("typeTotalNum",typeDtoList.size());
-        model.addAttribute("typeDtoList",typeDtoList);
-        model.addAttribute("currentTypeId",type_id);
-        return "/admin/adminTypeForums";
+        model.addAttribute("typeTotalNum", typeDtoList.size());
+        model.addAttribute("typeDtoList", typeDtoList);
+        model.addAttribute("currentTypeId", type_id);
+        return "adminTypeForums";
     }
 
     /**
      * 标签管理页
-     * @param model 页面模型
-     * @param pageNum 当前页码
+     *
+     * @param model    页面模型
+     * @param pageNum  当前页码
      * @param pageSize 当前页显示数据条数
      * @return 标签管理页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/tags")
     public String adminTags(Model model,
-                            @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                            @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
+                            @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                            @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有的标签
         List<TagDto> tagDtoList = tagService.findAllTagPaging(pageNum, pageSize);
 //        List<TagDto> tagDtoList = tagService.findAllTagOrderByArticleNumPaging(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(tagDtoList);
-        model.addAttribute("tagTotalNum",tagDtoList.size());
-        model.addAttribute("tagDtoList",tagDtoList);
-        model.addAttribute("pageInfo",pageInfo);
-        return "/admin/adminTags";
+        model.addAttribute("tagTotalNum", tagDtoList.size());
+        model.addAttribute("tagDtoList", tagDtoList);
+        model.addAttribute("pageInfo", pageInfo);
+        return "adminTags";
     }
 
     /**
      * 根据tag_id查询标签下的文章
-     * @param model 页面模型
-     * @param pageNum 当前页码
+     *
+     * @param model    页面模型
+     * @param pageNum  当前页码
      * @param pageSize 每页显示条数
-     * @param tag_id 标签id
+     * @param tag_id   标签id
      * @return 标签下的文章列表页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/tag/{id}")
     public String adminTagsIndex(Model model,
-                                  @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                                  @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize,
-                                  @PathVariable("id")Integer tag_id){
+                                 @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                                 @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize,
+                                 @PathVariable("id") Integer tag_id) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //根据tag_id查询文章 根据文章点赞数排序
 //        List<ArticleDto> articleDtoList = articleService.findArticleByTagId(tag_id,pageNum,pageSize);
-        List<ArticleDto> articleDtoList = articleService.findArticleByTagIdOrderByApprovalNum(tag_id,pageNum,pageSize);
+        List<ArticleDto> articleDtoList = articleService.findArticleByTagIdOrderByApprovalNum(tag_id, pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(articleDtoList);
-        model.addAttribute("articleDtoList",articleDtoList);
-        model.addAttribute("pageInfo",pageInfo);
+        model.addAttribute("articleDtoList", articleDtoList);
+        model.addAttribute("pageInfo", pageInfo);
         //查询所有的分类
         List<TagDto> tagDtoList = tagService.findAll();
         for (TagDto tagDto : tagDtoList) {
             tagDto.setTotal_num(articleService.findTotalByTagId(tagDto.getId()));
         }
-        model.addAttribute("tagTotalNum",tagDtoList.size());
-        model.addAttribute("tagDtoList",tagDtoList);
-        model.addAttribute("currentTagId",tag_id);
+        model.addAttribute("tagTotalNum", tagDtoList.size());
+        model.addAttribute("tagDtoList", tagDtoList);
+        model.addAttribute("currentTagId", tag_id);
         //根据标签进行查询 在model中放入标志
-        model.addAttribute("tag_id",tag_id);
-        return "/admin/adminTagForums";
+        model.addAttribute("tag_id", tag_id);
+        return "adminTagForums";
     }
 
     /**
      * 作者页
-     * @param model 页面模型
-     * @param pageNum 当前页码
+     *
+     * @param model    页面模型
+     * @param pageNum  当前页码
      * @param pageSize 每页显示条数
      * @return 作者列表页
      */
     @RequiresRoles({"admin"}) //当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/authors")
     public String adminAuthor(Model model,
-                              @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                              @RequestParam(defaultValue = "6",value = "pageSize")Integer pageSize){
+                              @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                              @RequestParam(defaultValue = "6", value = "pageSize") Integer pageSize) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //查询所有的用户
         List<AuthorDto> authorDtoList = userService.findAllAuthorDto(pageNum, pageSize);
         PageInfo pageInfo = new PageInfo(authorDtoList);
-        model.addAttribute("authorDtoList",authorDtoList);
-        model.addAttribute("pageInfo",pageInfo);
-        return "/admin/adminAuthor";
+        model.addAttribute("authorDtoList", authorDtoList);
+        model.addAttribute("pageInfo", pageInfo);
+        return "adminAuthor";
     }
 
     /**
      * 根据id删除分类
+     *
      * @param type_id 分类id
      * @return 删除分类的结果数据
      */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/delType")
     @ResponseBody
-    public String delType(@RequestParam("type_id") Integer type_id){
+    public String delType(@RequestParam("type_id") Integer type_id) {
         JSONObject jsonObject = new JSONObject();
         //查询该分类下的文章
         Integer num = typeService.findTotalArticleNumByTypeId(type_id);
-        if (num>0){
+        if (num > 0) {
             //说明该分类下有文章
-            jsonObject.put("statusCode",500);
-            jsonObject.put("msg","该分类下有"+num+"篇文章,不能删除该分类.");
-        }else {
+            jsonObject.put("statusCode", 500);
+            jsonObject.put("msg", "该分类下有" + num + "篇文章,不能删除该分类.");
+        } else {
             //直接删除分类
             typeService.delTypeById(type_id);
-            jsonObject.put("statusCode",200);
-            jsonObject.put("msg","删除分类成功");
+            jsonObject.put("statusCode", 200);
+            jsonObject.put("msg", "删除分类成功");
         }
         return jsonObject.toString();
     }
 
     /**
      * 根据标签id删除标签
+     *
      * @param tag_id 标签id
      * @return 删除标签的结果数据
      */
@@ -363,21 +375,22 @@ public class AdminController {
         JSONObject jsonObject = new JSONObject();
         //查询该标签下的文章
         Integer num = tagService.findTotalArticleNumByTagId(tag_id);
-        if (num>0){
+        if (num > 0) {
             //说明该标签下有文章
-            jsonObject.put("statusCode",500);
-            jsonObject.put("msg","该标签下有"+num+"篇文章,不能删除该标签.");
-        }else {
+            jsonObject.put("statusCode", 500);
+            jsonObject.put("msg", "该标签下有" + num + "篇文章,不能删除该标签.");
+        } else {
             //直接删除
             tagService.delTagByTagId(tag_id);
-            jsonObject.put("statusCode",200);
-            jsonObject.put("msg","删除标签成功");
+            jsonObject.put("statusCode", 200);
+            jsonObject.put("msg", "删除标签成功");
         }
         return jsonObject.toString();
     }
 
     /**
      * 根据文章id删除文章
+     *
      * @param article_id 文章id
      * @return 删除文章的结果数据
      */
@@ -395,29 +408,30 @@ public class AdminController {
         //4.删除文章及文章下的所有评论信息
         articleService.deleteArticleComment(article_id);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("msg","删除文章成功");
-        jsonObject.put("statusCode","200");
+        jsonObject.put("msg", "删除文章成功");
+        jsonObject.put("statusCode", "200");
 
         return jsonObject.toString();
     }
 
     /**
      * 根据作者id查询作者信息
-     * @param model 页面模型
+     *
+     * @param model     页面模型
      * @param author_id 用户id
-     * @param pageNum 当前页码
-     * @param pageSize 每页显示条数
+     * @param pageNum   当前页码
+     * @param pageSize  每页显示条数
      * @return 作者详细信息
      */
     @RequiresRoles({"admin"})//当前controller需要具有admin角色才能访问 若没有该角色会报AuthorizationException异常
     @RequestMapping("/author_details/{id}")
     public String authorDetails(Model model,
                                 @PathVariable("id") Integer author_id,
-                                @RequestParam(required = false,defaultValue = "1",value = "pageNum")Integer pageNum,
-                                @RequestParam(defaultValue = "5",value = "pageSize")Integer pageSize){
+                                @RequestParam(required = false, defaultValue = "1", value = "pageNum") Integer pageNum,
+                                @RequestParam(defaultValue = "5", value = "pageSize") Integer pageSize) {
         Subject subject = SecurityUtils.getSubject();
-        if (subject.getPrincipal()!=null){
-            model.addAttribute("user",userService.findByAccountName(subject.getPrincipal().toString()));
+        if (subject.getPrincipal() != null) {
+            model.addAttribute("user", userService.findByAccountName(subject.getPrincipal().toString()));
         }
         //根据作者id 查询出作者的信息
         User author = userService.findById(author_id);
@@ -430,9 +444,9 @@ public class AdminController {
             articleDto.setType_name(typeService.findById(articleDto.getType_id()).getType_name());
         }
         PageInfo pageInfo = new PageInfo(articleDtoList);
-        model.addAttribute("articleDtoList",articleDtoList);
-        model.addAttribute("pageInfo",pageInfo);
-        model.addAttribute("author",author);
-        return "/admin/adminAuthorDetails";
+        model.addAttribute("articleDtoList", articleDtoList);
+        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("author", author);
+        return "adminAuthorDetails";
     }
 }

@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/css/semantic.min.css">
-    <link rel="stylesheet" href="../../static/css/my.css">
-    <title>标签</title>
+    <link rel="stylesheet" href="../static/css/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/my.css">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../static/favicon.ico" type="image/x-icon">
+    <title>作者</title>
 </head>
 <body>
 <!--导航-->
@@ -17,9 +19,9 @@
                     class="mini home icon"></i>帖子</a>
             <a href="adminTypes.html" th:href="@{/admin/types}" class="m-item item m-mobile-hide"><i
                     class="mini microphone icon"></i>话题</a>
-            <a href="adminTags.html" th:href="@{/admin/tags}" class="active m-item item m-mobile-hide"><i
+            <a href="adminTags.html" th:href="@{/admin/tags}" class="m-item item m-mobile-hide"><i
                     class="mini tags icon"></i>标签</a>
-            <a href="adminAuthor.html" th:href="@{/admin/authors}" class="m-item item m-mobile-hide"><i
+            <a href="adminAuthor.html" th:href="@{/admin/authors}" class="active m-item item m-mobile-hide"><i
                     class="mini user icon"></i>作者</a>
             <div class="right m-item m-mobile-hide menu" th:if="${user}">
                 <div class="ui item">
@@ -39,51 +41,59 @@
     <div class="ui container">
         <div class="ui stackable grid">
             <!--头部-->
+            <!--头部-->
             <div class="ui top attached segment">
                 <div class="ui middle aligned two column grid">
                     <div class="column">
-                        <h3 class="ui violet header">标签列表</h3>
+                        <h3 class="ui violet header">用户列表</h3>
                     </div>
                     <div class="right aligned column">
                         当前页共<h3 class="ui orange header m-inline-block m-text-thin" th:text="${pageInfo.size}">
-                        15</h3>个标签
+                        15</h3>个用户
                     </div>
                 </div>
             </div>
-            <!--消息提示区域-->
-            <div class="ui attached message segment hidden" id="tipMsg">
-                <i class="close icon" onclick="hideTipMsg()"></i>
-                <h3 id="tipMsgContent"></h3>
-            </div>
-            <!--标签-->
             <div class="ui attached violet segment">
-                <div class="ui mini middle aligned three column grid">
+                <div class="ui mini middle aligned five column grid">
                     <div class="center aligned column">
-                        <h5 class="ui violet header">标签名</h5>
+                        <h5 class="ui violet header">用户姓名</h5>
                     </div>
                     <div class="center aligned column">
-                        <h5 class="ui violet header">标签下的文章数</h5>
+                        <h5 class="ui violet header">发文数</h5>
                     </div>
                     <div class="center aligned column">
-                        <h5 class="ui violet header">操作</h5>
+                        <h5 class="ui violet header">评论数</h5>
+                    </div>
+                    <div class="center aligned column">
+                        <h5 class="ui violet header">点赞数</h5>
+                    </div>
+                    <div class="center aligned column">
+                        <h5 class="ui violet header">点踩数</h5>
                     </div>
                 </div>
             </div>
-            <!--标签列表-->
+            <!--作者列表-->
             <div class="ui attached violet segment">
-                <div class="ui mini middle aligned three column grid" th:each="tagDto : ${tagDtoList}">
+                <div class="ui mini middle aligned five column grid" th:each="authorDto : ${authorDtoList}">
                     <div class="center aligned column">
-                        <a href="#" class="ui tag label violet"
-                           th:text="${tagDto.tag_name}" th:href="'/admin/tag/'+${tagDto.id}">思考与感悟</a>
+                        <img class="ui avatar image" th:src="${authorDto.user_avatar}" src="https://picsum.photos/id/1033/100/100">
+                        <a href="#" th:href="'/admin/author_details/'+${authorDto.id}" th:text="${authorDto.nick_name}">李文博</a>
                     </div>
                     <div class="center aligned column">
-                        共<h3 class="ui orange header m-inline-block m-text-thin"
-                             th:text="${tagDto.total_num}">15</h3>篇
+                        共发布<h3 class="ui orange header m-inline-block m-text-thin"
+                               th:text="${authorDto.total_published_article_num}">15</h3>篇
                     </div>
                     <div class="center aligned column">
-                        <button class="ui negative button mini"
-                                th:onclick="'javascript:showDeleteModal('+${tagDto.id}+')'">删除标签
-                        </button>
+                        共评论<h3 class="ui orange header m-inline-block m-text-thin"
+                               th:text="${authorDto.total_comment_num}">15</h3>次
+                    </div>
+                    <div class="center aligned column">
+                        共点赞<h3 class="ui orange header m-inline-block m-text-thin"
+                               th:text="${authorDto.total_approval_num}">15</h3>次
+                    </div>
+                    <div class="center aligned column">
+                        共点踩<h3 class="ui orange header m-inline-block m-text-thin"
+                               th:text="${authorDto.total_trample_num}">15</h3>次
                     </div>
                 </div>
             </div>
@@ -91,39 +101,39 @@
             <div class="ui center aligned bottom attached segment">
                 <div class="ui buttons">
                     <li th:if="${pageInfo.hasPreviousPage}">
-                        <a th:href="'/admin/tags?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
+                        <a th:href="'/admin/authors?pageNum='+${pageInfo.pageNum-1}" class="ui basic violet button">上一页</a>
                     </li>
                     <li th:if="!${pageInfo.hasPreviousPage}">
                         <button class="ui basic disabled violet button">上一页</button>
                     </li>
                     <li th:if="${pageInfo.pageNum<=3&&pageInfo.pages!=0}" th:each="page : ${#numbers.sequence(1,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/authors?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                         <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/authors?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                     </li>
                     <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2<=pageInfo.pages}"
                         th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pageNum+2)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/authors?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                         <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/authors?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                     </li>
                     <li th:if="${pageInfo.pageNum>3&&pageInfo.pageNum+2>pageInfo.pages}"
                         th:each="page : ${#numbers.sequence(pageInfo.pageNum-2,pageInfo.pages)}">
                             <span th:if="${pageInfo.pageNum==page}">
-                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/authors?pageNum='+${page}" class="ui violet button" th:text="${page}">1</a>
                             </span>
                         <span th:if="${pageInfo.pageNum!=page}">
-                                <a th:href="'/admin/tags?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
+                                <a th:href="'/admin/authors?pageNum='+${page}" class="ui basic violet button" th:text="${page}">1</a>
                             </span>
                     </li>
                     <li th:if="${pageInfo.hasNextPage}">
-                        <a th:href="'/admin/tags?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
+                        <a th:href="'/admin/authors?pageNum='+${pageInfo.pageNum+1}" class="ui basic violet button">下一页</a>
                     </li>
                     <li th:if="!${pageInfo.hasNextPage}">
                         <button class="ui basic disabled violet button">下一页</button>
@@ -133,22 +143,7 @@
         </div>
     </div>
 </div>
-<!--删除的模态框-->
-<div class="container">
-    <div class="ui delete modal card tiny">
-        <i class="close icon"></i>
-        <div class="content">
-            <h2>您确定要删除该标签吗？</h2>
-        </div>
-        <div class="extra content">
-            <input type="hidden" id="tag_id" value="">
-            <div class="ui two buttons">
-                <div class="ui violet affirm button" onclick="deleteTag()">确定</div>
-                <div class="ui red cancel button" onclick="hideDeleteModal()">取消</div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <br>
 <br>
 <br>
@@ -158,63 +153,18 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
 <!--底部-->
 <footer class="ui attached segment">
     <div class="ui center aligned container">
         <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright ©2019-2020 @LiWenBo 版权所有</p>
     </div>
 </footer>
-
-
-<script src="../../static/js/jquery.min.js"></script>
-<script src="../../static/js/semantic.min.js"></script>
-<script>
-    $('.menu.toggle').click(function () {
-        $('.m-item').toggleClass('m-mobile-hide');
-    });
-    function showDeleteModal(tag_id) {
-        $("#tag_id").val(tag_id);
-        $(".ui.delete.modal").modal("setting", "closable", false);
-        $(".ui.delete.modal").modal("show");
-    }
-
-    function hideDeleteModal() {
-        $(".ui.delete.modal").modal("setting", "closable", true);
-        $(".ui.delete.modal").modal("hide");
-    }
-
-    function hideTipMsg() {
-        $("#tipMsgContent").text("");
-        $("#tipMsg").addClass("hidden");
-    }
-
-    function deleteTag() {
-        var tag_id = $("#tag_id").val();
-        $.ajax({
-            url: '/admin/delTag',
-            data: {
-                tag_id: tag_id
-            },
-            type: 'post',
-            dataType: 'json',
-            async: false,
-            success: function (data) {
-                hideDeleteModal();
-                $("#tipMsgContent").text("");
-                if (data.statusCode == 200) {
-                    window.alert(data.msg);
-                    window.location.reload();
-                    // $("#tipMsgContent").text(data.msg);
-                    // $("#tipMsg").removeClass("hidden");
-                    // $("#tipMsg").addClass("info");
-                } else {
-                    $("#tipMsg").addClass("warning");
-                    $("#tipMsgContent").text(data.msg);
-                    $("#tipMsg").removeClass("hidden");
-                }
-            }
-        });
-    }
-</script>
 </body>
 </html>
